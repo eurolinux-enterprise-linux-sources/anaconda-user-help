@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE note PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<note>
+	<para>
+		Consider setting IDs of regular users and their default groups at range starting at <literal>5000</literal> instead of <literal>1000</literal>. That is because the range reserved for system users and groups, <literal>0</literal>-<literal>999</literal>, might increase in the future and thus overlap with IDs of regular users.
+	</para>
+	<para>
+		For creating users with custom IDs using kickstart, see <xref linkend="varlist-kickstart-user-options" />.
+	</para>
+	<para>
+		For changing the minimum UID and GID limits after the installation, which ensures that your chosen UID and GID ranges are applied automatically on user creation, see <ulink url="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-managing_users_and_groups#s1-users-groups-introduction">the Users and Groups chapter of the System Administrator's Guide</ulink>.
+	</para>
+</note>

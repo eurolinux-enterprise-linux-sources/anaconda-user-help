@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-network-hostname-configuration-s390">
+	<title>Network &amp; Hostname</title>
+
+
+	<indexterm>
+		<primary>DHCP (Dynamic Host Configuration Protocol)</primary>
+	</indexterm>
+	<indexterm>
+		<primary>IPv4</primary>
+	</indexterm>
+
+	<indexterm>
+		<primary>hostname</primary>
+	</indexterm>
+
+
+	<para>
+		To configure essential networking features for your system, select <guilabel>Network &amp; Hostname</guilabel> at the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+	<para>
+		Locally accessible interfaces are automatically detected by the installation program and cannot be manually added or deleted. The detected interfaces are listed in the left pane. Click an interface in the list to display more details about in on the right. To activate or deactivate a network interface, move the switch in the top right corner of the screen to either <guilabel>ON</guilabel> or <guilabel>OFF</guilabel>.
+	</para>
+
+	<note>
+		<para>
+			There are several types of network device naming standards used to identify network devices with persistent names such as <literal>em1</literal> or <literal>wl3sp0</literal>. For information about these standards, see the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/ch-Consistent_Network_Device_Naming.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Networking Guide</ulink>.
+		</para>
+	</note>
+
+	<figure>
+		<title>Network &amp; Hostname Configuration Screen</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/netconfig/networkconfig.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Network &amp; Hostname Configuration Screen
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<para>
+		Below the list of connections, enter a host name for this computer in the <guilabel>Hostname</guilabel> input field. The host name can be either a <firstterm>fully-qualified domain name</firstterm> (FQDN) in the format <replaceable>hostname</replaceable>.<replaceable>domainname</replaceable> or a <firstterm>short host name</firstterm> in the format <replaceable>hostname</replaceable>. Many networks have a <firstterm>Dynamic Host Configuration Protocol</firstterm> (DHCP) service that automatically supplies connected systems with a domain name. To allow the DHCP service to assign the domain name to this machine, only specify the short host name. The value <literal>localhost.localdomain</literal> means that no specific static host name for target system is configured, and the actual host name of installed system will be configured during process of network configuration (for example, by NetworkManager using DHCP or DNS).
+	</para>
+	<important>
+		<para>
+			If you want to manually assign the host name, make sure you do not use a domain name that is not delegated to you, as this can result in network resources becoming unavailable. For more information, see the recommended naming practices in the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Networking Guide</ulink>.
+		</para>
+	</important>
+
+
+	<para>
+		Change the default setting <replaceable>localhost</replaceable>.<replaceable>localdomain</replaceable> to a unique host name for each of your Linux instances.
+	</para>
+
+
+
+
+	<para>
+		Once you have finished network configuration, click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+
+
+
+
+	<section id="sect-edit-network-connections-s390">
+		<title>Edit Network Connections</title>
+
+		<para>
+			All network connections on System&nbsp;z are listed in the <guilabel>Network &amp; Hostname</guilabel> screen. By default, the list contains the connection configured earlier in the booting phase and is either OSA, LCS, or HiperSockets. All of these interface types use names in the form of <systemitem>enccw</systemitem><replaceable>device_id</replaceable>, for example <literal>enccw0.0.0a00</literal>. Note that on System&nbsp;z, you cannot add a new connection because the network subchannels need to be grouped and set online beforehand, and this is currently only done in the booting phase. See <xref linkend="chap-installer-booting-ipl-s390"/> for details.
+		</para>
+
+		<para>
+			Usually, the network connection configured earlier in the booting phase does not need to be modified during the rest of the installation. However, if you do need to modify the existing connection, click the <guibutton>Configure</guibutton> button. A <guilabel>NetworkManager</guilabel> dialog appears with a set of tabs appropriate to wired connections, as described below. Here, you can configure network connections for the system, not all of which are relevant to System&nbsp;z.
+		</para>
+
+		<para>
+			This section only details the most important settings for a typical wired connection used during installation. Many of the available options do not have to be changed in most installation scenarios and are not carried over to the installed system. Configuration of other types of network is broadly similar, although the specific configuration parameters are necessarily different. To learn more about network configuration after installation, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Networking Guide</ulink>.
+		</para>
+
+		<para>
+			To configure a network connection manually, click the <guibutton>Configure</guibutton> button in the lower right corner of the screen. A dialog appears that allows you to configure the selected connection.  If required, see the <citetitle pubwork="book">Networking Guide</citetitle> for more detailed information on network settings.
+		</para>
+
+		<para>
+			The most useful network configuration options to consider during installation are:
+		</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					Mark the <guilabel>Automatically connect to this network when it is available</guilabel> check box if you want to use the connection every time the system boots. You can use more than one connection that will connect automatically. This setting will carry over to the installed system.
+
+					<figure>
+						<title>Network Auto-Connection Feature</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/netconfig/network-connections-general.png" format="PNG" scalefit="0"/>
+							</imageobject>
+							<textobject>
+								<para>
+									Auto-connection feature
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					By default, IPv4 parameters are configured automatically by the DHCP service on the network. At the same time, the IPv6 configuration is set to the <literal>Automatic</literal> method. This combination is suitable for most installation scenarios and usually does not require any changes.
+				</para>
+
+				<figure>
+					<title>IP Protocol Settings</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/netconfig/network-connections-ipv4-ipv6.png" format="PNG" width="660"/>
+						</imageobject>
+						<textobject>
+							<para>
+								IP protocol settings
+							</para>
+						</textobject>
+					</mediaobject>
+				</figure>
+			</listitem>
+		</itemizedlist>
+
+		<para>
+			When you have finished editing network settings, click <guibutton>Save</guibutton> to save the new configuration. If you reconfigured a device that was already active during installation, you must restart the device in order to use the new configuration in the installation environment. Use the <guibutton>ON/OFF</guibutton> switch on the <guilabel>Network &amp; Host Name</guilabel> screen to restart the device.
+		</para>
+
+
+	</section>
+
+	<section id="sect-adv-network-connections-s390">
+		<title>Advanced Network Interfaces</title>
+
+		<para>
+			Advanced network interfaces are also available for installation. This includes virtual local area networks (<acronym>VLAN</acronym>s) and three methods to use aggregated links. Detailed description of these interfaces is beyond the scope of this document; read the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/index.html">
+			Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Networking Guide</ulink> for more information.
+		</para>
+
+		<para>
+			To create an advanced network interface, click the <guibutton>+</guibutton> button in the lower left corner of the <guilabel>Network &amp; Hostname</guilabel> screen.
+		</para>
+
+		<para>
+			A dialog appears with a drop-down menu with the following options:
+		</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<literal>Bond</literal> - represents NIC (<firstterm>Network Interface Controller</firstterm>) Bonding, a method to bind multiple network interfaces together into a single, bonded, channel.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<literal>Bridge</literal> - represents NIC Bridging, a method to connect multiple separate network into one aggregate network.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<literal>Team</literal> - represents NIC Teaming, a new implementation to aggregate links, designed to provide a small kernel driver to implement the fast handling of packet flows, and various applications to do everything else in user space.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<literal>VLAN</literal> - represents a method to create multiple distinct broadcast domains, which are mutually isolated.
+				</para>
+			</listitem>
+		</itemizedlist>
+
+		<figure>
+			<title>Advanced Network Interface Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/netconfig/network-adv-interfaces-dialog.png" format="PNG" scalefit="0"/>
+				</imageobject>
+				<textobject>
+					<para>
+						Advanced Network Interface Dialog
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<note>
+			<para>
+				Note that locally accessible interfaces, wired or wireless, are automatically detected by the installation program and cannot be manually added or deleted by using these controls.
+			</para>
+		</note>
+
+		<para>
+			Once you have selected an option and clicked the <guibutton>Add</guibutton> button, another dialog appears for you to configure the new interface. See the respective chapters in the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Networking Guide</ulink> for detailed instructions. To edit configuration on an existing advanced interface, click the <guibutton>Configure</guibutton> button in the lower right corner of the screen. You can also remove a manually-added interface by clicking the <guibutton>-</guibutton> button.
+		</para>
+
+	</section>
+
+</section>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-headless-installations">
+	<title>Headless Systems</title>
+	<para>
+		When installing headless systems, you can only choose between an automated Kickstart installation and an interactive VNC installation using Connect Mode. For more information about automated Kickstart installation, see <xref linkend="sect-kickstart-commands" />. The general process for interactive VNC installation is described below.
+	</para>
+	<orderedlist>
+		<listitem>
+			<para>
+				Set up a network boot server to start the installation. Information about installing and performing basic configurating of a network boot server can be found in <xref linkend="chap-installation-server-setup" />.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Configure the server to use the boot options for a Connect Mode VNC installation. For information on these boot options, see <xref linkend="sect-vnc-installations-connect-mode" />.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Follow the procedure for VNC Installation using Connect Mode as described in the procedure <xref linkend="proc-vnc-installations-connect-mode" />. However, when directed to boot the system, boot it from the network server instead of local media.
+			</para>
+		</listitem>
+	</orderedlist>
+</chapter>

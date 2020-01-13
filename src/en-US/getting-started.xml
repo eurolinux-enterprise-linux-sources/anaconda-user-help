@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-getting-started">
+	<title>Getting Started</title>
+
+
+	<indexterm>
+		<primary>installation</primary>
+		<secondary>getting started</secondary>
+	</indexterm>
+
+	<para>
+		You can install &PRODUCT; with an installation utility called <application>Anaconda</application>. Most users can simply follow the procedure outlined in <xref linkend="sect-simple-install" /> to install &PRODUCT; using the graphical interface in <application>Anaconda</application>.
+	</para>
+	<para>
+		Users with advanced requirements can also use the graphical interface to configure many aspects of the installation, and install &PRODUCT; on a wide variety of systems. On systems without a local interface, installation can be accessed entirely remotely. Installation can also be automated by using a <application>Kickstart</application> file, and performed with no interaction at all.
+	</para>
+	<section id="sect-graphical-installation">
+		<title>Graphical Installation</title>
+
+		<para>
+			The &PRODUCT; installer, <application>Anaconda</application>, provides a simple graphical method to install &PRODUCT;. The graphical installation interface has a built-in help system which can guide you through most installations, even if you have never installed Linux before. However, <application>Anaconda</application> can also be used to configure advanced installation options if required.
+		</para>
+		<para>
+			<application>Anaconda</application> is different from most other operating system installation programs due to its parallel nature. Most installers follow a linear path; you must choose your language first, then you configure networking, and so on. There is usually only one way to proceed at any given time.
+		</para>
+		<para>
+			In the graphical interface in <application>Anaconda</application> you are at first only required to select your language and locale, and then you are presented with a central screen, where you can configure most aspects of the installation in any order you like. While certain parts require others to be completed before configuration - for example, when installing from a network location, you must configure networking before you can select which packages to install - most options in <application>Anaconda</application> can be configured in any order. If a background task, such as network initialization or disk detection, is blocking configuration of a certain option, you can configure unrelated options while waiting for it to complete.
+		</para>
+		<para>
+			Additional differences appear in certain screens; notably the custom partition process is very different from other Linux distributions. These differences are described in each screen's subsection.
+		</para>
+		<para>
+			Some screens will be automatically configured depending on your hardware and the type of media you used to start the installation. You can still change the detected settings in any screen. Screens which have not been automatically configured, and therefore require your attention before you begin the installation, are marked by an exclamation mark. You cannot start the actual installation process before you finish configuring these settings.
+		</para>
+		<para>
+			Installation can also be performed in text mode, however certain options, notably including custom partitioning, are unavailable. See <xref linkend="sect-installation-text-mode-x86" />, or if using an IBM Power system or IBM System z, see <xref linkend="sect-installation-text-mode-ppc" />, or <xref linkend="sect-installation-text-mode-s390" />, respectively, for more information.
+		</para>
+	</section>
+	<section id="sect-remote-installation">
+		<title>Remote Installation</title>
+		<para>
+			You can use the graphical interface remotely to install &PRODUCT;. For headless systems, <literal>Connect Mode</literal> can be used to perform a graphical installation completely remotely. For systems with a display and keyboard, but without the capacity to run the graphical interface, <literal>Direct Mode</literal> can instead be used to facilitate setup. For more information, see the <xref linkend="chap-vnc-installations" />.
+		</para>
+	</section>
+	<section id="sect-automated-installation">
+		<title>Automated Installation</title>
+		<para>
+			<application>Anaconda</application> installations can be automated through the use of a <application>Kickstart</application> file. <application>Kickstart</application> files can be used to configure any aspect of installation, allowing installation without user interaction, and can be used to easily automate installation of multiple instances of &PRODUCT;.
+		</para>
+		<para>
+			In most situations, you can simply follow the procedure outlined in <xref linkend="sect-simple-install-kickstart" /> to create and configure a <application>Kickstart</application> file, which can be used to perform an arbitrary number of non-interactive installations of &PRODUCT;.
+		</para>
+		<para>
+			<application>Kickstart</application> files can be automatically created based on choices made using the graphical interface, through the online <ulink url="https://access.redhat.com/labsinfo/kickstartconfig"><citetitle>Kickstart Generator</citetitle></ulink> tool, or written from scratch using any text editor. For more information, see <xref linkend="sect-kickstart-file-create" />.
+		</para>
+		<para>
+			<application>Kickstart</application> files can be easily maintained and updated using various utilities in &PRODUCT;. For more information, see <xref linkend="sect-kickstart-maintain" />.
+		</para>
+	</section>
+</chapter>

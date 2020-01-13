@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-configuration-progress-menu-ppc">
+	<title>The Configuration Menu and Progress Screen</title>
+
+	<para>
+		Once you click <guibutton>Begin Installation</guibutton> at the <guilabel>Installation Summary</guilabel> screen, the progress screen appears. &PRODUCT; reports the installation progress on the screen as it writes the selected packages to your system.
+	</para>
+
+	<figure>
+		<title>Installing Packages</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/pkgselection/installing-packages.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					The Packages Completed progress bar
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<para>
+		<indexterm>
+			<primary>install log file</primary>
+			<secondary><filename>anaconda.packaging.log</filename> </secondary>
+		</indexterm>
+		<indexterm>
+			<primary><filename>anaconda.packaging.log</filename> </primary>
+			<secondary>install log file location</secondary>
+		</indexterm>
+
+		For your reference, a complete log of your installation can be found in the <filename>/var/log/anaconda/anaconda.packaging.log</filename> file, once you reboot your system.
+	</para>
+
+	<para>
+		If you chose to encrypt one or more partitions during partitioning setup, a dialog window with a progress bar will be displayed during the early stage of the installation process. This window informs that the installer is attempting to gather enough entropy (random data) to ensure that the encryption is secure. This window will disappear after 256 bits of entropy are gathered, or after 10 minutes. You can speed up the gathering process by moving your mouse or randomly typing on the keyboard. After the window disappears, the installation process will continue.
+	</para>
+
+	<figure>
+		<title>Gathering Entropy for Encryption</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/encrypt/anaconda-entropy.png" format="PNG" scalefit="0"/>
+			</imageobject>
+			<textobject>
+				<para>
+					A dialog window with a progress bar while the installer gathers entropy
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<para>
+		While the packages are being installed, more configuration is required. Above the installation progress bar are the <guilabel>Root Password</guilabel> and <guilabel>User Creation</guilabel> menu items.
+	</para>
+
+	<para>
+		The <guilabel>Root Password</guilabel> screen is used to configure the system's <systemitem>root</systemitem> account. This account can be used to perform critical system management and administration tasks. The same tasks can also be performed with a user account with the <systemitem>wheel</systemitem> group membership; if such an user account is created during installation, setting up a <systemitem>root</systemitem> password is not mandatory.
+	</para>
+
+	<para>
+		Creating a user account is optional and can be done after installation, but it is recommended to do it on this screen. A user account is used for normal work and to access the system. Best practice suggests that you always access the system through a user account, not the root account.
+	</para>
+
+	<para>
+		It is possible to disable access to the <guilabel>Root Password</guilabel> or <guilabel>Create User</guilabel> screens. To do so, use a Kickstart file which includes the <command>rootpw --lock</command> or <command>user --lock</command> commands. See <xref linkend="sect-kickstart-commands"/> for more information these commands.
+	</para>
+
+
+	<xi:include href="PasswordSpoke-ppc64.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="UserSpoke-ppc64.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</section>

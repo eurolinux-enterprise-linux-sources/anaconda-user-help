@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-upgrading-your-current-system">
+	<title>Upgrading Your Current System</title>
+
+
+	<indexterm>
+		<primary>upgrade</primary>
+		<secondary>using Red&nbsp;Hat Upgrade</secondary>
+	</indexterm>
+
+	<indexterm>
+		<primary>upgrade</primary>
+		<secondary>using Preupgrade Assistant</secondary>
+	</indexterm>
+
+	<indexterm>
+		<primary>upgrade</primary>
+		<secondary>from &PRODUCT;&nbsp;&PREVVER;</secondary>
+	</indexterm>
+
+
+	<para>
+		The procedure for performing an in-place upgrade on your current system is handled by the following utilities:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				The <application>Preupgrade Assistant</application>, which is a diagnostics utility that assesses your current system and identifies potential problems you might encounter during or after the upgrade.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				The <application>Red&nbsp;Hat Upgrade Tool</application> utility, which is used to upgrade a system from Red&nbsp;Hat Enterprise&nbsp;Linux version 6 to version 7.
+			</para>
+		</listitem>
+	</itemizedlist>
+	<note>
+		<para>
+			In-place upgrades are currently only supported on AMD64 and Intel&nbsp;64 (<systemitem>x86_64</systemitem>) systems and on IBM System&nbsp;z (<systemitem>s390x</systemitem>). Additionally, only the <literal>Server</literal> variant can be upgraded with <application>Red&nbsp;Hat Upgrade Tool</application>.
+		</para>
+	</note>
+	<para>
+		Full documentation covering the process of upgrading from an earlier release of Red&nbsp;Hat Enterprise&nbsp;Linux to Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 is available in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Migration_Planning_Guide/chap-Red_Hat_Enterprise_Linux-Migration_Planning_Guide-Upgrading.html"><citetitle>Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Migration Planning Guide</citetitle></ulink>.
+	</para>
+	<para>
+		You can also use the <ulink url="https://access.redhat.com/labs/rhelupgradehelper/">Red&nbsp;Hat Enterprise&nbsp;Linux Upgrade Helper</ulink> to guide you through migration from Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;6 to 7.
+	</para>
+</chapter>

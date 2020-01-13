@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-write-changes-to-disk-x86">
+	<title>Begin Installation</title>
+
+	<para>
+		When all required sections of the <guilabel>Installation Summary</guilabel> screen have been completed, the admonition at the bottom of the menu screen disappears and the <guibutton>Begin Installation</guibutton> button becomes available.
+	</para>
+
+	<figure>
+		<title>Ready to Install</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/diskpartitioning/write_changes.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					When all required items on the Installation Summary screen have been attended to, the installation can begin.
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<warning>
+		<para>
+			Up to this point in the installation process, no lasting changes have been made on your computer. When you click <guibutton>Begin Installation</guibutton>, the installation program will allocate space on your hard drive and start to transfer &PRODUCT; into this space. Depending on the partitioning option that you chose, this process might include erasing data that already exists on your computer.
+		</para>
+
+	</warning>
+	<para>
+		To revise any of the choices that you made up to this point, return to the relevant section of the <guilabel>Installation Summary</guilabel> screen. To cancel installation completely, click <guibutton>Quit</guibutton> or switch off your computer. To switch off most computers at this stage, press the power button and hold it down for a few seconds.
+	</para>
+
+	<para>
+		If you have finished customizing your installation and are certain that you want to proceed, click <guibutton>Begin Installation</guibutton>.
+	</para>
+
+	<para>
+		After you click <guibutton>Begin Installation</guibutton>, allow the installation process to complete. If the process is interrupted, for example, by you switching off or resetting the computer, or by a power outage, you will probably not be able to use your computer until you restart and complete the &PRODUCT; installation process, or install a different operating system.
+	</para>
+
+</section>

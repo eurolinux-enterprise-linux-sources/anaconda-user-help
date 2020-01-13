@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-storage-devices-x86">
+	<title>Storage Devices</title>
+
+
+	<indexterm>
+		<primary>storage devices</primary>
+		<secondary>basic storage devices</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>storage devices</primary>
+		<secondary>specialized storage devices</secondary>
+	</indexterm>
+
+
+	<para>
+		You can install &PRODUCT; on a large variety of storage devices. You can see basic, locally accessible, storage devices in the <guilabel>Installation Destination</guilabel> page, as described in <xref linkend="sect-disk-partitioning-setup-x86"/>. To add a specialized storage device, click the <guibutton>Add a disk</guibutton> button in the <guilabel>Specialized &amp; Network Disks</guilabel> section of the screen.
+	</para>
+
+	<figure>
+		<title>Storage Space Overview</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/diskpartsetup/disk-setup-x86.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Storage Space Overview.
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<note>
+		<para>
+			Monitoring of LVM and software RAID devices by the <systemitem class="daemon">dmeventd</systemitem> daemon is not performed during installation.
+		</para>
+	</note>
+
+	<section id="sect-storage-device-selection-x86">
+		<title>The Storage Devices Selection Screen</title>
+
+		<para>
+			The storage device selection screen displays all storage devices to which the <application>Anaconda</application> installation program has access.
+		</para>
+
+		<para>
+			The devices are grouped under the following tabs:
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>Multipath Devices</term>
+				<listitem>
+					<para>
+						Storage devices accessible through more than one path, such as through multiple SCSI controllers or Fiber Channel ports on the same system.
+					</para>
+					<para>
+						The installation program only detects multipath storage devices with serial numbers that are 16 or 32 characters long.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Other SAN Devices</term>
+				<listitem>
+					<para>
+						Devices available on a Storage Area Network (SAN).
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Firmware RAID</term>
+				<listitem>
+					<para>
+						Storage devices attached to a firmware RAID controller.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+
+		<figure>
+			<title>Tabbed Overview of Specialized Storage Devices</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/storagedevices/selectstoragedevices-multipath.png" format="PNG" width="660"/>
+				</imageobject>
+				<textobject>
+					<para>
+						Tabbed Overview of Specialized Storage Devices
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+
+		<para>
+			A set of buttons is available in the bottom right corner of the screen. Use these buttons to add additional storage devices. The available buttons are:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<guibutton>Add iSCSI Target</guibutton> - use to attach iSCSI devices; continue with <xref linkend="sect-advanced-storage-iscsi-x86"/>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<guibutton>Add FCoE SAN</guibutton> - use to configure a Fibre Channel Over Internet storage device; continue with <xref linkend="sect-advanced-storage-fcoe-x86"/>
+				</para>
+			</listitem>
+		</itemizedlist>
+
+		<para>
+			The overview page also contains the <guilabel>Search</guilabel> tab that allows you to filter storage devices either by their <firstterm>World Wide Identifier</firstterm> (WWID) or by the port, target, or <firstterm>logical unit number</firstterm> (LUN) at which they are accessed.
+		</para>
+
+		<figure>
+			<title>The Storage Devices Search Tab</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/storagedevices/searchstoragedevices.png" format="PNG" width="660"/>
+				</imageobject>
+				<textobject>
+					<para>
+						The Storage Devices Search Tab
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			The Search tab contains the <guilabel>Search By</guilabel> drop-down menu to select searching by port, target, LUN, or WWID. Searching by WWID or LUN requires additional values in the corresponding input text fields. Click the <guibutton>Find</guibutton> button to start the search.
+		</para>
+
+		<para>
+			Each device is presented on a separate row, with a check box to its left. Click the check box to make the device available during the installation process.  Later in the installation process, you can choose to install &PRODUCT; onto any of the devices selected here, and can choose to automatically mount any of the other devices selected here as part of the installed system.
+		</para>
+
+		<para>
+			Note that the devices that you select here are not automatically erased by the installation process. Selecting a device on this screen does not, in itself, place data stored on the device at risk. Also note that any devices that you do not select here to form part of the installed system can be added to the system after installation by modifying the <filename>/etc/fstab</filename> file.
+		</para>
+
+		<important>
+			<indexterm>
+				<primary>Chain loading</primary>
+			</indexterm>
+			<para>
+				Any storage devices that you do not select on this screen are hidden from <application>Anaconda</application> entirely. To <firstterm>chain load</firstterm> the &PRODUCT; boot loader from a different boot loader, select all the devices presented in this screen.
+			</para>
+		</important>
+
+		<para>
+			When you have selected the storage devices to make available during installation, click <guibutton>Done</guibutton> to return to the Installation Destination screen.
+		</para>
+
+
+
+		<section id="sect-advanced-storage-options-x86">
+			<title>Advanced Storage Options</title>
+
+
+			<indexterm>
+				<primary>iscsi</primary>
+				<secondary>installation</secondary>
+			</indexterm>
+			<indexterm>
+				<primary>FCoE</primary>
+				<secondary>installation</secondary>
+			</indexterm>
+
+
+			<para>
+				To use an advanced storage device, you can configure an <firstterm>iSCSI</firstterm> (SCSI over TCP/IP) target or <firstterm>FCoE</firstterm> (Fibre Channel over Ethernet) <firstterm>SAN</firstterm> (Storage Area Network) by clicking the appropriate button in the lower right corner of the Installation Destination screen. See <xref linkend="appe-iscsi-disks"/> for an introduction to iSCSI.
+			</para>
+
+			<figure>
+				<title>Advanced Storage Options</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/storagedevices/searchstoragedevices.png" format="PNG" width="660"/>
+					</imageobject>
+					<textobject>
+						<para>
+							Advanced Storage Options
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<section id="sect-advanced-storage-iscsi-x86">
+				<title>Configuring iSCSI Parameters</title>
+
+				<para>
+					When you have clicked the <guilabel>Add iSCSI target...</guilabel> button, the <guilabel>Add iSCSI Storage Target</guilabel> dialog appears.
+				</para>
+
+				<figure>
+					<title>The iSCSI Discovery Details Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/diskpartadvanced/iscsi-discovery-reverse-pair.png" format="PNG" scalefit="0"/>
+						</imageobject>
+						<textobject>
+							<para>
+								The <guilabel>iSCSI Discovery Details</guilabel> dialog.
+							</para>
+						</textobject>
+					</mediaobject>
+				</figure>
+				<para>
+					To use iSCSI storage devices for the installation, <application>Anaconda</application> must be able to <firstterm>discover</firstterm> them as iSCSI targets and be able to create an iSCSI <firstterm>session</firstterm> to access them. Each of these steps might require a user name and password for <firstterm>CHAP</firstterm> (Challenge Handshake Authentication Protocol) authentication. Additionally, you can configure an iSCSI target to authenticate the iSCSI initiator on the system to which the target is attached (<firstterm>reverse CHAP</firstterm>), both for discovery and for the session. Used together, CHAP and reverse CHAP are called <firstterm>mutual CHAP</firstterm> or <firstterm>two-way CHAP</firstterm>. Mutual CHAP provides the greatest level of security for iSCSI connections, particularly if the user name and password are different for CHAP authentication and reverse CHAP authentication.
+				</para>
+
+				<note>
+					<para>
+						Repeat the iSCSI discovery and iSCSI login steps as many times as necessary to add all required iSCSI storage. However, you cannot change the name of the iSCSI initiator after you attempt discovery for the first time. To change the iSCSI initiator name, you must restart the installation.
+					</para>
+				</note>
+
+
+				<procedure>
+					<title>iSCSI Discovery and Starting an iSCSI Session</title>
+					<para>
+						Use the <guilabel>Add iSCSI Storage Target</guilabel> dialog to provide <application>Anaconda</application> with the information necessary to discover the iSCSI target.
+					</para>
+					<step>
+						<para>
+							Enter the IP address of the iSCSI target in the <guilabel>Target IP Address</guilabel> field.
+						</para>
+					</step>
+					<step>
+						<para>
+							Provide a name in the <guilabel>iSCSI Initiator Name</guilabel> field for the iSCSI initiator in <firstterm>iSCSI qualified name</firstterm> (IQN) format. A valid IQN entry contains:
+						</para>
+
+						<itemizedlist>
+							<listitem>
+								<para>
+									the string <literal>iqn.</literal> (note the period)
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									a date code that specifies the year and month in which your organization's Internet domain or subdomain name was registered, represented as four digits for the year, a dash, and two digits for the month, followed by a period. For example, represent September 2010 as  <literal>2010-09.</literal>
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									your organization's Internet domain or subdomain name, presented in reverse order with the top-level domain first. For example, represent the subdomain <literal>storage.example.com</literal> as <literal>com.example.storage</literal>
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									a colon followed by a string that uniquely identifies this particular iSCSI initiator within your domain or subdomain. For example, <literal>:diskarrays-sn-a8675309</literal>
+								</para>
+							</listitem>
+						</itemizedlist>
+						<para>
+							A complete IQN can therefore look as follows: <literal>iqn.2010-09.storage.example.com:diskarrays-sn-a8675309</literal> . <application>Anaconda</application> prepopulates the <guilabel>iSCSI Initiator Name</guilabel> field with a name in this format to help you with the structure.
+						</para>
+
+						<para>
+							For more information on IQNs , see <citetitle>3.2.6. iSCSI Names</citetitle> in <citetitle>RFC 3720 - Internet Small Computer Systems Interface (iSCSI)</citetitle> available from <ulink url="http://tools.ietf.org/html/rfc3720#section-3.2.6"/> and <citetitle>1. iSCSI Names and Addresses</citetitle> in <citetitle>RFC 3721 - Internet Small Computer Systems Interface (iSCSI) Naming and Discovery</citetitle> available from <ulink url="http://tools.ietf.org/html/rfc3721#section-1"/>.
+						</para>
+					</step>
+					<step>
+						<para>
+							Use the <guilabel>Discovery Authentication Type</guilabel> drop-down menu to specify the type of authentication to use for iSCSI discovery. The following options are available:
+						</para>
+
+						<itemizedlist>
+							<listitem>
+								<para>
+									no credentials
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									CHAP pair
+								</para>
+							</listitem>
+							<listitem>
+								<para>
+									CHAP pair and a reverse pair
+								</para>
+							</listitem>
+						</itemizedlist>
+					</step>
+					<step>
+						<stepalternatives>
+							<step>
+								<para>
+									If you selected <guimenuitem>CHAP pair</guimenuitem> as the authentication type, provide the user name and password for the iSCSI target in the <guilabel>CHAP Username</guilabel> and <guilabel>CHAP Password</guilabel> fields.
+								</para>
+							</step>
+							<step>
+								<para>
+									If you selected <guimenuitem>CHAP pair and a reverse pair</guimenuitem> as the authentication type, provide the user name and password for the iSCSI target in the <guilabel>CHAP Username</guilabel> and <guilabel>CHAP Password</guilabel> field and the user name and password for the iSCSI initiator in the <guilabel>Reverse CHAP Username</guilabel> and <guilabel>Reverse CHAP Password</guilabel> fields.
+								</para>
+							</step>
+						</stepalternatives>
+					</step>
+					<step>
+						<para>
+							Optionally check the box labeled <guilabel>Bind targets to network interfaces</guilabel>.
+						</para>
+					</step>
+					<step>
+						<para>
+							Click the <guibutton>Start Discovery</guibutton> button. <application>Anaconda</application> attempts to discover an iSCSI target based on the information that you provided. If discovery succeeds, the dialog displays a list of all iSCSI nodes discovered on the target.
+						</para>
+					</step>
+					<step>
+						<para>
+							Each node is presented with a check box beside it. Click the check boxes to select the nodes to use for installation.
+						</para>
+
+						<figure>
+							<title>The Dialog of Discovered iSCSI Nodes</title>
+							<mediaobject>
+								<imageobject>
+									<imagedata fileref="images/diskpartadvanced/iscsi-discovered-nodes.png" format="PNG" scalefit="0"/>
+								</imageobject>
+								<textobject>
+									<para>
+										The Dialog of Discovered iSCSI Nodes
+									</para>
+								</textobject>
+							</mediaobject>
+						</figure>
+					</step>
+					<step>
+						<para>
+							The <guilabel>Node login authentication type</guilabel> menu provides the same options as the <guilabel>Discovery Authentication Type</guilabel> menu described in step 3. However, if you needed credentials for discovery authentication, it is typical to use the same credentials to log into a discovered node. To do that, use the additional <guimenuitem>Use the credentials from discovery</guimenuitem> option from the menu. When the proper credentials have been provided, the <guibutton>Log In</guibutton> button becomes available.
+						</para>
+					</step>
+					<step>
+						<para>
+							Click <guibutton>Log In</guibutton> to initiate an iSCSI session.
+						</para>
+					</step>
+				</procedure>
+			</section>
+
+			<section id="sect-advanced-storage-fcoe-x86">
+				<title>Configuring FCoE Parameters</title>
+
+				<para>
+					When you have clicked the <guilabel>Add FCoE SAN...</guilabel> button, a dialog appears for you to configure network interfaces for discovering FCoE storage devices.
+				</para>
+
+				<para>
+					First, select a network interface that is connected to a FCoE switch in the <guilabel>NIC</guilabel> drop-down menu and click the <guibutton>Add FCoE disk(s)</guibutton> button to scan the network for SAN devices.
+				</para>
+
+				<figure>
+					<title>Configure FCoE Parameters</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/diskpartadvanced/fcoe-config.png" format="PNG" scalefit="0"/>
+						</imageobject>
+						<textobject>
+							<para>
+								Configure FCoE Parameters
+							</para>
+						</textobject>
+					</mediaobject>
+				</figure>
+				<para>
+					There are check boxes with additional options to consider:
+				</para>
+
+
+				<variablelist>
+					<varlistentry>
+						<term>Use DCB</term>
+						<listitem>
+							<para>
+								<firstterm>Data Center Bridging</firstterm> (DCB) is a set of enhancements to the Ethernet protocols designed to increase the efficiency of Ethernet connections in storage networks and clusters. Enable or disable the installation program's awareness of DCB with the check box in this dialog. This option should only be enabled for network interfaces that require a host-based DCBX client. Configurations on interfaces that implement a hardware DCBX client should leave this check box empty.
+							</para>
+						</listitem>
+					</varlistentry>
+
+					<varlistentry>
+						<term>Use auto vlan</term>
+						<listitem>
+							<para>
+								<firstterm>Auto VLAN</firstterm> indicates whether VLAN discovery should be performed. If this box is checked, then the FIP (FCoE Initiation Protocol) VLAN discovery protocol will run on the Ethernet interface once the link configuration has been validated. If they are not already configured, network interfaces for any discovered FCoE VLANs will be automatically created and FCoE instances will be created on the VLAN interfaces. This option is enabled by default.
+							</para>
+						</listitem>
+					</varlistentry>
+
+				</variablelist>
+
+				<para>
+					Discovered FCoE devices will be displayed under the <guilabel>Other SAN Devices</guilabel> tab in the Installation Destination screen.
+				</para>
+
+			</section>
+		</section>
+
+	</section>
+
+</section>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-initial-setup">
+	<title>Initial Setup</title>
+	<para>
+		After you started a new &PRODUCT; system the first time, the <application>Initial Setup</application> application launches, if you installed the server:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				Using the <guimenuitem>Server with GUI</guimenuitem> base environment in the &PRODUCT; setup.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Using a Kickstart file that contains one of the following entries in the <systemitem>%packages</systemitem> section:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						the <package>initial-setup-gui</package> package for graphical mode
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						the <package>initial-setup</package> package for text mode
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						the <package>x11</package> group
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						the <package>gnome-desktop</package> group
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						the <package>kde-desktop</package> group
+					</para>
+				</listitem>
+
+			</itemizedlist>
+		</listitem>
+	</itemizedlist>
+	<bridgehead renderas="sect3">Options in the Initial Setup</bridgehead>
+	<para>
+		The <application>Initial Setup</application> application can display the following options:
+	</para>
+	<informaltable id="fig.is-options">
+		<tgroup cols="3">
+			<colspec colwidth="50%" />
+			<colspec colwidth="25%" />
+			<colspec colwidth="25%" />
+			<thead>
+				<row>
+					<entry>
+						Option
+					</entry>
+					<entry>
+						Graphical User Interface
+					</entry>
+					<entry>
+						Text User Interface
+					</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>
+						License agreement
+						<footnote id="fn.is-options_license">
+							<para>
+								This option is only displayed if you did not previously agreed to the license.
+							</para>
+						</footnote>
+					</entry>
+					<entry>
+						Yes
+					</entry>
+					<entry>
+						Yes
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Language settings
+						<footnote id="fn.is-options_already_set">
+							<para>
+								This option is only displayed if you did not previously set it.
+							</para>
+						</footnote>
+					</entry>
+					<entry>
+						No
+					</entry>
+					<entry>
+						Yes
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Date &amp; time
+						<footnoteref linkend="fn.is-options_already_set" />
+					</entry>
+					<entry>
+						Yes
+					</entry>
+					<entry>
+						Yes
+						<footnote id="fn.in-reconfig-mode">
+							<para>
+								This option is only available if you run <application>Initial Setup</application> in reconfiguration mode
+							</para>
+						</footnote>
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Subscription Manager
+					</entry>
+					<entry>
+						Yes
+					</entry>
+					<entry>
+						No
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Network &amp; host name
+						<footnoteref linkend="fn.is-options_already_set" />
+					</entry>
+					<entry>
+						Yes
+					</entry>
+					<entry>
+						No
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Root password
+						<footnoteref linkend="fn.is-options_already_set" />
+					</entry>
+					<entry>
+						Yes
+					</entry>
+					<entry>
+						Yes
+						<footnoteref linkend="fn.in-reconfig-mode" />
+					</entry>
+				</row>
+				<row>
+					<entry>
+						User creation
+						<footnoteref linkend="fn.is-options_already_set" />
+					</entry>
+					<entry>
+						Yes
+					</entry>
+					<entry>
+						Yes
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</informaltable>
+	<important>
+		<para>
+			Options set during the setup are not displayed in the <application>Initial Setup</application>. To display all options in <application>Initial Setup</application>, you must install &PRODUCT; using a Kickstart file that contains the following command:
+		</para>
+<screen>firstboot --enable --reconfig</screen>
+		<para>
+			The <option>--reconfig</option> option specifies that all options should be displayed. For further details about Kickstart installations, see <xref linkend="chap-kickstart-installations" />.
+		</para>
+	</important>
+
+	<section id="initial-setup_GUI">
+		<title>Graphical Mode</title>
+		<para>
+			In graphical mode, the <application>Initial Setup</application> displays the following screen:
+		</para>
+		<figure>
+			<title>Main Initial Setup Screen</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/initial-setup/is-firstscreen.png" format="PNG" width="660" />
+				</imageobject>
+				<textobject>
+					<para>
+						Initial Setup Screen
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			The <guilabel>License Agreement</guilabel> screen displays the overall licensing terms for &PRODUCT;.
+		</para>
+		<figure>
+			<title>License Information Screen</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/initial-setup/is-license.png" format="PNG" width="660" />
+				</imageobject>
+				<textobject>
+					<para>
+						License Information Screen in Initial Setup
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			In order to continue with the configuration process, the license agreement must be accepted. Exiting <application>Initial Setup</application> without completing this step will cause the system to restart, and once the system finishes rebooting, you will be prompted to accept the agreement again.
+		</para>
+		<para>
+			Review the license agreement. Then, select <guilabel>I accept the license agreement.</guilabel> and click <guibutton>Done</guibutton> to continue.
+		</para>
+		<para>
+			The <guilabel>User Creation</guilabel> screen is the same as the one used when creating an account during the installation. See <xref linkend="sect-account-configuration-user-x86" /> for detailed information.
+		</para>
+		<para>
+			Similarly, the <guilabel>Network &amp; Host Name</guilabel> screen is the same as the one used when setting up network. See <xref linkend="sect-network-hostname-configuration-x86" /> for information.
+		</para>
+		<para>
+			The <guilabel>Subscription Manager</guilabel> screen allows you to register your system with Red&nbsp;Hat to receive updates and install additional packages from repositories provided by Red&nbsp;Hat. For information about how to register your system, see <xref linkend="sect-initial-setup-subsciption-manager" />.
+		</para>
+		<para>
+			Once ready, click the <guibutton>FINISH CONFIGURATION</guibutton> button to register your system, before completing the <application>Initial Setup</application> configuration process.
+		</para>
+		<para>
+			To start the <application>Initial Setup</application> again, see <xref linkend="starting_initial_setup_manually" />.
+		</para>
+		<xi:include href="SubscriptionManagerSpoke-common.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</section>
+
+	<xi:include href="InitialSetup-text.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<section id="starting_initial_setup_manually">
+		<title>Starting Initial Setup Manually</title>
+		<para>
+			Once you once finished the <application>Initial Setup</application>, the application does not start again when you boot the system. To manually start the <application>Initial Setup</application> on system boot:
+		</para>
+		<procedure>
+			<step>
+				<para>
+					Enable the service:
+				</para>
+<screen># systemctl enable initial-setup.service</screen>
+
+			</step>
+			<step>
+				<para>
+					Optionally, to display all menu options, including the ones previously set, create an empty <filename>/.unconfigured</filename> file to start <application>Initial Setup</application> in reconfiguration mode:
+				</para>
+<screen># touch /.unconfigured</screen>
+				<para>
+					Note that, regardless of this setting, the license agreement entry is not displayed again if you previously accepted it.
+				</para>
+			</step>
+			<step>
+				<para>
+					Reboot the system.
+				</para>
+			</step>
+		</procedure>
+		<note>
+			<para>
+				The <package>initial-setup-gui</package> (graphical mode) or <package>initial-setup</package> (text mode) packages must be installed for to run <application>Initial Setup</application>.
+			</para>
+		</note>
+	</section>
+</chapter>

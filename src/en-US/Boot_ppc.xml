@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-booting-installer-ppc">
+	<title>Booting the Installation on IBM Power&nbsp;Systems</title>
+
+
+	<indexterm>
+		<primary>booting the installation program</primary>
+		<secondary>IBM Power&nbsp;Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>CD/DVD media</primary>
+		<secondary>booting</secondary>
+	</indexterm>
+
+	<indexterm>
+		<primary>USB media</primary>
+		<secondary>booting</secondary>
+	</indexterm>
+
+
+
+	<para>
+		To boot an IBM Power&nbsp;Systems server from a DVD, you must specify the install boot device in the <guilabel>System Management Services</guilabel> (SMS) menu.
+	</para>
+	<para>
+		To enter the <guilabel>System Management Services</guilabel> GUI, press the <keycap>1</keycap> key during the boot process when you hear the chime sound. This brings up a graphical interface similar to the one described in this section.
+	</para>
+	<para>
+		On a text console, press <keycap>1</keycap> when the self test is displaying the banner along with the tested components:
+	</para>
+	<figure id="figu-booting-sms-console">
+		<title>The SMS Console</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="./images/pseries/sms-console.png" format="PNG" scalefit="0"/>
+			</imageobject>
+			<textobject>
+				<para>
+					SMS console screen
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<para>
+		Once in the SMS menu, select the option for <guimenuitem>Select Boot Options</guimenuitem>. In that menu, specify <guilabel>Select Install or Boot a Device</guilabel>. There, select <guilabel>CD/DVD</guilabel>, and then the bus type (in most cases SCSI). If you are uncertain, you can select to view all devices. This scans all available buses for boot devices, including network adapters and hard drives.
+	</para>
+	<para>
+		Finally, select the device containing the installation DVD. The boot menu will now load.
+	</para>
+
+	<important>
+		<para>
+			Because IBM Power&nbsp;Systems servers primarily use text consoles, <application>Anaconda</application> will not automatically start a graphical installation. However, the graphical installation program offers more features and customization and is recommended if your system has a graphical display.
+		</para>
+		<para>
+			To start a graphical installation, pass the <option>inst.vnc</option> boot option (see <xref linkend="list-boot-options-vnc"/>).
+		</para>
+	</important>
+
+	<section id="sect-boot-menu-ppc">
+		<title>The Boot Menu</title>
+		<para>
+			Once your system has completed loading the boot media, a boot menu is displayed using <application>GRUB2</application> (<application>GRand Unified Bootloader</application>, version 2). The boot menu provides several options in addition to launching the installation program. If no key is pressed within 60 seconds, the default boot option (the one highlighted in white) will be run. To choose the default, either wait for the timer to run out or press <keycap>Enter</keycap>.
+		</para>
+		<figure>
+			<title>The Boot Screen</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/boot/boot_screen.png" format="PNG" scalefit="0"/>
+				</imageobject>
+				<textobject>
+					<para>
+						The boot screen
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			To select a different option than the default, use the arrow keys on your keyboard, and press <keycap>Enter</keycap> when the correct option is highlighted.
+		</para>
+		<para>
+			To customize the boot options for a particular menu entry, press the <keycap>e</keycap> key and add custom boot options to the command line. When ready press <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo> to boot the modified option.
+		</para>
+		<para>
+			See <xref linkend="chap-anaconda-boot-options"/> for more information about additional boot options.
+		</para>
+		<para>
+			The boot menu options are:
+		</para>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>Install &PRODUCT;&nbsp;7.0</term>
+					<listitem>
+						<para>
+							Choose this option to install &PRODUCT; onto your computer system using the graphical installation program.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Test this media &amp; install &PRODUCT;&nbsp;7.0</term>
+					<listitem>
+						<para>
+							This option is the default. Prior to starting the installation program, a utility is launched to check the integrity of the installation media.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Troubleshooting  <literal>&gt;</literal></term>
+					<listitem>
+						<para>
+							This item is a separate menu containing options that help resolve various installation issues. When highlighted, press <keycap>Enter</keycap> to display its contents.
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+
+			<figure>
+				<title>The Troubleshooting Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/boot/boot_screen_troubleshooting.png" format="PNG" scalefit="0"/>
+					</imageobject>
+					<textobject>
+						<para>
+							The troubleshooting menu
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<variablelist>
+				<varlistentry>
+					<term>Install &PRODUCT;&nbsp;7.0 in basic graphics mode</term>
+					<listitem>
+						<para>
+							This option allows you to install &PRODUCT; in graphical mode even if the installation program is unable to load the correct driver for your   video card. If your screen appears distorted or goes blank when using the <guilabel>Install &PRODUCT;&nbsp;7.0</guilabel> option, restart your computer and try this option instead.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Rescue a &PRODUCT; system</term>
+					<listitem>
+						<para>
+							Choose this option to repair a problem with your installed &PRODUCT; system that prevents you from booting normally. The rescue environment contains utility programs that allow you fix a wide variety of these problems.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Run a memory test</term>
+					<listitem>
+						<para>
+							This option runs a memory test on your system. For more information, see <xref linkend="sect-boot-options-memtest"/>.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Boot from local drive</term>
+					<listitem>
+						<para>
+							This option boots the system from the first installed disk. If you booted this disc accidentally, use this option to boot from the hard disk immediately without starting the installation program.
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+
+	</section>
+
+	<section id="sect-installing-alternate-source-ppc">
+		<title>Installing from a Different Source</title>
+
+		<para>
+			You can install &PRODUCT; from the ISO images stored on hard disk, or from a network using NFS, FTP, HTTP, or HTTPS methods. Experienced users frequently use one of these methods because it is often faster to read data from a hard disk or network server than from a DVD.
+		</para>
+
+		<para>
+			The following table summarizes the different boot methods and recommended installation methods to use with each:
+		</para>
+
+		<table frame="all">
+			<title>Boot Methods and Installation Sources</title>
+
+			<tgroup align="left" cols="2" colsep="1" rowsep="1">
+				<thead>
+					<row>
+						<entry>
+							Boot method
+						</entry>
+						<entry>
+							Installation source
+						</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>
+							Full installation media (DVD)
+						</entry>
+						<entry>
+							The boot media itself
+						</entry>
+					</row>
+					<row>
+						<entry>
+							Minimal boot media (CD or DVD)
+						</entry>
+						<entry>
+							Full installation DVD ISO image or the installation tree extracted from this image, placed in a network location or on a hard drive
+						</entry>
+					</row>
+					<row>
+						<entry>
+							Network boot
+						</entry>
+						<entry>
+							Full installation DVD ISO image or the installation tree extracted from this image, placed in a network location
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+
+	</section>
+
+	<section id="sect-booting-from-pxe-ppc">
+		<title>Booting from the Network Using an Installation Server</title>
+		<para>
+			For network boot, you need a properly configured server, and a network interface in your computer that can support an installation server. For information on how to configure an installation server, see <xref linkend="sect-network-boot-setup-ppc-grub2"/>.
+		</para>
+		<para>
+			Configure the computer to boot from the network interface by selecting <option>Select Boot Options</option> in the SMS menu, then <option>Select Boot/Install Device</option>. Finally, select your network device from the list of available devices.
+		</para>
+		<para>
+			Once you properly configure booting from an installation server, the computer can boot the &PRODUCT; installation system without any other media.
+		</para>
+		<para>
+			To boot a computer from a server:
+		</para>
+		<procedure id="proc-boot-starting-network">
+			<title>How to Start the Installation Program from the Network</title>
+			<step>
+				<para>
+					Ensure that the network cable is attached. The link indicator light on the network socket should be lit, even if the computer is not switched on.
+				</para>
+			</step>
+			<step>
+				<para>
+					Switch on the computer.
+				</para>
+			</step>
+			<step>
+				<para>
+					Networking setup and diagnostic information usually appears before your computer connects to the server, although this depends on the hardware in use. Then you will see a menu with options specifying how the network boot server is setup. Press the number key that corresponds to the desired option. In case you are not sure which option you should select, ask your server administrator.
+				</para>
+			</step>
+		</procedure>
+
+		<para>
+			If your system does not boot from the network installation server, ensure that the SMS is configured to boot first from the correct network interface. See your hardware's documentation for more information.
+		</para>
+		<important>
+			<para>
+				Use the <filename>vmlinuz</filename> and <filename>initrd.img</filename> images to boot your system over a network. You cannot use the <filename>ppc64.img</filename> image to boot over a network; the file is too large for TFTP.
+			</para>
+		</important>
+	</section>
+</chapter>

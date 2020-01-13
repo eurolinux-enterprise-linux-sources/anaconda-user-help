@@ -1,0 +1,24 @@
+diff -uNr anaconda-user-help-7.5.3/prepare_anaconda_help_content.py anaconda-user-help-7.5.3p/prepare_anaconda_help_content.py
+--- anaconda-user-help-7.5.3/prepare_anaconda_help_content.py	2018-05-23 09:38:37.867691905 +0000
++++ anaconda-user-help-7.5.3p/prepare_anaconda_help_content.py	2018-05-23 09:40:20.628631835 +0000
+@@ -15,8 +15,8 @@
+ OUTPUT_FOLDER_RHEL = "anaconda_help_content/rhel/en-US"
+ OUTPUT_FOLDER_RHV = "anaconda_help_content/rhv/en-US"
+ 
+-DEFAULT_PRODUCT_NAME = "Red Hat Enterprise Linux"
+-RHV_PRODUCT_NAME = "Red Hat Virtualization"
++DEFAULT_PRODUCT_NAME = "EuroLinux"
++RHV_PRODUCT_NAME = "EL Virtualization"
+ 
+ MAIN_ENTITY_FILE = "Installation_Guide.ent"
+ 
+@@ -237,7 +237,8 @@
+     template = "the full <citetitle>\&PRODUCT\; Installation Guide<\/citetitle>, available at \&IGURL\;"
+     for path in glob.glob(os.path.join(output_folder, "*.xml")):
+         os.system("sed 's/<xref\/>/%s/g' -i %s %s" % (template, path, path))
+-        os.system("sed 's/Red Hat Enterprise/Scientific/g' -i %s %s" % (path, path))
++        os.system("sed 's/Red Hat Enterprise Linux/EuroLinux/g' -i %s %s" % (path, path))
++        os.system("sed 's/Red Hat Enterprise/EuroLinux/g' -i %s %s" % (path, path))
+ 
+     # resolve any newly added entities
+     print("running xmllint to resolve any newly added entities")

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-disk-partitioning-setup-ppc">
+	<title>Installation Destination</title>
+
+
+	<indexterm>
+		<primary>disk partitioning</primary>
+	</indexterm>
+	<indexterm>
+		<primary>automatic partitioning</primary>
+	</indexterm>
+	<indexterm>
+		<primary>partitioning</primary>
+		<secondary>automatic</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>automatic partitioning</primary>
+	</indexterm>
+
+
+	<para>
+		To select the disks and partition the storage space on which you will install Red&nbsp;Hat&nbsp;Enterprise&nbsp;Linux, select <guilabel>Installation Destination</guilabel> in the <guilabel>Installation Summary</guilabel> screen. If you are unfamiliar with disk partitions, see <xref linkend="appe-disk-partitions-overview"/> for more information.
+	</para>
+
+
+	<warning>
+		<para>
+			Red&nbsp;Hat recommends that you always back up any data that you have on your systems. For example, if you are upgrading or creating a dual-boot system, you should back up any data you want to keep on your storage devices. Unforeseen circumstances can result in loss of all your data.
+		</para>
+	</warning>
+
+	<important>
+		<para>
+			If you install &PRODUCT; in text mode, you can only use the default partitioning schemes described in this section. You cannot add or remove partitions or file systems beyond those that the installation program automatically adds or removes.
+		</para>
+	</important>
+
+	<important>
+		<itemizedlist>
+			<title>Special cases</title>
+
+			<listitem>
+				<para>
+					If you have a RAID card, be aware that some BIOS types do not support booting from the RAID card. In such a case, the <systemitem>/boot</systemitem> partition must be created on a partition outside of the RAID array, such as on a separate hard drive. It is necessary to use an internal hard drive for partition creation with problematic RAID cards. A <systemitem>/boot</systemitem> partition is also necessary for software RAID setups.
+					If you have chosen to automatically partition your system, you should manually edit your <systemitem>/boot</systemitem> partition; see <xref linkend="sect-custom-partitioning-ppc"/> for more details.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					When you install &PRODUCT; on a system with both multipath and non-multipath storage devices, the automatic partitioning layout in the installation program might create volume groups that contain a mix of multipath and non-multipath devices. This defeats the purpose of multipath storage. We advise that you select only multipath or only non-multipath devices on the <guilabel>Installation Destination</guilabel> screen. Alternatively, proceed to manual partitioning.
+				</para>
+			</listitem>
+
+		</itemizedlist>
+	</important>
+
+
+	<figure>
+		<title>Storage Space Overview</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/diskpartsetup/disk-setup-ppc.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Storage Space Overview.
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+
+
+
+	<para>
+		On this screen, you can see storage devices available locally on your computer. You can also add additional specialized or network devices by clicking the <guibutton>Add a disk</guibutton> button. To learn more about these devices see <xref linkend="sect-storage-devices-ppc"/>.
+	</para>
+
+	<para>
+		If you do not feel comfortable with partitioning your system, leave the default selection of the <guilabel>Automatically configure partitioning</guilabel> radio button to let the installation program partition the storage devices for you.
+	</para>
+
+
+	<para>
+		Below the panes for storage devices is a form of additional controls labeled <guilabel>Other Storage Options</guilabel>:
+	</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>
+				In the <guilabel>Partitioning</guilabel> section, you can select how storage devices are partitioned and how volumes are created. You can configure the partitions, manually or allow the installation program to do it automatically.
+			</para>
+
+			<para>
+				Automatic partitioning is recommended if you are doing a clean installation on previously unused storage or do not need to keep any data that might be present on the storage. To proceed this way, leave the default selection of the <guilabel>Automatically configure partitioning</guilabel> radio button, and the installation program will create the necessary partitions and volumes on the storage space for you.
+			</para>
+
+			<para>
+				For automatic partitioning, you can also select the <guilabel>I would like to make additional space available</guilabel> check box to choose how to reassign space from other file systems to this installation. After you click <guibutton>Done</guibutton>, there are two dialogs that can appear. If you selected automatic partitioning but there is not enough storage space to complete the installation using the recommended partitioning configuration, a dialog will appear:
+			</para>
+
+			<figure>
+				<title>Installation Options Dialog with Option to Reclaim Space</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/diskpartsetup/install-options-reclaim.png" format="PNG" scalefit="0"/>
+					</imageobject>
+					<textobject>
+						<para>
+							There is not enough room to install &PRODUCT;, so the Installation Options dialog asks if you want to reclaim space from other file systems.
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<para>
+				You can click to the <guilabel>&PRODUCT; software selection</guilabel> link. The link will navigate you to the <guilabel>Software selection</guilabel> section, where you can change what software you want to install, and free some aditional storage space.
+			</para>
+
+			<para>
+				Alternatively, you can click <guibutton>Cancel &amp; add more disks</guibutton> to return to the <guilabel>Installation Destination</guilabel> screen, where it is possible to add more storage devices or choose to configure partitioning manually. Click <guibutton>Reclaim space</guibutton> to free some storage space from existing file systems. See <xref linkend="sect-reclaim-disk-space-ppc"/> for details.
+			</para>
+
+			<para>
+				The second dialog appears if you cannot create enough free space. In this case, you have to add more disks on the initial storage screen or quit the installation.
+			</para>
+
+			<para>
+				If you select the <guilabel>I will configure partitioning</guilabel> radio button for manual setup, you will be brought to the <guilabel>Manual Partitioning</guilabel> screen after clicking <guibutton>Done</guibutton>. See <xref linkend="sect-custom-partitioning-ppc"/> for details.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				In the <guilabel>Encryption</guilabel> section, you can select the <guilabel>Encrypt my data</guilabel> check box to encrypt all partitions except for the <filename class="partition">/boot</filename> partition. See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security Guide</ulink> for information on encryption.
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<para>
+		At the bottom of the screen is the <guibutton>Full disk summary and bootloader</guibutton> button for you to configure a disk on which a boot loader will be installed.
+	</para>
+
+
+	<para>
+		See <xref linkend="sect-bootloader-ppc"/> for more information.
+	</para>
+
+	<para>
+		Click the <guibutton>Done</guibutton> button once you have made your selections to either return to the <guilabel>Installation Summary</guilabel> screen or to proceed to the <guilabel>Manual Partitioning</guilabel> screen.
+	</para>
+
+	<section id="sect-bootloader-ppc">
+		<title>Boot Loader Installation</title>
+
+
+		<indexterm>
+			<primary>boot loader</primary>
+		</indexterm>
+		<indexterm>
+			<primary>boot loader</primary>
+			<secondary>GRUB2</secondary>
+		</indexterm>
+		<indexterm>
+			<primary>GRUB2</primary>
+		</indexterm>
+		<indexterm>
+			<primary>installation</primary>
+			<secondary>GRUB2</secondary>
+		</indexterm>
+		<indexterm>
+			<primary>GRUB2</primary>
+			<secondary>installation</secondary>
+		</indexterm>
+		<indexterm>
+			<primary>boot loader</primary>
+			<secondary>installation</secondary>
+		</indexterm>
+		<indexterm>
+			<primary>master boot record</primary>
+		</indexterm>
+
+		<para>
+			&PRODUCT; uses GRUB2 (GRand Unified Bootloader version 2) as its boot loader. The boot loader is the first program that runs when the computer starts and is responsible for loading and transferring control to an operating system. GRUB2 can boot any compatible operating system and can also use <firstterm>chain loading</firstterm> to transfer control to other boot loaders for unsupported operating systems.
+		</para>
+
+		<warning>
+			<para>
+				Installing GRUB2 can overwrite your existing boot loader.
+			</para>
+		</warning>
+
+		<para>
+			If you have other operating systems already installed, &PRODUCT; attempts to automatically detect and configure GRUB2 to boot them. You can manually configure any additional operating systems if they are not detected properly.
+		</para>
+
+		<para>
+			To specify which device the boot loader should be installed on, click the <guilabel>Full disk summary and bootloader</guilabel> link at the bottom of the <guilabel>Installation Destination</guilabel> screen. The <guilabel>Selected Disks</guilabel> dialog will appear. If you are partitioning the drive manually, this dialog can be reached by clicking <guilabel>Storage device/s selected</guilabel> on the <guilabel>Manual Partitioning</guilabel> screen.
+		</para>
+
+
+		<figure>
+			<title>Summary of Selected Disks</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/bootloader/ppc-bootloader.png" format="PNG" scalefit="0"/>
+				</imageobject>
+				<textobject>
+					<para>
+						Summary of Selected Disks
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+
+		<para>
+			In the <guilabel>Boot</guilabel> column, a green tick icon marks one of the devices as the intended boot device. To change the boot device, select a device from the list and click the <guibutton>Set as Boot Device</guibutton> button to install the boot loader there instead.
+		</para>
+
+		<para>
+			To decline installation of a new boot loader, select the marked device and click the <guibutton>Do not install bootloader</guibutton> button. This will remove the tick and ensure GRUB2 is not installed on any device.
+		</para>
+
+		<warning>
+			<para>
+				If you choose not to install a boot loader for any reason, you will not be able to boot the system directly, and you must use another boot method, such as a commercial boot loader application. Use this option only if you are sure you have another way to boot your system.
+			</para>
+		</warning>
+
+	</section>
+
+	<section id="sect-encrypt-partitions-ppc">
+		<title>Encrypt Partitions</title>
+
+		<para>
+			If you selected the <guilabel>Encrypt my data</guilabel> option, when you click to proceed to the next screen the installation program will prompt you for a passphrase with which to encrypt the partitions on the system.
+		</para>
+
+		<para>
+			Partitions are encrypted using the <firstterm>Linux Unified Key Setup</firstterm> - see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security Guide</ulink> for more information.
+		</para>
+
+		<figure>
+			<title>Enter Passphrase for an Encrypted Partition </title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/encrypt/passphrase.png" format="PNG" scalefit="0"/>
+				</imageobject>
+				<textobject>
+					<para>
+						The dialog contains text boxes to enter a passphrase and to confirm it.
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			Choose a passphrase and type it into each of the two fields in the dialog box. Note that you need to use the same keyboard layout for setting up this passphrase that you will use to unlock partitions later. Use the language layout icon to ensure the correct layout is selected. You must provide this passphrase every time that the system boots. Press <keycap>Tab</keycap> while in the <guilabel>Passphrase</guilabel> input field to retype it. If the passphrase is too weak, a warning icon appears in the field and you will not be allowed to type in the second field. Hover your mouse cursor over the warning icon to learn how to improve the passphrase.
+		</para>
+
+		<warning>
+			<para>
+				If you lose this passphrase, any encrypted partitions and the data on them will become completely inaccessible. There is no way to recover a lost passphrase.
+			</para>
+			<para>
+				Note that if you perform a Kickstart installation, you can save encryption passphrases and create backup encryption passphrases during installation. See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security Guide</ulink> for more information about disk encryption.
+			</para>
+		</warning>
+
+	</section>
+
+	<section id="sect-reclaim-disk-space-ppc">
+		<title>Reclaim Disk Space</title>
+
+		<para>
+			If there is insufficient space to install &PRODUCT; on the disks selected in <guilabel>Installation Destination</guilabel> and you selected <guibutton>Reclaim Space</guibutton> at the <guilabel>Installation Options</guilabel> dialog, the <guilabel>Reclaim Disk Space</guilabel> dialog appears.
+		</para>
+
+		<warning>
+			<para>
+				Unless you select to shrink a partition, reclaiming space on a partition involves deleting all the data on it and you should always verify that any data you need to keep was backed up.
+			</para>
+		</warning>
+
+		<figure>
+			<title>Reclaim Disk Space from Existing File Systems</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/diskpartsetup/reclaim-space-ppc.png" format="PNG" scalefit="0"/>
+				</imageobject>
+				<textobject>
+					<para>
+						This dialog allows you to preserve, shrink, or delete existing file systems to generate necessary space for the installation.
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			The existing file systems &PRODUCT; has detected are listed in a table as part of their respective disks. The <guilabel>Reclaimable Space</guilabel> column lists the space that could be reassigned to this installation. The <guilabel>Action</guilabel> column lists what action will be taken with the file system to reclaim space.
+		</para>
+
+		<para>
+			Beneath the table are four buttons:
+		</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<guibutton>Preserve</guibutton> - leaves the file system untouched and no data will be deleted. This is the default action.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<guibutton>Delete</guibutton> - removes the file system entirely. All the space it takes up on the disk will be made available for the installation.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<guibutton>Shrink</guibutton> - recovers free space from the file system and makes it available for this installation. Use the slider to set a new size for the selected partition. Can only be used on resizable partitions where LVM or RAID is not used.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<guibutton>Delete all/Preserve all</guibutton> - this button, located on the right, marks all file systems for deletion by default. Upon clicking, it changes the label and allows you to mark all file systems to be preserved again.
+				</para>
+			</listitem>
+		</itemizedlist>
+
+		<para>
+			Select a file system or a whole disk in the table with your mouse and click one of the buttons. The label in the <guilabel>Action</guilabel> column will change to match your selection and the amount of <guilabel>Total selected space to reclaim</guilabel> displayed beneath the table will adjust accordingly. Beneath this value is the amount of space the installation requires based on the packages you have selected to install.
+		</para>
+
+		<para>
+			When enough space has been reclaimed for the installation to proceed, the <guibutton>Reclaim Space</guibutton> button will become available. Click this button to return to the Installation Summary screen and proceed with the installation.
+		</para>
+
+	</section>
+
+	<xi:include href="CustomSpoke-ppc64.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</section>

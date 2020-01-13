@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<appendix id="appe-Publican-Revision_History">
+	<title>Revision History</title>
+	<para>
+		Note that revision numbers relate to the edition of this manual, not to version numbers of &PRODUCT;.
+	</para>
+	<simpara>
+		<revhistory>
+			<revision>
+				<revnumber>1.4-0</revnumber>
+				<date>Tue Aug 1 2017</date>
+				<author>
+					<firstname>Petr</firstname>
+					<surname>Bokoč</surname>
+					<email>pbokoc@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Preparing document for 7.4 GA publication.</member>
+					</simplelist>
+				</revdescription>
+			</revision>
+			<revision>
+				<revnumber>1.3-9</revnumber>
+				<date>Mon May 15 2017</date>
+				<author>
+					<firstname>Petr</firstname>
+					<surname>Bokoč</surname>
+					<email>pbokoc@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Preparing document for 7.4 Beta publication.</member>
+					</simplelist>
+				</revdescription>
+			</revision>
+			<revision>
+				<revnumber>1.3-8</revnumber>
+				<date>Tue Apr 4 2017</date>
+				<author>
+					<firstname>Petr</firstname>
+					<surname>Bokoč</surname>
+					<email>pbokoc@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Asynchronous update.</member>
+
+					</simplelist>
+
+				</revdescription>
+
+			</revision>
+			<revision>
+				<revnumber>1.3-7</revnumber>
+				<date>Sun Nov 6 2016</date>
+				<author>
+					<firstname>Robert</firstname>
+					<surname>Kratky</surname>
+					<email>rkratky@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Version for 7.3 GA publication.</member>
+
+					</simplelist>
+
+				</revdescription>
+
+			</revision>
+			<revision>
+				<revnumber>1.3-4</revnumber>
+				<date>Mon Nov 16 2015</date>
+				<author>
+					<firstname>Petr</firstname>
+					<surname>Bokoč</surname>
+					<email>pbokoc@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Version for 7.2 GA publication.</member>
+
+					</simplelist>
+
+				</revdescription>
+
+			</revision>
+			<revision>
+				<revnumber>1.2-2</revnumber>
+				<date>Wed Feb 18 2015</date>
+				<author>
+					<firstname>Petr</firstname>
+					<surname>Bokoč</surname>
+					<email>pbokoc@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Version for 7.1 GA publication.</member>
+
+					</simplelist>
+
+				</revdescription>
+
+			</revision>
+			<revision>
+				<revnumber>1.0-0</revnumber>
+				<date>Tue Jun 03 2014</date>
+				<author>
+					<firstname>Petr</firstname>
+					<surname>Bokoč</surname>
+					<email>pbokoc@redhat.com</email>
+				</author>
+				<revdescription>
+					<simplelist>
+						<member>Version for 7.0 GA publication.</member>
+
+					</simplelist>
+
+				</revdescription>
+
+			</revision>
+
+		</revhistory>
+
+	</simpara>
+</appendix>

@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-simple-install">
+	<title>Quick Installation Guide</title>
+
+	<section id="sect-simple-install">
+		<title>Interactive Installation</title>
+		<para>
+			This section describes the simple procedure to install and register &PRODUCT; after you have created and booted from an installation USB drive.
+		</para>
+		<para>
+			Prerequisites: Create an installation USB drive and boot it. For details, see:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<xref linkend="chap-making-media" />.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<xref linkend="chap-booting-installer-x86" />.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			After booting the installation USB drive:
+		</para>
+		<procedure id="proc-simple-install">
+			<step>
+				<para>
+					Select <guilabel>Install &PRODUCT;</guilabel> in the boot menu and press <keycap>Enter</keycap>.
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/boot/boot_screen.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+			</step>
+			<step>
+				<para>
+					After <application>Anaconda</application>, the &PRODUCT; installer, started, select your language and region, and click <guilabel>Continue</guilabel>.
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/langselection/langselection-GUI.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+			</step>
+			<step>
+				<para>
+					The <guilabel>Installation Summary</guilabel> is the central screen to set configuration options:
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/preinstallhub/preinstall_hub.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+				<para>
+					You can display and modify the individual options in any order. If a configuration option was automatically configured correctly, no further action is required. However, if items are marked with an exclamation point icon, you must complete the configuration for these items before you can begin the installation.
+				</para>
+				<note>
+					<para>
+						Nothing will be written to the disk until you click the <guibutton>Begin Installation</guibutton> button.
+					</para>
+				</note>
+			</step>
+			<step>
+				<para>
+					Select <guilabel>Date &amp; Time</guilabel>:
+				</para>
+				<substeps>
+					<step>
+						<para>
+							Set your region and the nearest city in your time zone.
+						</para>
+					</step>
+					<step>
+						<para>
+							Click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel>.
+						</para>
+					</step>
+				</substeps>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/timezone/timezone.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+			</step>
+			<step>
+				<para>
+					Select <guibutton>Keyboard Layout</guibutton>:
+				</para>
+				<substeps>
+					<step>
+						<para>
+							Use the <guibutton>+</guibutton> and <guibutton>-</guibutton> buttons to add and remove keyboard layouts.
+						</para>
+					</step>
+					<step>
+						<para>
+							If you enable multiple keyboard layouts, move your preferred layout to the top of the list using the <guibutton>&uarr;</guibutton> button to set it as default.
+						</para>
+					</step>
+					<step>
+						<para>
+							Click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel>.
+						</para>
+					</step>
+				</substeps>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/kbdconfig/keyboard.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+			</step>
+			<step>
+				<para>
+					Select <guilabel>Installation Destination</guilabel>:
+				</para>
+				<substeps>
+					<step>
+						<para>
+							Select the target disk. A check mark is displayed next to the selected target.
+						</para>
+						<para>
+							The selected disk is partitioned automatically.
+						</para>
+					</step>
+					<step>
+						<para>
+							Click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel>.
+						</para>
+					</step>
+				</substeps>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/diskpartsetup/disk-setup-x86.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+			</step>
+			<step>
+				<para>
+					Select <guilabel>Network and Hostname</guilabel>:
+				</para>
+				<substeps>
+					<step>
+						<para>
+							Click the <guilabel>Ethernet</guilabel> sliding switch in the top right corner to enable the network configuration.
+						</para>
+					</step>
+					<step>
+						<para>
+							Optional, select the device and click <guibutton>Configure</guibutton> to update the network interface configuration.
+						</para>
+					</step>
+					<step>
+						<para>
+							Click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel>.
+						</para>
+					</step>
+				</substeps>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/netconfig/networkconfig.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+				<note>
+					<para>
+						<application>Anaconda</application> applies the network settings immediately. They are used during the setup and after the installation.
+					</para>
+				</note>
+			</step>
+			<step>
+				<para>
+					On the <guilabel>Installation Summary</guilabel> screen, click <guibutton>Begin Installation</guibutton>.
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/diskpartitioning/write_changes.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+			</step>
+			<step>
+				<para>
+					The installation starts and the <guilabel>Configuration</guilabel> screen is displayed:
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/pkgselection/installing-packages.png" format="PNG" scalefit="0" />
+					</imageobject>
+				</mediaobject>
+				<para>
+					During the installation:
+				</para>
+				<substeps>
+					<step>
+						<para>
+							Select <guilabel>Root Password</guilabel>:
+						</para>
+						<substeps>
+							<step>
+								<para>
+									Enter the password for the <systemitem>root</systemitem> user and confirm it.
+								</para>
+							</step>
+							<step>
+								<para>
+									Click <guibutton>Done</guibutton> to return to the <guilabel>Configuration</guilabel> screen.
+								</para>
+							</step>
+						</substeps>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/accountconfig/rootpassword.png" format="PNG" scalefit="0" />
+							</imageobject>
+						</mediaobject>
+					</step>
+					<step>
+						<para>
+							Select <guilabel>User Creation</guilabel>:
+						</para>
+						<substeps>
+							<step>
+								<para>
+									Enter the user's full name.
+								</para>
+							</step>
+							<step>
+								<para>
+									Optionally, update the automatically generated user name.
+								</para>
+							</step>
+							<step>
+								<para>
+									Set the password and confirm it.
+								</para>
+							</step>
+							<step>
+								<para>
+									Optionally, check the <guilabel>Make this user administrator</guilabel> check box. This will add the user to the <systemitem>wheel</systemitem> group and allow this account to use <command>sudo</command> without any further configuration.
+								</para>
+							</step>
+							<step>
+								<para>
+									Click <guibutton>Done</guibutton> to return to the <guilabel>Configuration</guilabel> screen.
+								</para>
+							</step>
+						</substeps>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/accountconfig/createuser.png" format="PNG" scalefit="0" />
+							</imageobject>
+						</mediaobject>
+					</step>
+					<step>
+						<para>
+							Wait until the installation completes and click <guibutton>Reboot</guibutton>.
+						</para>
+					</step>
+				</substeps>
+			</step>
+			<step>
+				<para>
+					After the installed system has been started:
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							If you installed the server using the <guilabel>Server with GUI</guilabel> base environment, the <application>Initial Setup</application> application is started automatically:
+						</para>
+						<procedure>
+							<step>
+								<para>
+									Accept the license agreement.
+								</para>
+							</step>
+							<step>
+								<para>
+									Register the system.
+								</para>
+							</step>
+						</procedure>
+						<para>
+							For details, see <xref linkend="chap-initial-setup" />.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							If you selected any other base environment during the installation:
+						</para>
+						<procedure>
+							<step>
+								<para>
+									Log into the system as the <systemitem>root</systemitem> user.
+								</para>
+							</step>
+							<step>
+								<para>
+									Register the system and automatically attach a subscription:
+								</para>
+<screen># subscription-manager register --auto-attach \
+--username=<replaceable>user_name</replaceable> --password=<replaceable>password</replaceable></screen>
+								</step>
+							</procedure>
+						</listitem>
+					</itemizedlist>
+				</step>
+			</procedure>
+		</section>
+
+		<section id="sect-simple-install-kickstart">
+			<title>Automatic Installation</title>
+			<para>
+				This section describes a simple procedure on how to add a Kickstart file to the installation USB drive, which automatically installs and registers &PRODUCT;. You can use this procedure to deploy &PRODUCT; on multiple machines.
+			</para>
+
+			<bridgehead renderas="sect3" id="bridgehead.gen-usb-media">Generating the USB Boot Media</bridgehead>
+			<procedure id="proc-simple-gen-kickstart-iso">
+				<step>
+					<para>
+						Record an installation in a Kickstart file:
+					</para>
+					<substeps>
+						<step>
+							<para>
+								Manually install &PRODUCT; once. For details see <xref linkend="sect-simple-install" />.
+							</para>
+						</step>
+						<step>
+							<para>
+								Boot the installed system. During the installation, <application>Anaconda</application> created a Kickstart file with the settings in the <filename>/root/anaconda-ks.cfg</filename> file.
+							</para>
+						</step>
+					</substeps>
+				</step>
+				<step>
+					<para>
+						Download the &PRODUCT; installation DVD ISO file to the <filename>/tmp/</filename> directory.
+					</para>
+				</step>
+				<step>
+					<para>
+						Mount the installation ISO file to the <filename>/mnt/</filename> directory. For example:
+					</para>
+<screen># mount -o loop /tmp/rhel-server-7.3-x86_64-dvd.iso /mnt/</screen>
+				</step>
+				<step>
+					<para>
+						Create a working directory and copy the DVD content to it. For example:
+					</para>
+<screen># mkdir /root/rhel-install/
+# shopt -s dotglob
+# cp -avRf /mnt/* /root/rhel-install/</screen>
+					</step>
+					<step>
+						<para>
+							Unmount the ISO file:
+						</para>
+<screen># umount /mnt/</screen>
+					</step>
+					<step>
+						<para>
+							Copy the Kickstart file generated during the installation to the working directory:
+						</para>
+<screen># cp /root/anaconda-ks.cfg /root/rhel-install/</screen>
+					</step>
+					<step>
+						<para>
+							To register &PRODUCT; after the installation automatically and attach a subscription, append the following to the <filename>/root/rhel-install/anaconda-ks.cfg</filename> file:
+						</para>
+<screen>%post
+subscription-manager register --auto-attach --username=<replaceable>user_name</replaceable> --password=<replaceable>password</replaceable>
+%end</screen>
+						</step>
+						<step>
+							<para>
+								Display the installation DVD volume name:
+							</para>
+<screen># isoinfo -d -i rhel-server-7.3-x86_64-dvd.iso | grep "Volume id" | \
+sed -e 's/Volume id: //' -e 's/ /\\x20/g'
+<computeroutput>RHEL-7.3\x20Server.x86_64</computeroutput></screen>
+							</step>
+							<step>
+								<para>
+									Add a new menu entry to the boot <filename>/root/rhel-install/isolinux/isolinux.cfg</filename> file that uses the Kickstart file. For example:
+								</para>
+<screen>#######################################
+label kickstart
+menu label ^Kickstart Installation of RHEL7.3
+kernel vmlinuz
+append initrd=initrd.img inst.stage2=hd:LABEL=RHEL-7.3\x20Server.x86_64 inst.ks=cdrom:/anaconda-ks.cfg
+#######################################</screen>
+									<note>
+										<para>
+											Set the <option>inst.stage2=hd:LABEL=</option> option to the DVD volume name retrieved in the previous step.
+										</para>
+									</note>
+								</step>
+								<step>
+									<para>
+										Create the <filename>/root/rhel-ks.iso</filename> file from the working directory:
+									</para>
+<screen># mkisofs -J -T -o /root/rhel-ks.iso -b isolinux/isolinux.bin \
+-c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table \
+-R -m TRANS.TBL -graft-points -V "RHEL-7.3 Server.x86_64" \
+/root/rhel-install/</screen>
+										<note>
+											<para>
+												Set the <option>-V</option> option to the DVD volume name retrieved in an earlier step and replace <literal>\x20</literal> in the string with a space.
+											</para>
+										</note>
+									</step>
+									<step>
+										<para>
+											Create an installation USB drive. For details, see <xref linkend="sect-making-usb-media-linux" />.
+										</para>
+									</step>
+								</procedure>
+
+								<bridgehead renderas="sect3">Install &PRODUCT; Using the Kickstart File</bridgehead>
+								<procedure>
+									<step>
+										<para>
+											Boot the installation USB drive. See <xref linkend="chap-booting-installer-x86" />.
+										</para>
+									</step>
+									<step>
+										<para>
+											Select the entry, that contains the Kickstart configuration, you created in <xref linkend="bridgehead.gen-usb-media" />.
+										</para>
+									</step>
+								</procedure>
+							</section>
+
+						</chapter>

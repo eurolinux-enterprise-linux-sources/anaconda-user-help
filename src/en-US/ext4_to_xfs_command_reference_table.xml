@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<appendix id="appe-ext4-to-xfs-command-reference">
+  <title>Reference Table for ext4 and XFS Commands</title>
+  <para>
+    XFS replaces ext4 as the default file system in &PRODUCT;&nbsp;7. This table serves as a cross reference listing common file system manipulation tasks and any changes in these commands between ext4 and XFS.
+  </para>
+  <table id="tabl-xt4-to-xfs-command-reference">
+    <title>Reference Table for ext4 and XFS Commands</title>
+    <tgroup cols="3">
+      <colspec colnum="1" colwidth="2*" />
+      <colspec colnum="2" colwidth="1*" />
+      <colspec colnum="3" colwidth="1*" />
+      <thead>
+        <row>
+          <entry>
+            Task
+          </entry>
+          <entry>
+            ext4
+          </entry>
+          <entry>
+            XFS
+          </entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>
+            Creating a file system
+          </entry>
+          <entry>
+            <command>mkfs.ext4</command>
+          </entry>
+          <entry>
+            <command>mkfs.xfs</command>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Mounting a file system
+          </entry>
+          <entry>
+            <command>mount</command>
+          </entry>
+          <entry>
+            <command>mount</command>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Resizing a file system
+          </entry>
+          <entry>
+            <command>resize2fs</command>
+          </entry>
+          <entry>
+            <command>xfs_growfs</command>
+            <footnote>
+              <para>
+                The size of XFS file systems cannot be reduced; the command is used only to increase the size.
+              </para>
+            </footnote>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Repairing a file system
+          </entry>
+          <entry>
+            <command>e2fsck</command>
+          </entry>
+          <entry>
+            <command>xfs_repair</command>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Changing the label on a file system
+          </entry>
+          <entry>
+            <command>e2label</command>
+          </entry>
+          <entry>
+            <command>xfs_admin -L</command>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Reporting on disk space and file usage
+          </entry>
+          <entry>
+            <command>quota</command>
+          </entry>
+          <entry>
+            <command>quota</command>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Debugging a file system
+          </entry>
+          <entry>
+            <command>debugfs</command>
+          </entry>
+          <entry>
+            <command>xfs_db</command>
+          </entry>
+        </row>
+        <row>
+          <entry>
+            Saving critical file system metadata to a file
+          </entry>
+          <entry>
+            <command>e2image</command>
+          </entry>
+          <entry>
+            <command>xfs_metadump</command>
+          </entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </table>
+</appendix>

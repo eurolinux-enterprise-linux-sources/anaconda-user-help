@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-keyboard-configuration-ppc">
+	<title>Keyboard Configuration</title>
+
+
+	<indexterm>
+		<primary>keymap</primary>
+		<secondary>selecting type of keyboard</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>keyboard</primary>
+		<secondary>configuration</secondary>
+	</indexterm>
+
+
+	<para>
+		To add multiple keyboard layouts to your system, select <guilabel>Keyboard</guilabel> from the <guilabel>Installation Summary</guilabel> screen. Upon saving, the keyboard layouts are immediately available in the installation program and you can switch between them by using the keyboard icon located at all times in the upper right corner of the screen.
+	</para>
+
+	<para>
+		Initially, only the language you selected in the welcome screen is listed as the keyboard layout in the left pane. You can either replace the initial layout or add more layouts. However, if your language does not use ASCII characters, you might need to add a keyboard layout that does, to be able to properly set a password for an encrypted disk partition or the root user, among other things.
+	</para>
+
+	<figure>
+		<title>Keyboard Configuration</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/kbdconfig/keyboard.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Keyboard layout configuration screen
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<para>
+		To add an additional layout, click the <guibutton>+</guibutton> button, select it from the list, and click <guibutton>Add</guibutton>. To delete a layout, select it and click the <guibutton>-</guibutton> button. Use the arrow buttons to arrange the layouts in order of preference. For a visual preview of the keyboard layout, select it and click the keyboard button.
+	</para>
+
+	<para>
+		To test a layout, use the mouse to click inside the text box on the right. Type some text to confirm that your selection functions correctly.
+	</para>
+
+	<para>
+		To test additional layouts, you can click the language selector at the top on the screen to switch them. However, it is recommended to set up a keyboard combination for switching layout. Click the <guibutton>Options</guibutton> button at the right to open the <guilabel>Layout Switching Options</guilabel> dialog and choose a combination from the list by selecting its check box. The combination will then be displayed above the <guibutton>Options</guibutton> button. This combination applies both during the installation and on the installed system, so you must configure a combination here in order to use one after installation. You can also select more than one combination to switch between layouts.
+	</para>
+
+	<important>
+		<para>
+			If you use a layout that cannot accept Latin characters, such as <guilabel>Russian</guilabel>, Red&nbsp;Hat recommends additionally adding the <guilabel>English (United States)</guilabel> layout and configuring a keyboard combination to switch between the two layouts. If you only select a layout without Latin characters, you might be unable to enter a valid root password and user credentials later in the installation process. This can prevent you from completing the installation.
+		</para>
+	</important>
+
+
+	<para>
+		Once you have made your selection, click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+
+	<note>
+		<para>
+			To change your keyboard configuration after you have completed the installation, visit the <application>Keyboard</application> section of the <application>Settings</application> dialogue window.
+		</para>
+	</note>
+
+</section>

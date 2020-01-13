@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-initial-setup-text">
+	<title>Text Mode</title>
+	<para>
+		If you installed &PRODUCT; without the <application>X Window System</application>, the <application>Initial Setup</application> starts in text mode:
+	</para>
+	<figure>
+		<title><application>Initial Setup</application> in text mode</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/initial-setup/is-tui.png" />
+			</imageobject>
+		</mediaobject>
+	</figure>
+	<para>
+		To configure an entry, enter the menu number and press <keycap function="enter">Enter</keycap>. Additionally, you can press the following keys:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				<keycap>q</keycap> to close the application. Until you accepted the license agreement, closing the application causes the system to reboot.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<keycap>c</keycap> to continue. Pressing this key in a submenu returns you to the main menu. In the main menu, pressing the <keycap>c</keycap> key stores the settings and closes the application. Note that you cannot continue without accepting the license agreement.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<keycap>r</keycap> to refresh the menu.
+			</para>
+		</listitem>
+	</itemizedlist>
+	<para>
+		Menu entries can have different statuses:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				<option>[x]</option>: This setting is already configured. However, you can change the setting.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<option>[!]</option>: This setting is mandatory but not yet set.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<option>[&nbsp;]</option>: This setting is optional and not yet set.
+			</para>
+		</listitem>
+	</itemizedlist>
+	<para>
+		To start the <application>Initial Setup</application> again, see <xref linkend="starting_initial_setup_manually" />.
+	</para>
+</section>

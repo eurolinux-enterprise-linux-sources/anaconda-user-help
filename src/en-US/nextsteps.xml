@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-next-steps">
+  <title>Your Next Steps</title>
+  <para>
+    This chapter lists common steps that might be required after installation. Not all steps listed here are always necessary. You can use this list to find other manuals, describing how to perform the tasks you need.
+  </para>
+  <variablelist>
+    <varlistentry>
+      <term>Find help, answers, and utilize diagnostic services</term>
+      <listitem>
+        <para>
+          <application>Red&nbsp;Hat Access</application> is a GUI application which allows you to conveniently access Red&nbsp;Hat knowledge and solutions. It can be used to search for error codes, messages, or any topic of interest, and view related knowledge from the Red&nbsp;Hat Customer Portal. More information about <application>Red&nbsp;Hat Access</application> can be found in the <ulink url="https://access.redhat.com/articles/535483">Red&nbsp;Hat Access GUI</ulink> article on the Red&nbsp;Hat Customer Portal.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Recover a lost root password</term>
+      <listitem>
+        <para>
+          The root password, which is configured during the installation, is required for accessing the system as the root user. Without the root password you will not be able to configure your system or install additional software. If you lost or forgot your root password, you can reset it by following the steps described in <xref linkend="sect-rescue-mode-reset-root-password" />.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Install driver updates</term>
+      <listitem>
+        <para>
+          Usually, drivers for system devices are already supported in the kernel provided by &PRODUCT;. However, occasionally, support for devices that have been released recently can be missing. In these cases, a driver update enabling your device might be available.
+        </para>
+        <para>
+          Devices necessary to complete the installation can have driver updates provided before the installation begins. If a device is missing a driver, but it is not essential during the installation, it is recommended to wait until after the installation completes, and install additional drivers afterwards. For instructions on installing and enabling additional drivers on the installed system using <application>RPM</application> and <application>Yum</application>, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Configure the network</term>
+      <listitem>
+        <para>
+          In most cases network access is configured during the installation process, either in the installation program or in a Kickstart file. For information on configuring the network after the installation, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Networking_Guide/index.html">
+          Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Networking Guide</ulink>.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Set up <application>Kdump</application></term>
+      <listitem>
+        <para>
+          <application>Kdump</application> is a kernel crash dumping mechanism. If your system encounters a significant error, <application>Kdump</application> can save the contents of the system's memory into a <firstterm>kernel crash dump</firstterm>, which can then be analyzed to find the cause of the error.
+        </para>
+        <para>
+          <application>Kdump</application> can be enabled during the installation process (see <xref linkend="sect-kdump-x86" />). It can also be configured at any time afterwards. <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Kernel_Crash_Dump_Guide/index.html">
+          Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Kernel Crash Dump Guide</ulink> provides all information necessary to understand how <application>Kdump</application> works and how to configure it on your system.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Register the system</term>
+      <listitem>
+        <para>
+          The products installed on a system (including the operating system itself) are covered by subscriptions. A subscription service is used to track registered systems, the products installed on those systems, and the subscriptions attached to those products. Registration is a part of the <application>Initial Setup</application> configuration process (see <xref linkend="sect-initial-setup-subsciption-manager" />).
+        </para>
+        <para>
+          However, if you have not registered your system during <application>Initial Setup</application>, you can register it afterwards. See <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Subscription_Management/1/html/RHSM/index.html">
+          Using and Configuring Red&nbsp;Hat Subscription&nbsp;Manager</ulink> and <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Satellite/6.1/html/User_Guide/index.html">
+          Red&nbsp;Hat Satellite User Guide</ulink> for more information.
+        </para>
+        <note>
+          <para>
+            You can also use the <ulink url="https://access.redhat.com/labs/registrationassistant/">Registration Assistant</ulink> application to guide you through the registration process.
+          </para>
+        </note>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Automate the initial configuration of cloud instances using cloud-init</term>
+      <listitem>
+        <para>
+          For the initial configuration of cloud instances, you can use the <package>cloud-init</package> package. On a new cloud instance, <application>cloud-init</application> can automatically:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              set the default locale
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              configure the host name
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              configure network interfaces
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              generate private SSH keys
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              add SSH keys to the user's <filename>.ssh/authorized_keys</filename> file
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              set up ephemeral mount points
+            </para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          <application>Cloud-init</application> is used with Red&nbsp;Hat's cloud products. See documentation on using <application>cloud-init</application> with Red&nbsp;Hat products:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              Red&nbsp;Hat Enterprise&nbsp;Linux Atomic&nbsp;Host&nbsp;7 <ulink url="https://access.redhat.com/documentation/en/red-hat-enterprise-linux-atomic-host/7/single/installation-and-configuration-guide/#setting_up_cloud_init">Installation and Configuration Guide</ulink>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Red&nbsp;Hat OpenStack&nbsp;Platform&nbsp;8 <ulink url="https://access.redhat.com/documentation/en/red-hat-openstack-platform/8/single/instances-and-images-guide/">Instances and Images Guide</ulink>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Red&nbsp;Hat Enterprise&nbsp;Virtualization <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.6/html/Virtual_Machine_Management_Guide/sect-Using_Cloud-Init_to_Automate_the_Configuration_of_Virtual_Machines.html">Virtual Machine Management Guide</ulink>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Red&nbsp;Hat CloudForms <ulink url="https://access.redhat.com/documentation/en/red-hat-cloudforms/4.1/provisioning-virtual-machines-and-hosts/chapter-2-provisioning-requests">Provisioning Virtual Machines and Hosts Guide</ulink>
+            </para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          See also <ulink url="http://cloudinit.readthedocs.io/en/latest/index.html">upstream cloud-init documentation</ulink>
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Perform an initial system update</term>
+      <listitem>
+        <para>
+          After the installation is complete, Red&nbsp;Hat recommends that you perform an initial system update. During this process, all installed packages are updated to their latest available versions. Updates to packages provide security fixes, bug fixes and enhancements.
+        </para>
+        <para>
+          In &PRODUCT;, the <application>Yum</application> package manager is used for updating the installed packages. For more information about updating your system with <application>Yum</application>, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Configure additional repositories</term>
+      <listitem>
+        <para>
+          New software is installed from <firstterm>package repositories</firstterm>. Package repositories are organized sets of software and metadata that can be accessed by the <application>Yum</application> package manager. If you registered your system with Red&nbsp;Hat, update repositories are configured automatically and you can install updates and additional software from those. However, if you want to set up additional repositories, for example containing your own software, some extra steps are needed.
+        </para>
+        <para>
+          For information about configuring additional software repositories, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Install additional packages</term>
+      <listitem>
+        <para>
+          You can control which packages will be installed by selecting an environment in the <systemitem>Software Selection</systemitem> dialog in the graphical installation. This dialog does not provide a way to choose individual packages, only predefined sets. However, you can use the <application>Yum</application> packages manager to install additional packages after the installation. See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink> for more information.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Switch to a graphical login</term>
+      <listitem>
+        <para>
+          Depending on the options you chose during the installation process, it is possible that your system does not have a graphical interface, instead offering only a text-based prompt. If this is the case and you want to enable a graphical desktop after the installation, you must install the <application>X Window System</application> and your preferred desktop environment (either <application>GNOME</application> or <application>KDE</application>).
+        </para>
+        <para>
+          As with all other software, these packages can be installed using the <application>Yum</application> package manager. For information about using <application>Yum</application> to install new packages, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>. For information on how to enable graphical login by default, see <xref linkend="sect-trouble-after-graphical-login-x86" />.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Enable or disable <application>GNOME</application> 3 extensions</term>
+      <listitem>
+        <para>
+          The default desktop environment in &PRODUCT;&nbsp;7 is <application>GNOME</application> 3 which provides <application>GNOME Shell</application> and <application>GNOME Classic</application> user interfaces. It is possible to customize these interfaces by enabling and disabling <application>GNOME</application> 3 extensions. See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Desktop_Migration_and_Administration_Guide/index.html">
+          Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Desktop Migration and Administration Guide</ulink> for more information.
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</chapter>

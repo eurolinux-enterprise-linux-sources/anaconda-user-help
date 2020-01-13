@@ -1,0 +1,1280 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-post-installation-configuration-s390">
+	<title>Configuring an Installed Linux on IBM System&nbsp;z Instance</title>
+	<para>
+		For more information about Linux on System&nbsp;z, see the publications listed in <xref linkend="chap-additional-references-s390" />. Some of the most common tasks are described here.
+	</para>
+	<section id="sect-post-installation-adding-dasds-s390">
+		<title>Adding DASDs</title>
+		<para>
+			DASDs (<firstterm>Direct Access Storage Devices</firstterm>) are a type of storage commonly used with IBM System&nbsp;z. Additional information about working with these storage devices can be found at the IBM Knowledge&nbsp;Center at <ulink url="http://www-01.ibm.com/support/knowledgecenter/linuxonibm/com.ibm.linux.z.lgdd/lgdd_t_dasd_wrk.html" />.
+		</para>
+		<para>
+			The following is an example of how to set a DASD online, format it, and make the change persistent.
+		</para>
+		<note>
+			<para>
+				Make sure the device is attached or linked to the Linux system if running under z/VM.
+			</para>
+
+<screen><command>CP ATTACH EB1C TO *</command></screen>
+			<para>
+				To link a mini disk to which you have access, issue, for example:
+			</para>
+
+<screen><command>CP LINK RHEL7X 4B2E 4B2E MR</command>
+<command>DASD 4B2E LINKED R/W</command></screen>
+			<para>
+				See <citetitle>z/VM: CP Commands and Utilities Reference, SC24-6175</citetitle> for details about the commands.
+			</para>
+
+		</note>
+		<section id="sect-post-installation-adding-dasds-setting-online-s390">
+			<title>Dynamically Setting DASDs Online</title>
+			<para>
+				To set a DASD online, follow these steps:
+			</para>
+			<procedure>
+				<step>
+					<para>
+						Use the <command>cio_ignore</command> utility to remove the DASD from the list of ignored devices and make it visible to Linux:
+					</para>
+
+<screen><command># cio_ignore -r <replaceable>device_number</replaceable></command></screen>
+					<para>
+						Replace <replaceable>device_number</replaceable> with the device number of the DASD. For example:
+					</para>
+
+<screen><command># cio_ignore -r 4b2e</command></screen>
+
+				</step>
+				<step>
+					<para>
+						Set the device online. Use a command of the following form:
+					</para>
+
+<screen><command># chccwdev -e <replaceable>device_number</replaceable></command></screen>
+					<para>
+						Replace <replaceable>device_number</replaceable> with the device number of the DASD. For example:
+					</para>
+
+<screen><command># chccwdev -e 4b2e</command></screen>
+					<para>
+						As an alternative, you can set the device online using sysfs attributes:
+					</para>
+					<procedure>
+						<step>
+							<para>
+								Use the <command>cd</command> command to change to the /sys/ directory that represents that volume:
+							</para>
+
+<screen><prompt>#</prompt> <command>cd /sys/bus/ccw/drivers/dasd-eckd/0.0.4b2e/</command>
+<prompt>#</prompt> <command>ls -l</command>
+total 0
+-r--r--r--  1 root root 4096 Aug 25 17:04 availability
+-rw-r--r--  1 root root 4096 Aug 25 17:04 cmb_enable
+-r--r--r--  1 root root 4096 Aug 25 17:04 cutype
+-rw-r--r--  1 root root 4096 Aug 25 17:04 detach_state
+-r--r--r--  1 root root 4096 Aug 25 17:04 devtype
+-r--r--r--  1 root root 4096 Aug 25 17:04 discipline
+-rw-r--r--  1 root root 4096 Aug 25 17:04 online
+-rw-r--r--  1 root root 4096 Aug 25 17:04 readonly
+-rw-r--r--  1 root root 4096 Aug 25 17:04 use_diag</screen>
+
+						</step>
+						<step>
+							<para>
+								Check to see if the device is already online:
+							</para>
+
+<screen><prompt>#</prompt> <command>cat online</command>
+0</screen>
+
+						</step>
+						<step>
+							<para>
+								If it is not online, enter the following command to bring it online:
+							</para>
+
+<screen><prompt>#</prompt> <command>echo 1 &gt; online</command>
+<prompt>#</prompt> <command>cat online</command>
+1</screen>
+
+						</step>
+
+					</procedure>
+
+
+				</step>
+				<step>
+					<para>
+						Verify which block devnode it is being accessed as:
+					</para>
+
+<screen><prompt>#</prompt> <command>ls -l</command>
+total 0
+-r--r--r--  1 root root 4096 Aug 25 17:04 availability
+lrwxrwxrwx  1 root root    0 Aug 25 17:07 block -&gt; ../../../../block/dasdb
+-rw-r--r--  1 root root 4096 Aug 25 17:04 cmb_enable
+-r--r--r--  1 root root 4096 Aug 25 17:04 cutype
+-rw-r--r--  1 root root 4096 Aug 25 17:04 detach_state
+-r--r--r--  1 root root 4096 Aug 25 17:04 devtype
+-r--r--r--  1 root root 4096 Aug 25 17:04 discipline
+-rw-r--r--  1 root root    0 Aug 25 17:04 online
+-rw-r--r--  1 root root 4096 Aug 25 17:04 readonly
+-rw-r--r--  1 root root 4096 Aug 25 17:04 use_diag</screen>
+					<para>
+						As shown in this example, device 4B2E is being accessed as /dev/dasdb.
+					</para>
+
+				</step>
+
+			</procedure>
+
+			<para>
+				These instructions set a DASD online for the current session, but this is not persistent across reboots. For instructions on how to set a DASD online persistently, see <xref linkend="sect-post-installation-dasds-setting-online-persistently-s390" />. When you work with DASDs, use the persistent device symbolic links under <filename>/dev/disk/by-path/</filename>. See the chapter about persistent storage device naming in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Storage_Administration_Guide/persistent_naming.html"><citetitle>Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Storage Administration Guide</citetitle></ulink> for more in-depth information about different ways to consistently refer to storage devices.
+			</para>
+		</section>
+
+		<section id="sect-post-installation-preparing-dasds-s390">
+			<title>Preparing a New DASD with Low-level Formatting</title>
+			<para>
+				Once the disk is online, change back to the <filename>/root</filename> directory and low-level format the device. This is only required once for a DASD during its entire lifetime:
+			</para>
+
+<screen><prompt>#</prompt> <command>cd /root</command>
+<prompt>#</prompt> <command>dasdfmt -b 4096 -d cdl -p /dev/disk/by-path/ccw-0.0.4b2e</command>
+Drive Geometry: 10017 Cylinders * 15 Heads =  150255 Tracks
+
+I am going to format the device /dev/disk/by-path/ccw-0.0.4b2e in the following way:
+Device number of device : 0x4b2e
+Labelling device        : yes
+Disk label              : VOL1
+Disk identifier         : 0X4B2E
+Extent start (trk no)   : 0
+Extent end (trk no)     : 150254
+Compatible Disk Layout  : yes
+Blocksize               : 4096
+
+---&gt;&gt; ATTENTION! &lt;&lt;---
+All data of that device will be lost.
+Type "yes" to continue, no will leave the disk untouched: yes
+cyl    97 of  3338 |#----------------------------------------------|   2%</screen>
+			<para>
+				When the progress bar reaches the end and the format is complete, <application>dasdfmt</application> prints the following output:
+			</para>
+
+<screen>Rereading the partition table...
+Exiting...</screen>
+				<para>
+					Now, use fdasd to partition the DASD. You can create up to three partitions on a DASD. In our example here, we create one partition spanning the whole disk:
+				</para>
+
+<screen><prompt>#</prompt> <command>fdasd -a /dev/disk/by-path/ccw-0.0.4b2e</command>
+auto-creating one partition for the whole disk...
+writing volume label...
+writing VTOC...
+checking !
+wrote NATIVE!
+rereading partition table...</screen>
+				<para>
+					After a (low-level formatted) DASD is online, it can be used like any other disk under Linux. For instance, you can create file systems, LVM physical volumes, or swap space on its partitions, for example <filename>/dev/disk/by-path/ccw-0.0.4b2e-part1</filename>. Never use the full DASD device (<filename>dev/dasdb</filename>) for anything but the commands <command>dasdfmt</command> and <command>fdasd</command>. If you want to use the entire DASD, create one partition spanning the entire drive as in the <literal>fdasd</literal> example above.
+				</para>
+				<para>
+					To add additional disks later without breaking existing disk entries in, for example, <filename>/etc/fstab</filename>, use the persistent device symbolic links under <filename>/dev/disk/by-path/</filename>.
+				</para>
+
+			</section>
+
+			<section id="sect-post-installation-dasds-setting-online-persistently-s390">
+				<title>Persistently Setting DASDs Online</title>
+				<para>
+					The above instructions described how to activate DASDs dynamically in a running system. However, such changes are not persistent and do not survive a reboot. Making changes to the DASD configuration persistent in your Linux system depends on whether the DASDs belong to the root file system. Those DASDs required for the root file system need to be activated very early during the boot process by the <systemitem>initramfs</systemitem> to be able to mount the root file system.
+				</para>
+				<para>
+					The <command>cio_ignore</command> commands are handled transparently for persistent device configurations and you do not need to free devices from the ignore list manually.
+				</para>
+				<section id="sect-post-installation-dasds-on-root-s390">
+					<title>DASDs That Are Part of the Root File System</title>
+					<para>
+						The only file you have to modify to add DASDs that are part of the root file system is <filename>/etc/zipl.conf</filename>. Then run the <application>zipl</application> boot loader tool. There is no need to recreate the <systemitem>initramfs</systemitem>.
+					</para>
+					<para>
+						There is one boot option to activate DASDs early in the boot process: <parameter>rd.dasd=</parameter>. This option takes a comma-separated list as input. The list contains a device bus ID and optional additional parameters consisting of key-value pairs that correspond to DASD <application>sysfs</application> attributes.
+					</para>
+
+					<para>
+						Below is an example <filename>zipl.conf</filename> for a system that uses physical volumes on partitions of two DASDs for an LVM volume group <systemitem>vg_devel1</systemitem> that contains a logical volume <systemitem>lv_root</systemitem> for the root file system.
+					</para>
+
+<screen>[defaultboot]
+default=linux
+target=/boot/
+
+[linux]
+image=/boot/vmlinuz-2.6.32-19.el7.s390x
+ramdisk=/boot/initramfs-2.6.32-19.el7.s390x.img
+parameters="root=/dev/mapper/vg_devel1-lv_root rd.dasd=0.0.0200,use_diag=0,readonly=0,erplog=0,failfast=0 rd.dasd=0.0.0207,use_diag=0,readonly=0,erplog=0,failfast=0  rd_LVM_LV=vg_devel1/lv_root rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us cio_ignore=all,!condev"</screen>
+						<para>
+							Suppose that you want to add another physical volume on a partition of a third DASD with device bus ID <literal>0.0.202b</literal>. To do this, add <literal>rd.dasd=0.0.202b</literal> to the parameters line of your boot kernel in <filename>zipl.conf</filename>:
+						</para>
+
+<screen>[defaultboot]
+default=linux
+target=/boot/
+
+[linux]
+image=/boot/vmlinuz-2.6.32-19.el7.s390x
+ramdisk=/boot/initramfs-2.6.32-19.el7.s390x.img
+parameters="root=/dev/mapper/vg_devel1-lv_root rd.dasd=0.0.0200,use_diag=0,readonly=0,erplog=0,failfast=0 rd.dasd=0.0.0207,use_diag=0,readonly=0,erplog=0,failfast=0 rd.dasd=0.0.202b  rd_LVM_LV=vg_devel1/lv_root rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us cio_ignore=all,!condev"
+</screen>
+						<warning>
+							<para>
+								Make sure the length of the kernel command line in <filename>/etc/zipl.conf</filename> does not exceed 896 bytes. Otherwise, the boot loader cannot be saved, and the installation fails.
+							</para>
+						</warning>
+						<para>
+							Run <command>zipl</command> to apply the changes of <filename>/etc/zipl.conf</filename> for the next IPL:
+						</para>
+
+<screen><prompt>#</prompt> <command>zipl -V</command>
+Using config file '/etc/zipl.conf'
+Target device information
+Device..........................: 5e:00
+Partition.......................: 5e:01
+Device name.....................: dasda
+DASD device number..............: 0201
+Type............................: disk partition
+Disk layout.....................: ECKD/compatible disk layout
+Geometry - heads................: 15
+Geometry - sectors..............: 12
+Geometry - cylinders............: 3308
+Geometry - start................: 24
+File system block size..........: 4096
+Physical block size.............: 4096
+Device size in physical blocks..: 595416
+Building bootmap in '/boot/'
+Building menu 'rh-automatic-menu'
+Adding #1: IPL section 'linux' (default)
+kernel image......: /boot/vmlinuz-2.6.32-19.el7.s390x
+kernel parmline...: 'root=/dev/mapper/vg_devel1-lv_root rd.dasd=0.0.0200,use_diag=0,readonly=0,erplog=0,failfast=0 rd.dasd=0.0.0207,use_diag=0,readonly=0,erplog=0,failfast=0 rd.dasd=0.0.202b rd_LVM_LV=vg_devel1/lv_root rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us cio_ignore=all,!condev'
+initial ramdisk...: /boot/initramfs-2.6.32-19.el7.s390x.img
+component address:
+kernel image....: 0x00010000-0x00a70fff
+parmline........: 0x00001000-0x00001fff
+initial ramdisk.: 0x02000000-0x022d2fff
+internal loader.: 0x0000a000-0x0000afff
+Preparing boot device: dasda (0201).
+Preparing boot menu
+Interactive prompt......: enabled
+Menu timeout............: 15 seconds
+Default configuration...: 'linux'
+Syncing disks...
+Done.</screen>
+
+					</section>
+
+					<section id="sect-post-installation-dasds-no-root-s390">
+						<title>DASDs That Are Not Part of the Root File System</title>
+						<para>
+							DASDs that are not part of the root file system, that is, <firstterm>data disks</firstterm>, are persistently configured in the file <filename>/etc/dasd.conf</filename>. It contains one DASD per line. Each line begins with the device bus ID of a DASD. Optionally, each line can continue with options separated by space or tab characters. Options consist of key-value-pairs, where the key and value are separated by an equals sign.
+						</para>
+						<para>
+							The key corresponds to any valid <systemitem>sysfs</systemitem> attribute a DASD can have. The value will be written to the key's <systemitem>sysfs</systemitem> attribute. Entries in <filename>/etc/dasd.conf</filename> are activated and configured by udev when a DASD is added to the system. At boot time, all DASDs visible to the system get added and trigger <application>udev</application>.
+						</para>
+						<para>
+							Example content of <filename>/etc/dasd.conf</filename>:
+						</para>
+
+<screen>0.0.0207
+0.0.0200 use_diag=1 readonly=1</screen>
+						<para>
+							Modifications of <filename>/etc/dasd.conf</filename> only become effective after a reboot of the system or after the dynamic addition of a new DASD by changing the system's I/O configuration (that is, the DASD is attached under z/VM). Alternatively, you can trigger the activation of a new entry in <filename>/etc/dasd.conf</filename> for a DASD which was previously not active, by executing the following commands:
+						</para>
+						<procedure>
+							<step>
+								<para>
+									Use the <command>cio_ignore</command> utility to remove the DASD from the list of ignored devices and make it visible to Linux:
+								</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>device_number</replaceable></command></screen>
+								<para>
+									For example:
+								</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r 021a</command></screen>
+
+							</step>
+							<step>
+								<para>
+									Trigger the activation by writing to the <parameter>uevent</parameter> attribute of the device:
+								</para>
+
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/<replaceable>device-bus-ID</replaceable>/uevent</command></screen>
+								<para>
+									For example:
+								</para>
+
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/0.0.021a/uevent</command></screen>
+
+							</step>
+
+						</procedure>
+
+
+					</section>
+
+				</section>
+
+			</section>
+
+			<section id="sect-post-installation-fcp-attached-luns-s390">
+				<title>Adding FCP-attached Logical Units (LUNs)</title>
+				<para>
+					The following is an example of how to add an FCP LUN.
+				</para>
+				<note>
+					<para>
+						If running under z/VM, make sure the FCP adapter is attached to the z/VM guest virtual machine. For multipathing in production environments there would be at least two FCP devices on two different physical adapters (CHPIDs). For example:
+					</para>
+
+<screen><command>CP ATTACH FC00 TO *</command>
+<command>CP ATTACH FCD0 TO *</command></screen>
+
+				</note>
+				<section id="sect-post-installation-fcp-attached-luns-dynamic-s390">
+					<title>Dynamically Activating an FCP LUN</title>
+					<para>
+						Follow these steps to activate a LUN:
+					</para>
+					<procedure>
+						<step>
+							<para>
+								Use the <command>cio_ignore</command> utility to remove the FCP adapter from the list of ignored devices and make it visible to Linux:
+							</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>device_number</replaceable></command></screen>
+							<para>
+								Replace <replaceable>device_number</replaceable> with the device number of the FCP adapter. For example:
+							</para>
+
+						</step>
+						<step>
+							<para>
+								To bring the FCP adapter device online, use the following command:
+							</para>
+
+<screen><prompt>#</prompt> <command>chccwdev -e fc00</command></screen>
+
+						</step>
+						<step>
+							<para>
+								Verify that the required WWPN was found by the automatic port scanning of the zfcp device driver:
+							</para>
+
+<screen><prompt>#</prompt> <command>ls -l /sys/bus/ccw/drivers/zfcp/0.0.fc00/</command>
+drwxr-xr-x.  3 root root    0 Apr 28 18:19 0x500507630040710b
+drwxr-xr-x.  3 root root    0 Apr 28 18:19 0x50050763050b073d
+drwxr-xr-x.  3 root root    0 Apr 28 18:19 0x500507630e060521
+drwxr-xr-x.  3 root root    0 Apr 28 18:19 0x500507630e860521
+-r--r--r--.  1 root root 4096 Apr 28 18:17 availability
+-r--r--r--.  1 root root 4096 Apr 28 18:19 card_version
+-rw-r--r--.  1 root root 4096 Apr 28 18:17 cmb_enable
+-r--r--r--.  1 root root 4096 Apr 28 18:17 cutype
+-r--r--r--.  1 root root 4096 Apr 28 18:17 devtype
+lrwxrwxrwx.  1 root root    0 Apr 28 18:17 driver -&gt;  ../../../../bus/ccw/drivers/zfcp
+-rw-r--r--.  1 root root 4096 Apr 28 18:17 failed
+-r--r--r--.  1 root root 4096 Apr 28 18:19 hardware_version
+drwxr-xr-x. 35 root root    0 Apr 28 18:17 host0
+-r--r--r--.  1 root root 4096 Apr 28 18:17 in_recovery
+-r--r--r--.  1 root root 4096 Apr 28 18:19 lic_version
+-r--r--r--.  1 root root 4096 Apr 28 18:17 modalias
+-rw-r--r--.  1 root root 4096 Apr 28 18:17 online
+-r--r--r--.  1 root root 4096 Apr 28 18:19 peer_d_id
+-r--r--r--.  1 root root 4096 Apr 28 18:19 peer_wwnn
+-r--r--r--.  1 root root 4096 Apr 28 18:19 peer_wwpn
+--w-------.  1 root root 4096 Apr 28 18:19 port_remove
+--w-------.  1 root root 4096 Apr 28 18:19 port_rescan
+drwxr-xr-x.  2 root root    0 Apr 28 18:19 power
+-r--r--r--.  1 root root 4096 Apr 28 18:19 status
+lrwxrwxrwx.  1 root root    0 Apr 28 18:17 subsystem -&gt;  ../../../../bus/ccw
+-rw-r--r--.  1 root root 4096 Apr 28 18:17 uevent</screen>
+
+						</step>
+						<step>
+							<para>
+								Activate the FCP LUN by adding it to the port (WWPN) through which you would like to access the LUN:
+							</para>
+
+<screen><prompt>#</prompt> <command>echo 0x4020400100000000 &gt; /sys/bus/ccw/drivers/zfcp/0.0.fc00/0x50050763050b073d/unit_add</command></screen>
+
+						</step>
+						<step>
+							<para>
+								Find out the assigned SCSI device name:
+							</para>
+
+<screen><prompt>#</prompt> <command>lszfcp -DV</command>
+/sys/devices/css0/0.0.0015/0.0.fc00/0x50050763050b073d/0x4020400100000000
+/sys/bus/ccw/drivers/zfcp/0.0.fc00/host0/rport-0:0-21/target0:0:21/0:0:21:1089355792</screen>
+
+						</step>
+					</procedure>
+				</section>
+
+				<section id="sect-post-installation-fcp-attached-luns-persistent-s390">
+					<title>Persistently activating FCP LUNs</title>
+					<para>
+						The above instructions described how to activate FCP LUNs dynamically in a running system. However, such changes are not persistent and do not survive a reboot. How you make the changes to the FCP configuration persistent in your Linux system depends on whether the FCP LUNs belong to the root file system. Those required for the root file system need to be activated very early during the boot process by the <systemitem>initramfs</systemitem> to be able to mount the root file system. The <command>cio_ignore</command> commands are handled transparently for persistent device configurations and you do not need to free devices from the ignore list manually.
+					</para>
+					<section id="sect-post-installation-fcp-attached-luns-on-root-s390">
+						<title>FCP LUNs That Are Part of the Root File System</title>
+						<para>
+							The only file you have to modify for adding FCP LUNs that are part of the root file system is <filename>/etc/zipl.conf</filename> followed by a run of the <application>zipl</application> boot loader tool. There is no more need to recreate the <systemitem>initramfs</systemitem>.
+						</para>
+						<para>
+							&PRODUCT; provides a parameter to activate FCP LUNs early in the boot process: <parameter>rd.zfcp=</parameter>. The value is a comma-separated list containing the device bus ID, the WWPN as 16 digit hexadecimal number prefixed with <literal>0x</literal>, and the FCP LUN prefixed with <literal>0x</literal> and padded with zeroes to the right to have 16 hexadecimal digits.
+						</para>
+						<para>
+							The following example <filename>zipl.conf</filename> is for a system that uses physical volumes on partitions of two FCP LUNs for an LVM volume group <systemitem>vg_devel1</systemitem> that contains a logical volume <systemitem>lv_root</systemitem> for the root file system. For simplicity, the example shows a configuration without multipathing.
+						</para>
+
+<screen>[defaultboot]
+default=linux
+target=/boot/
+
+[linux]
+image=/boot/vmlinuz-2.6.32-19.el7.s390x
+ramdisk=/boot/initramfs-2.6.32-19.el7.s390x.img
+parameters="root=/dev/mapper/vg_devel1-lv_root
+rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a000000000
+rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a100000000
+rd_LVM_LV=vg_devel1/lv_root rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8
+SYSFONT=latarcyrheb-sun16 KEYTABLE=us cio_ignore=all,!condev"</screen>
+							<para>
+								To add another physical volume on a partition of a third FCP LUN with device bus ID 0.0.fc00, WWPN 0x5105074308c212e9 and FCP LUN 0x401040a300000000, add <literal>rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a300000000</literal> to the parameters line of your boot kernel in <filename>zipl.conf</filename>. For example:
+							</para>
+
+<screen>[defaultboot]
+default=linux
+target=/boot/
+
+[linux]
+image=/boot/vmlinuz-2.6.32-19.el7.s390x
+ramdisk=/boot/initramfs-2.6.32-19.el7.s390x.img
+parameters="root=/dev/mapper/vg_devel1-lv_root
+rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a000000000
+rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a100000000
+<emphasis>rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a300000000</emphasis>
+rd_LVM_LV=vg_devel1/lv_root rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8
+SYSFONT=latarcyrheb-sun16 KEYTABLE=us cio_ignore=all,!condev"</screen>
+								<warning>
+									<para>
+										Make sure the length of the kernel command line in <filename>/etc/zipl.conf</filename> does not exceed 896 bytes. Otherwise, the boot loader cannot be saved, and the installation fails.
+									</para>
+								</warning>
+								<para>
+									Run <application>zipl</application> to apply the changes of <filename>/etc/zipl.conf</filename> for the next IPL:
+								</para>
+
+<screen><prompt>#</prompt> <command>zipl -V</command>
+Using config file '/etc/zipl.conf'
+Target device information
+Device..........................: 08:00
+Partition.......................: 08:01
+Device name.....................: sda
+Device driver name..............: sd
+Type............................: disk partition
+Disk layout.....................: SCSI disk layout
+Geometry - start................: 2048
+File system block size..........: 4096
+Physical block size.............: 512
+Device size in physical blocks..: 10074112
+Building bootmap in '/boot/'
+Building menu 'rh-automatic-menu'
+Adding #1: IPL section 'linux' (default)
+kernel image......: /boot/vmlinuz-2.6.32-19.el7.s390x
+kernel parmline...: 'root=/dev/mapper/vg_devel1-lv_root rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a000000000 rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a100000000 rd.zfcp=0.0.fc00,0x5105074308c212e9,0x401040a300000000 rd_LVM_LV=vg_devel1/lv_root rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us cio_ignore=all,!condev'
+initial ramdisk...: /boot/initramfs-2.6.32-19.el7.s390x.img
+component address:
+kernel image....: 0x00010000-0x007a21ff
+parmline........: 0x00001000-0x000011ff
+initial ramdisk.: 0x02000000-0x028f63ff
+internal loader.: 0x0000a000-0x0000a3ff
+Preparing boot device: sda.
+Detected SCSI PCBIOS disk layout.
+Writing SCSI master boot record.
+Syncing disks...
+Done.</screen>
+
+							</section>
+
+							<section id="sect-post-installation-fcp-attached-luns-no-root-s390">
+								<title>FCP LUNs That Are Not Part of the Root File System</title>
+								<para>
+									FCP LUNs that are not part of the root file system, such as data disks, are persistently configured in the file <filename>/etc/zfcp.conf</filename>. It contains one FCP LUN per line. Each line contains the device bus ID of the FCP adapter, the WWPN as 16 digit hexadecimal number prefixed with <literal>0x</literal>, and the FCP LUN prefixed with <literal>0x</literal> and padded with zeroes to the right to have 16 hexadecimal digits, separated by a space or tab. Entries in <filename>/etc/zfcp.conf</filename> are activated and configured by udev when an FCP adapter is added to the system. At boot time, all FCP adapters visible to the system are added and trigger <application>udev</application>.
+								</para>
+								<para>
+									Example content of <filename>/etc/zfcp.conf</filename>:
+								</para>
+
+<screen>0.0.fc00 0x5105074308c212e9 0x401040a000000000
+0.0.fc00 0x5105074308c212e9 0x401040a100000000
+0.0.fc00 0x5105074308c212e9 0x401040a300000000
+0.0.fcd0 0x5105074308c2aee9 0x401040a000000000
+0.0.fcd0 0x5105074308c2aee9 0x401040a100000000
+0.0.fcd0 0x5105074308c2aee9 0x401040a300000000</screen>
+									<para>
+										Modifications of <filename>/etc/zfcp.conf</filename> only become effective after a reboot of the system or after the dynamic addition of a new FCP channel by changing the system's I/O configuration (for example, a channel is attached under z/VM). Alternatively, you can trigger the activation of a new entry in <filename>/etc/zfcp.conf</filename> for an FCP adapter which was previously not active, by executing the following commands:
+									</para>
+									<procedure>
+										<step>
+											<para>
+												Use the <command>cio_ignore</command> utility to remove the FCP adapter from the list of ignored devices and make it visible to Linux:
+											</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>device_number</replaceable></command></screen>
+											<para>
+												Replace <replaceable>device_number</replaceable> with the device number of the FCP adapter. For example:
+											</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r fcfc</command></screen>
+
+										</step>
+										<step>
+											<para>
+												To trigger the uevent that activates the change, issue:
+											</para>
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/<replaceable>device-bus-ID</replaceable>/uevent</command></screen>
+											<para>
+												For example:
+											</para>
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/0.0.fcfc/uevent</command></screen>
+										</step>
+
+									</procedure>
+
+
+								</section>
+
+
+							</section>
+
+
+						</section>
+
+						<section id="sect-post-installation-adding-network-devices-s390">
+							<title>Adding a Network Device</title>
+							<para>
+								Network device driver modules are loaded automatically by <application>udev</application>.
+							</para>
+							<para>
+								You can add a network interface on IBM System&nbsp;z dynamically or persistently.
+							</para>
+							<itemizedlist>
+								<listitem>
+									<para>
+										Dynamically
+									</para>
+									<procedure>
+										<step>
+											<para>
+												Load the device driver
+											</para>
+
+										</step>
+										<step>
+											<para>
+												Remove the network devices from the list of ignored devices.
+											</para>
+
+										</step>
+										<step>
+											<para>
+												Create the group device.
+											</para>
+
+										</step>
+										<step>
+											<para>
+												Configure the device.
+											</para>
+
+										</step>
+										<step>
+											<para>
+												Set the device online.
+											</para>
+
+										</step>
+
+									</procedure>
+
+
+								</listitem>
+								<listitem>
+									<para>
+										Persistently
+									</para>
+									<procedure>
+										<step>
+											<para>
+												Create a configuration script.
+											</para>
+
+										</step>
+										<step>
+											<para>
+												Activate the interface.
+											</para>
+
+										</step>
+
+									</procedure>
+
+
+								</listitem>
+
+							</itemizedlist>
+							<para>
+								The following sections provide basic information for each task of each IBM System&nbsp;z network device driver. <xref linkend="sect-post-installation-qeth-device-s390" /> describes how to add a qeth device to an existing instance of &PRODUCT;. <xref linkend="sect-post-installation-lcs-s390" /> describes how to add an lcs device to an existing instance of &PRODUCT;.
+							</para>
+							<section id="sect-post-installation-qeth-device-s390">
+								<title>Adding a qeth Device</title>
+								<para>
+									The <systemitem>qeth</systemitem> network device driver supports System&nbsp;z OSA-Express features in QDIO mode, HiperSockets, z/VM guest LAN, and z/VM VSWITCH.
+								</para>
+								<para>
+									The <systemitem>qeth</systemitem> device driver assigns the same interface name for Ethernet and Hipersockets devices: <literal>enccw</literal><replaceable>bus_ID</replaceable>. The bus ID is composed of the channel subsystem ID, subchannel set ID, and device number, for example <literal>enccw0.0.0a00</literal>.
+								</para>
+
+								<section id="sect-post-installation-qeth-device-dynamic-s390">
+									<title>Dynamically Adding a qeth Device</title>
+									<para>
+										To add a <systemitem>qeth</systemitem> device dynamically, follow these steps:
+									</para>
+									<procedure>
+										<step>
+											<para>
+												Determine whether the <systemitem>qeth</systemitem> device driver modules are loaded. The following example shows loaded <systemitem>qeth</systemitem> modules:
+											</para>
+
+<screen><prompt>#</prompt> <command>lsmod | grep qeth</command>
+											qeth_l3                  127056  9
+											qeth_l2                   73008  3
+											ipv6                  492872  155ip6t_REJECT,nf_conntrack_ipv6,qeth_l3
+											qeth                  115808  2 qeth_l3,qeth_l2
+											qdio                   68240  1 qeth
+											ccwgroup               12112  2 qeth</screen>
+											<para>
+												If the output of the <command>lsmod</command> command shows that the <systemitem>qeth</systemitem> modules are not loaded, run the <command>modprobe</command> command to load them:
+											</para>
+
+<screen><prompt>#</prompt> <command>modprobe qeth</command></screen>
+
+										</step>
+										<step>
+											<para>
+												Use the <command>cio_ignore</command> utility to remove the network channels from the list of ignored devices and make them visible to Linux:
+											</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable>,<replaceable>data_device_bus_id</replaceable></command></screen>
+
+											<para>
+												Replace <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable>,<replaceable>data_device_bus_id</replaceable> with the three device bus IDs representing a network device. For example, if the <replaceable>read_device_bus_id</replaceable> is <literal>0.0.f500</literal>, the <replaceable>write_device_bus_id</replaceable> is <literal>0.0.f501</literal>, and the <replaceable>data_device_bus_id</replaceable> is <literal>0.0.f502</literal>:
+											</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r 0.0.f500,0.0.f501,0.0.f502</command></screen>
+
+										</step>
+										<step>
+											<para>
+												Use the <application>znetconf</application> utility to sense and list candidate configurations for network devices:
+											</para>
+
+<screen><prompt>#</prompt> <command>znetconf -u</command>
+Scanning for network devices...
+Device IDs                 Type    Card Type      CHPID Drv.
+------------------------------------------------------------
+0.0.f500,0.0.f501,0.0.f502 1731/01 OSA (QDIO)        00 qeth
+0.0.f503,0.0.f504,0.0.f505 1731/01 OSA (QDIO)        01 qeth
+0.0.0400,0.0.0401,0.0.0402 1731/05 HiperSockets      02 qeth</screen>
+
+										</step>
+										<step>
+											<para>
+												Select the configuration you want to work with and use <application>znetconf</application> to apply the configuration and to bring the configured group device online as network device.
+											</para>
+
+<screen><prompt>#</prompt> <command>znetconf -a f500</command>
+Scanning for network devices...
+Successfully configured device 0.0.f500 (enccw0.0.f500)</screen>
+
+										</step>
+										<step>
+											<para>
+												Optionally, you can also pass arguments that are configured on the group device before it is set online:
+											</para>
+
+<screen><prompt>#</prompt> <command>znetconf -a f500 -o portname=myname</command>
+Scanning for network devices...
+Successfully configured device 0.0.f500 (enccw0.0.f500)</screen>
+
+											<para>
+												Now you can continue to configure the <systemitem>enccw0.0.f500</systemitem> network interface.
+											</para>
+
+										</step>
+
+									</procedure>
+
+									<para>
+										Alternatively, you can use <systemitem>sysfs</systemitem> attributes to set the device online as follows:
+									</para>
+									<procedure>
+										<step>
+											<para>
+												Create a <systemitem>qeth</systemitem> group device:
+											</para>
+
+<screen><prompt>#</prompt> <command>echo <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable>,<replaceable>data_device_bus_id</replaceable> &gt; /sys/bus/ccwgroup/drivers/qeth/group</command></screen>
+
+											<para>
+												For example:
+											</para>
+
+<screen><prompt>#</prompt> <command>echo 0.0.f500,0.0.f501,0.0.f502 &gt; /sys/bus/ccwgroup/drivers/qeth/group</command></screen>
+
+										</step>
+										<step>
+											<para>
+												Next, verify that the <systemitem>qeth</systemitem> group device was created properly by looking for the read channel:
+											</para>
+
+<screen><prompt>#</prompt> <command>ls /sys/bus/ccwgroup/drivers/qeth/0.0.f500</command></screen>
+
+											<para>
+												You can optionally set additional parameters and features, depending on the way you are setting up your system and the features you require, such as:
+											</para>
+											<itemizedlist>
+												<listitem>
+													<para>
+														<parameter>portno</parameter>
+													</para>
+												</listitem>
+												<listitem>
+													<para>
+														<parameter>layer2</parameter>
+													</para>
+												</listitem>
+												<listitem>
+													<para>
+														<parameter>portname</parameter>
+													</para>
+												</listitem>
+											</itemizedlist>
+										</step>
+										<step>
+											<para>
+												Bring the device online by writing <literal>1</literal> to the online <systemitem>sysfs</systemitem> attribute:
+											</para>
+
+<screen><prompt>#</prompt> <command>echo 1 &gt; /sys/bus/ccwgroup/drivers/qeth/0.0.f500/online</command></screen>
+
+										</step>
+										<step>
+											<para>
+												Then verify the state of the device:
+											</para>
+
+<screen><prompt>#</prompt> <command>cat /sys/bus/ccwgroup/drivers/qeth/0.0.f500/online</command>
+											1</screen>
+
+											<para>
+												A return value of <literal>1</literal> indicates that the device is online, while a return value <literal>0</literal> indicates that the device is offline.
+											</para>
+
+										</step>
+										<step>
+											<para>
+												Find the interface name that was assigned to the device:
+											</para>
+
+<screen><prompt>#</prompt> <command>cat /sys/bus/ccwgroup/drivers/qeth/0.0.f500/if_name</command>
+enccw0.0.f500</screen>
+
+											<para>
+												Now you can continue to configure the <systemitem>enccw0.0.f500</systemitem> network interface.
+											</para>
+											<para>
+												The following command from the <package>s390utils</package> package shows the most important settings of your <systemitem>qeth</systemitem> device:
+											</para>
+
+<screen><prompt>#</prompt> <command>lsqeth enccw0.0.f500</command>
+Device name                     : enccw0.0.f500
+-------------------------------------------------
+card_type               : OSD_1000
+cdev0                   : 0.0.f500
+cdev1                   : 0.0.f501
+cdev2                   : 0.0.f502
+chpid                   : 76
+online                  : 1
+portname                : OSAPORT
+portno                  : 0
+state                   : UP (LAN ONLINE)
+priority_queueing       : always queue 0
+buffer_count            : 16
+layer2                  : 1
+isolation               : none</screen>
+
+										</step>
+
+									</procedure>
+
+								</section>
+
+								<section id="sect-post-installation-qeth-device-dynamic-remove-s390">
+									<title>Dynamically Removing a qeth Device</title>
+									<para>
+										To remove a <systemitem>qeth</systemitem> device, use the <application>znetconf</application> utility. For example:
+									</para>
+									<procedure>
+										<step>
+											<para>
+												Use the <command>znetconf</command> utility to show you all configured network devices:
+											</para>
+
+<screen><prompt>#</prompt> <command>znetconf -c</command>
+Device IDs                 Type    Card Type      CHPID Drv. Name        	State
+--------------------------------------------------------------------------------------
+0.0.8036,0.0.8037,0.0.8038 1731/05 HiperSockets      FB qeth hsi1        	online
+0.0.f5f0,0.0.f5f1,0.0.f5f2 1731/01 OSD_1000          76 qeth enccw0.0.09a0      online
+0.0.f500,0.0.f501,0.0.f502 1731/01 GuestLAN QDIO     00 qeth enccw0.0.f500      online</screen>
+
+										</step>
+										<step>
+											<para>
+												Select the network device to be removed and run <command>znetconf</command> to set the device offline and ungroup the <systemitem>ccw</systemitem>> group device.
+											</para>
+
+<screen><prompt>#</prompt> <command>znetconf -r f500</command>
+Remove network device 0.0.f500 (0.0.f500,0.0.f501,0.0.f502)?
+Warning: this may affect network connectivity!
+Do you want to continue (y/n)?y
+Successfully removed device 0.0.f500 (enccw0.0.f500)</screen>
+
+										</step>
+										<step>
+											<para>
+												Verify the success of the removal:
+											</para>
+
+<screen><prompt>#</prompt> <command>znetconf -c</command>
+Device IDs                 Type    Card Type      CHPID Drv. Name        	State
+--------------------------------------------------------------------------------------
+0.0.8036,0.0.8037,0.0.8038 1731/05 HiperSockets      FB qeth hsi1        	online
+0.0.f5f0,0.0.f5f1,0.0.f5f2 1731/01 OSD_1000          76 qeth enccw0.0.09a0      online</screen>
+
+										</step>
+
+									</procedure>
+
+								</section>
+
+								<section id="sect-post-installation-qeth-device-persistent-s390">
+									<title>Persistently Adding a qeth Device</title>
+									<para>
+										To make your new <systemitem>qeth</systemitem> device persistent, you need to create the configuration file for your new interface. The network interface configuration files are placed in the <filename>/etc/sysconfig/network-scripts/</filename> directory.
+									</para>
+									<para>
+										The network configuration files use the naming convention <filename>ifcfg-<replaceable>device</replaceable></filename>, where <replaceable>device</replaceable> is the value found in the <filename>if_name</filename> file in the <systemitem>qeth</systemitem> group device that was created earlier, for example <literal>enccw0.0.09a0</literal>. The <command>cio_ignore</command> commands are handled transparently for persistent device configurations and you do not need to free devices from the ignore list manually.
+									</para>
+									<para>
+										If a configuration file for another device of the same type already exists, the simplest way is to copy it to the new name and then edit it:
+									</para>
+
+<screen><prompt>#</prompt> <command>cd /etc/sysconfig/network-scripts</command>
+<prompt>#</prompt> <command>cp ifcfg-enccw0.0.09a0 ifcfg-enccw0.0.0600</command></screen>
+
+									<para>
+										To learn IDs of your network devices, use the <application>lsqeth</application> utility:
+									</para>
+
+<screen><prompt>#</prompt> <command>lsqeth -p</command>
+devices                    CHPID interface        cardtype       port chksum prio-q'ing rtr4 rtr6 lay'2 cnt
+-------------------------- ----- ---------------- -------------- ---- ------ ---------- ---- ---- ----- -----
+0.0.09a0/0.0.09a1/0.0.09a2 x00   enccw0.0.09a0    Virt.NIC QDIO  0    sw     always_q_2 n/a  n/a  1     64
+0.0.0600/0.0.0601/0.0.0602 x00   enccw0.0.0600    Virt.NIC QDIO  0    sw     always_q_2 n/a  n/a  1     64</screen>
+									<para>
+										If you do not have a similar device defined, you must create a new file. Use this example of <filename>/etc/sysconfig/network-scripts/ifcfg-0.0.09a0</filename> as a template:
+									</para>
+
+<screen># IBM QETH
+DEVICE=enccw0.0.09a0
+BOOTPROTO=static
+IPADDR=10.12.20.136
+NETMASK=255.255.255.0
+ONBOOT=yes
+NETTYPE=qeth
+SUBCHANNELS=0.0.09a0,0.0.09a1,0.0.09a2
+PORTNAME=OSAPORT
+OPTIONS='layer2=1 portno=0'
+MACADDR=02:00:00:23:65:1a
+TYPE=Ethernet</screen>
+										<para>
+											Edit the new <filename>ifcfg-0.0.0600</filename> file as follows:
+										</para>
+										<procedure>
+											<step>
+												<para>
+													Modify the <parameter>DEVICE</parameter> statement to reflect the contents of the <filename>if_name</filename> file from your <systemitem>ccw</systemitem> group.
+												</para>
+
+											</step>
+											<step>
+												<para>
+													Modify the <parameter>IPADDR</parameter> statement to reflect the IP address of your new interface.
+												</para>
+
+											</step>
+											<step>
+												<para>
+													Modify the <parameter>NETMASK</parameter> statement as needed.
+												</para>
+
+											</step>
+											<step>
+												<para>
+													If the new interface is to be activated at boot time, then make sure <parameter>ONBOOT</parameter> is set to <literal>yes</literal>.
+												</para>
+
+											</step>
+											<step>
+												<para>
+													Make sure the <parameter>SUBCHANNELS</parameter> statement matches the hardware addresses for your qeth device.
+												</para>
+
+											</step>
+											<step>
+												<para>
+													Modify the <parameter>PORTNAME</parameter> statement or leave it out if it is not necessary in your environment.
+												</para>
+
+											</step>
+											<step>
+												<para>
+													You can add any valid <systemitem>sysfs</systemitem> attribute and its value to the <parameter>OPTIONS</parameter> parameter. The &PRODUCT; installation program currently uses this to configure the layer mode (<parameter>layer2</parameter>) and the relative port number (<parameter>portno</parameter>) of <systemitem>qeth</systemitem> devices.
+												</para>
+												<para>
+													The <systemitem>qeth</systemitem> device driver default for OSA devices is now layer 2 mode. To continue using old <systemitem>ifcfg</systemitem> definitions that rely on the previous default of layer 3 mode, add <literal>layer2=0</literal> to the <parameter>OPTIONS</parameter> parameter.
+												</para>
+
+											</step>
+
+										</procedure>
+
+										<para>
+											<filename>/etc/sysconfig/network-scripts/ifcfg-0.0.0600</filename>
+										</para>
+
+<screen># IBM QETH
+DEVICE=enccw0.0.0600
+BOOTPROTO=static
+IPADDR=192.168.70.87
+NETMASK=255.255.255.0
+ONBOOT=yes
+NETTYPE=qeth
+SUBCHANNELS=0.0.0600,0.0.0601,0.0.0602
+PORTNAME=OSAPORT
+OPTIONS='layer2=1 portno=0'
+MACADDR=02:00:00:b3:84:ef
+TYPE=Ethernet</screen>
+											<para>
+												Changes to an <filename>ifcfg</filename> file only become effective after rebooting the system or after the dynamic addition of new network device channels by changing the system's I/O configuration (for example, attaching under z/VM). Alternatively, you can trigger the activation of a <filename>ifcfg</filename> file for network channels which were previously not active yet, by executing the following commands:
+											</para>
+											<procedure>
+												<step>
+													<para>
+														Use the <command>cio_ignore</command> utility to remove the network channels from the list of ignored devices and make them visible to Linux:
+													</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable>,<replaceable>data_device_bus_id</replaceable></command></screen>
+
+													<para>
+														Replace <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable>,<replaceable>data_device_bus_id</replaceable> with the three device bus IDs representing a network device. For example, if the <replaceable>read_device_bus_id</replaceable> is <literal>0.0.0600</literal>, the <replaceable>write_device_bus_id</replaceable> is <literal>0.0.0601</literal>, and the <replaceable>data_device_bus_id</replaceable> is <literal>0.0.0602</literal>:
+													</para>
+
+<screen><prompt>#</prompt> <command> cio_ignore -r 0.0.0600,0.0.0601,0.0.0602</command></screen>
+
+												</step>
+												<step>
+													<para>
+														To trigger the uevent that activates the change, issue:
+													</para>
+
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/<replaceable>read-channel</replaceable>/uevent</command></screen>
+													<para>
+														For example:
+													</para>
+
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/0.0.0600/uevent</command></screen>
+
+												</step>
+												<step>
+													<para>
+														Check the status of the network device:
+													</para>
+
+<screen><prompt>#</prompt> <command>lsqeth</command></screen>
+
+												</step>
+												<step>
+													<para>
+														Now start the new interface:
+													</para>
+
+<screen><prompt>#</prompt> <command>ifup enccw0.0.0600</command></screen>
+
+												</step>
+												<step>
+													<para>
+														Check the status of the interface:
+													</para>
+
+<screen><prompt>#</prompt> <command>ip addr show enccw0.0.0600</command>
+3: enccw0.0.0600:  &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+link/ether 3c:97:0e:51:38:17 brd ff:ff:ff:ff:ff:ff
+inet 10.85.1.245/24 brd 10.34.3.255 scope global dynamic enccw0.0.0600
+valid_lft 81487sec preferred_lft 81487sec
+inet6 1574:12:5:1185:3e97:eff:fe51:3817/64 scope global noprefixroute dynamic
+valid_lft 2591994sec preferred_lft 604794sec
+inet6 fe45::a455:eff:d078:3847/64 scope link
+valid_lft forever preferred_lft forever</screen>
+												</step>
+												<step>
+													<para>
+														Check the routing for the new interface:
+													</para>
+
+<screen><prompt>#</prompt> <command>ip route</command>
+default via 10.85.1.245 dev enccw0.0.0600  proto static  metric 1024
+12.34.4.95/24 dev enp0s25  proto kernel  scope link  src 12.34.4.201
+12.38.4.128 via 12.38.19.254 dev enp0s25  proto dhcp  metric 1
+192.168.122.0/24 dev virbr0  proto kernel  scope link  src 192.168.122.1</screen>
+
+												</step>
+												<step>
+													<para>
+														Verify your changes by using the <systemitem>ping</systemitem> utility to ping the gateway or another host on the subnet of the new device:
+													</para>
+
+<screen><prompt>#</prompt> <command>ping -c 1 192.168.70.8</command>
+PING 192.168.70.8 (192.168.70.8) 56(84) bytes of data.
+64 bytes from 192.168.70.8: icmp_seq=0 ttl=63 time=8.07 ms</screen>
+												</step>
+												<step>
+													<para>
+														If the default route information has changed, you must also update <filename>/etc/sysconfig/network</filename> accordingly.
+													</para>
+												</step>
+											</procedure>
+
+										</section>
+
+									</section>
+
+									<section id="sect-post-installation-lcs-s390">
+										<title>Adding an LCS Device</title>
+										<para>
+											The <firstterm>LAN channel station</firstterm> (LCS) device driver supports 1000Base-T Ethernet on the OSA-Express2 and OSA-Express 3 features.
+										</para>
+										<para>
+											The <systemitem>LCS</systemitem> device driver assigns the following interface name for OSA-Express Fast Ethernet and Gigabit Ethernet devices: <literal>enccw</literal><replaceable>bus_ID</replaceable>. The bus ID is composed of the channel subsystem ID, subchannel set ID, and device number, for example <literal>enccw0.0.0a00</literal>.
+										</para>
+
+										<section id="sect-post-installation-lcs-dynamic-s390">
+											<title>Dynamically Adding an LCS Device</title>
+											<procedure>
+												<step>
+													<para>
+														Load the device driver:
+													</para>
+
+<screen><prompt>#</prompt> <command>modprobe lcs</command></screen>
+
+												</step>
+												<step>
+													<para>
+														Use the <command>cio_ignore</command> utility to remove the network channels from the list of ignored devices and make them visible to Linux:
+													</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable></command></screen>
+													<para>
+														Replace <replaceable>read_device_bus_id</replaceable> and <replaceable>write_device_bus_id</replaceable> with the two device bus IDs representing a network device. For example:
+													</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r 0.0.09a0,0.0.09a1</command></screen>
+
+												</step>
+												<step>
+													<para>
+														Create the group device:
+													</para>
+
+<screen><prompt>#</prompt> <command>echo <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable> &gt; /sys/bus/ccwgroup/drivers/lcs/group</command></screen>
+
+												</step>
+												<step>
+													<para>
+														Configure the device. OSA cards can provide up to 16 ports for a single CHPID. By default, the LCS group device uses port <literal>0</literal>. To use a different port, issue a command similar to the following:
+													</para>
+
+<screen><prompt>#</prompt> <command>echo <replaceable>portno</replaceable> &gt; /sys/bus/ccwgroup/drivers/lcs/device_bus_id/portno</command></screen>
+													<para>
+														Replace <replaceable>portno</replaceable> with the port number you want to use.
+													</para>
+
+												</step>
+												<step>
+													<para>
+														Set the device online:
+													</para>
+
+<screen><prompt>#</prompt> <command>echo 1 &gt; /sys/bus/ccwgroup/drivers/lcs/read_device_bus_id/online</command></screen>
+
+												</step>
+												<step>
+													<para>
+														To find out what network device name has been assigned, enter the command:
+													</para>
+
+<screen><prompt>#</prompt> <command>ls -l /sys/bus/ccwgroup/drivers/lcs/<replaceable>read_device_bus_ID</replaceable>/net/</command>
+drwxr-xr-x 4 root root 0 2010-04-22 16:54 enccw0.0.0600</screen>
+
+												</step>
+
+											</procedure>
+
+
+										</section>
+
+										<section id="sect-post-installation-lcs-persistent-s390">
+											<title>Persistently Adding an LCS Device</title>
+											<para>
+												The <command>cio_ignore</command> commands are handled transparently for persistent device configurations and you do not need to free devices from the ignore list manually.
+											</para>
+											<para>
+												To add an LCS device persistently, follow these steps:
+											</para>
+											<procedure>
+												<step>
+													<para>
+														Create a configuration script as file in <filename>/etc/sysconfig/network-scripts/</filename> with a name like <filename>ifcfg-<replaceable>device</replaceable></filename>, where <replaceable>device</replaceable> is the value found in the <filename>if_name</filename> file in the <systemitem>qeth</systemitem> group device that was created earlier, for example <literal>enccw0.0.09a0</literal>. The file should look similar to the following:
+													</para>
+
+<screen>
+# IBM LCS
+DEVICE=enccw0.0.09a0
+BOOTPROTO=static
+IPADDR=10.12.20.136
+NETMASK=255.255.255.0
+ONBOOT=yes
+NETTYPE=lcs
+SUBCHANNELS=0.0.09a0,0.0.09a1
+PORTNAME=0
+OPTIONS=''
+TYPE=Ethernet</screen>
+
+													</step>
+													<step>
+														<para>
+															Modify the value of <parameter>PORTNAME</parameter> to reflect the LCS port number (<parameter>portno</parameter>) you would like to use. You can add any valid lcs sysfs attribute and its value to the optional <parameter>OPTIONS</parameter> parameter. See <xref linkend="sect-post-installation-qeth-device-persistent-s390" /> for the syntax.
+														</para>
+
+													</step>
+													<step>
+														<para>
+															Set the <parameter>DEVICE</parameter> parameter as follows:
+														</para>
+
+<screen>DEVICE=enccw<replaceable>bus_ID</replaceable></screen>
+
+													</step>
+													<step>
+														<para>
+															Issue an <command>ifup</command> command to activate the device:
+														</para>
+
+<screen><prompt>#</prompt> <command>ifup enccw<replaceable>bus_ID</replaceable></command></screen>
+
+													</step>
+
+												</procedure>
+
+												<para>
+													Changes to an <filename>ifcfg</filename> file only become effective after rebooting the system. You can trigger the activation of a <filename>ifcfg</filename> file for network channels by executing the following commands:
+												</para>
+												<procedure>
+													<step>
+														<para>
+															Use the <command>cio_ignore</command> utility to remove the LCS device adapter from the list of ignored devices and make it visible to Linux:
+														</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r <replaceable>read_device_bus_id</replaceable>,<replaceable>write_device_bus_id</replaceable></command></screen>
+														<para>
+															Replace <replaceable>read_device_bus_id</replaceable> and <replaceable>write_device_bus_id</replaceable> with the device bus IDs of the LCS device. For example:
+														</para>
+
+<screen><prompt>#</prompt> <command>cio_ignore -r 0.0.09a0,0.0.09a1</command></screen>
+
+													</step>
+													<step>
+														<para>
+															To trigger the uevent that activates the change, issue:
+														</para>
+
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/<replaceable>read-channel</replaceable>/uevent</command></screen>
+														<para>
+															For example:
+														</para>
+
+<screen><prompt>#</prompt> <command>echo add &gt; /sys/bus/ccw/devices/0.0.09a0/uevent</command></screen>
+
+													</step>
+
+												</procedure>
+
+
+											</section>
+
+										</section>
+
+										<section id="sect-post-installation-configuring-network-root">
+											<title>Configuring a System&nbsp;z Network Device for Network Root File System</title>
+											<para>
+												To add a network device that is required to access the root file system, you only have to change the boot options. The boot options can be in a parameter file (see <xref linkend="chap-parameter-configuration-files-s390" />) or part of a <filename>zipl.conf</filename> on a DASD or FCP-attached SCSI LUN prepared with the <application>zipl</application> boot loader. There is no need to recreate the initramfs.
+											</para>
+											<para>
+												<application>Dracut</application>, the <application>mkinitrd</application> successor that provides the functionality in the initramfs that in turn replaces <application>initrd</application>, provides a boot parameter to activate network devices on System&nbsp;z early in the boot process: <parameter>rd.znet=</parameter>.
+											</para>
+											<para>
+												As input, this parameter takes a comma-separated list of the <parameter>NETTYPE</parameter> (qeth, lcs, ctc), two (lcs, ctc) or three (qeth) device bus IDs, and optional additional parameters consisting of key-value pairs corresponding to network device sysfs attributes. This parameter configures and activates the System&nbsp;z network hardware. The configuration of IP addresses and other network specifics works the same as for other platforms. See the <application>dracut</application> documentation for more details.
+											</para>
+											<para>
+												The <application>cio_ignore</application> commands for the network channels are handled transparently on boot.
+											</para>
+											<para>
+												Example boot options for a root file system accessed over the network through NFS:
+											</para>
+
+<screen>root=10.16.105.196:/nfs/nfs_root cio_ignore=all,!condev rd.znet=qeth,0.0.0a00,0.0.0a01,0.0.0a02,layer2=1,portno=0,portname=OSAPORT ip=10.16.105.197:10.16.105.196:10.16.111.254:255.255.248.0:nfs‑server.subdomain.domain:enccw0.0.09a0:none rd_NO_LUKS rd_NO_LVM rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us</screen>
+
+										</section>
+
+									</section>
+								</chapter>

@@ -1,0 +1,6 @@
+{
+    :article {
+        :product   "Red Hat Enterprise Linux 7"
+        :component "doc-Installation_Guide"
+    }
+}

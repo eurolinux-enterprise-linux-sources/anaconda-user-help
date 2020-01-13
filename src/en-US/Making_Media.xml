@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-making-media">
+	<title>Making Media</title>
+	<para>
+		This chapter describes how to use ISO image files obtained by following the steps in <xref linkend="chap-download-red-hat-enterprise-linux" /> to create bootable physical media, such as a DVD or a USB flash drive. You can then use these media to boot the installation program and start the installation. These steps only apply if you plan to install &PRODUCT; on an AMD64 or Intel&nbsp;64 system or an IBM Power&nbsp;Systems server using physical boot media. For information about installing &PRODUCT; on an IBM System&nbsp;z server, see <xref linkend="chap-installer-booting-ipl-s390" />. For instructions on how to set up a <firstterm>Preboot Execution Environment</firstterm> (PXE) server to perform a PXE-based installation over a network, see <xref linkend="chap-installation-server-setup" />.
+	</para>
+	<note>
+		<para>
+			By default, the <option>inst.stage2=</option> boot option is used on the installation media and set to a specific label (for example, <option>inst.stage2=hd:LABEL=RHEL7\x20Server.x86_64</option>). If you modify the default label of the file system containing the runtime image, or if using a customized procedure to boot the installation system, you must ensure this option is set to the correct value. See <xref linkend="list-boot-options-sources" /> for details.
+		</para>
+	</note>
+	<section id="sect-making-cd-dvd-media">
+		<title>Making an Installation CD or DVD</title>
+
+
+		<indexterm>
+			<primary>CD/DVD media</primary>
+			<secondary>making</secondary>
+			<seealso>ISO images</seealso>
+		</indexterm>
+
+
+		<para>
+			You can make an installation CD or DVD using burning software on your computer and a CD/DVD burner. The exact series of steps that produces an optical disc from an ISO image file varies greatly from computer to computer, depending on the operating system and disc burning software installed. Consult your burning software's documentation for the exact steps needed to burn a CD or DVD from an ISO image file.
+		</para>
+		<note>
+			<para>
+				It is possible to use optical discs (CDs and DVDs) to create both minimal boot media and full installation media. However, it is important to note that due to the large size of the full installation ISO image (between 4 and 4.5&nbsp;GB), only a DVD can be used to create a full installation disc. Minimal boot ISO is roughly 300&nbsp;MB, allowing it to be burned to either a CD or a DVD.
+			</para>
+		</note>
+		<para>
+			Make sure that your disc burning software is capable of burning discs from image files. Although this is true of most disc burning software, exceptions exist. In particular, note that the disc burning feature built into Windows XP and Windows Vista cannot burn DVDs; and that earlier Windows operating systems did not have any disc burning capability installed by default at all. Therefore, if your computer has a Windows operating system prior to Windows&nbsp;7 installed on it, you need a separate piece of software for this task. Examples of popular disc burning software for Windows that you might already have on your computer include <application>Nero Burning ROM</application> and <application>Roxio Creator</application>. Most widely used disc burning software for Linux, such as <application>Brasero</application> and <application>K3b</application>, also has the built-in ability to burn discs from ISO image files.
+		</para>
+		<para>
+			On some computers, the option to burn a disc from an ISO file is integrated into a context menu in the file browser. For example, when you right-click an ISO file on a computer with a Linux or UNIX operating system which runs the <application>GNOME</application> desktop, the <application>Nautilus</application> file browser presents you with the option to <guimenuitem>Write to disk</guimenuitem>.
+		</para>
+	</section>
+
+	<section id="sect-making-usb-media">
+		<title>Making Installation USB Media</title>
+
+
+		<indexterm>
+			<primary>USB flash media</primary>
+			<secondary>creating</secondary>
+		</indexterm>
+
+
+		<para>
+			You can use a USB drive instead of a CD or DVD to create bootable media for installing &PRODUCT; on AMD64 and Intel&nbsp;64 systems. The exact procedure varies depending on whether you want to perform it on a Linux or Windows system. You can create minimal boot media and full installation media using the same procedure; the only limitation is the capacity of the USB drive - it must have enough space to fit the entire image, which means roughly 350&nbsp;MB for minimal boot media and 4.5&nbsp;GB for full installation media.
+		</para>
+
+		<section id="sect-making-usb-media-linux">
+			<title>Making Installation USB Media on Linux</title>
+
+
+			<indexterm>
+				<primary>USB boot media</primary>
+				<secondary>creating</secondary>
+				<tertiary>on Linux</tertiary>
+			</indexterm>
+
+
+			<para>
+				The following procedure assumes you are using a Linux system and that you have downloaded an appropriate ISO image as described in <xref linkend="chap-download-red-hat-enterprise-linux" />. On most Linux distributions, it will work without the need for installing any additional packages.
+			</para>
+			<warning>
+				<para>
+					This procedure is destructive. Any data on the USB flash drive will be destroyed with no warning. Make sure that you specify the correct drive, and make sure that this drive does not contain any data you want to preserve.
+				</para>
+			</warning>
+			<para>
+				Many Linux distributions provide their own tools for creating live USB media: <package>liveusb-creator</package> on Fedora, <package>usb-creator</package> on Ubuntu, and others. Describing these tools is beyond the scope of this book; the following procedure will work on most Linux systems.
+			</para>
+			<procedure id="proc-making-usb-media-linux">
+				<title>Making USB Media on Linux</title>
+				<step>
+					<para>
+						Connect a USB flash drive to the system and execute the <command>dmesg</command> command. A log detailing all recent events will be displayed. At the bottom of this log, you will see a set of messages caused by the USB flash drive you just connected. It will look like a set of lines similar to the following:
+					</para>
+<screen><computeroutput>[  170.171135] sd 5:0:0:0: [sdb] Attached SCSI removable disk</computeroutput></screen>
+					<para>
+						Note the name of the connected device - in the above example, it is <literal>sdb</literal>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Log in as <systemitem class="username">root</systemitem>:
+					</para>
+<screen><prompt>$</prompt> <command>su -</command></screen>
+					<para>
+						Provide your root password when prompted.
+					</para>
+				</step>
+				<step>
+					<para>
+						Make sure that the device is not mounted. First, use the <command>findmnt <replaceable>device</replaceable></command> command and the device name you found in the earlier steps. For example, if the device name is <literal>sdb</literal>, use the following command:
+					</para>
+<screen><prompt>#</prompt> <command>findmnt /dev/sdb</command></screen>
+					<para>
+						If the command displays no output, you can proceed with the next step. However, if the command does provide output, it means that the device was automatically mounted and you must unmount it before proceeding. A sample output will look similar to the following:
+					</para>
+<screen>
+<prompt>#</prompt> <command>findmnt /dev/sdb</command>
+TARGET   SOURCE   FSTYPE  OPTIONS
+/mnt/iso /dev/sdb iso9660 ro,relatime
+</screen>
+					<para>
+						Note the <literal>TARGET</literal> column. Next, use the <command>umount <replaceable>target</replaceable></command> command to unmount the device:
+					</para>
+<screen><prompt>#</prompt> <command>umount /mnt/iso</command></screen>
+				</step>
+				<step>
+					<para>
+						Use the <command>dd</command> command to write the installation ISO image directly to the USB device:
+					</para>
+<screen><prompt>#</prompt> <command>dd if=<replaceable>/image_directory/image.iso</replaceable> of=/dev/<replaceable>device</replaceable> bs=<replaceable>blocksize</replaceable></command></screen>
+					<para>
+						Replace <replaceable>/image_directory/image.iso</replaceable> with the full path to the ISO image file you downloaded, <replaceable>device</replaceable> with the device name as reported by the <command>dmesg</command> command earlier, and <replaceable>blocksize</replaceable> with a reasonable block size (for example, <literal>512k</literal>) to speed up the writing process. The <option>bs</option> parameter is optional, but it can speed up the process considerably.
+					</para>
+					<important>
+						<para>
+							Make sure to specify the output as the device name (for example, <filename>/dev/sda</filename>), not as a name of a <emphasis>partition</emphasis> on the device (for example, <filename>/dev/sda1</filename>).
+						</para>
+					</important>
+					<para>
+						For example, if the ISO image is located in <filename>/home/testuser/Downloads/rhel-server-&PRODVER;x86_64-boot.iso</filename> and the detected device name is <filename>sdb</filename>, the command will look like the following:
+					</para>
+<screen><prompt>#</prompt> <command>dd if=/home/testuser/Downloads/rhel-server-&PRODVER;x86_64-boot.iso of=/dev/sdb bs=512k</command></screen>
+				</step>
+				<step>
+					<para>
+						Wait for <command>dd</command> to finish writing the image to the device. Note that no progress bar is displayed; the data transfer is finished when the <prompt>#</prompt> prompt appears again. After the prompt is displayed, log out from the <systemitem>root</systemitem> account and unplug the USB drive.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				The USB drive is now ready to be used as a boot device. You can continue with <xref linkend="chap-booting-installer-x86" /> on AMD64 and Intel&nbsp;64 systems or <xref linkend="chap-booting-installer-ppc" /> on IBM Power&nbsp;Systems servers.
+			</para>
+			<note>
+				<para>
+					Non-virtualized installations (known as "bare metal" installations) on IBM Power Systems servers require that the <option>inst.stage2=</option> boot option is specified. Refer to <xref linkend="sect-boot-options-installer" /> for information about the <option>inst.stage2=</option> boot option.
+				</para>
+			</note>
+		</section>
+
+		<section id="sect-making-usb-media-windows">
+			<title>Making Installation USB Media on Windows</title>
+
+
+			<indexterm>
+				<primary>USB boot media</primary>
+				<secondary>creating</secondary>
+				<tertiary>on Windows</tertiary>
+			</indexterm>
+
+
+			<para>
+				The procedure of creating bootable USB media on Windows depends on which tool you use. There are many different utilities which allow you to write an ISO image to a USB drive. Red&nbsp;Hat recommends using the <application>Fedora Media Writer</application>, available for download at <ulink url="https://github.com/MartinBriza/MediaWriter/releases" />.
+			</para>
+			<important>
+				<para>
+					Transferring the ISO image file to the USB drive using Windows Explorer or a similar file manager will not work - you will not be able to boot from the device.
+				</para>
+			</important>
+			<procedure id="proc-making-usb-media-windows">
+				<title>Making USB Media on Windows</title>
+				<step>
+					<para>
+						Download and install <application>Fedora Media Writer</application>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Download the &PRODUCT; ISO image you want to use to create the media. (See <xref linkend="chap-download-red-hat-enterprise-linux" /> for instructions on obtaining ISO images.)
+					</para>
+				</step>
+				<step>
+					<para>
+						Plug in the USB drive you will be using to create bootable media.
+					</para>
+				</step>
+				<step>
+					<para>
+						Open <application>Fedora Media Writer</application>.
+					</para>
+				</step>
+				<step>
+					<para>
+						In the main window, click <guilabel>Custom Image</guilabel> and select the downloaded &PRODUCT; ISO image.
+					</para>
+				</step>
+				<step>
+					<para>
+						From the drop-down menu, select the drive you want to use. If the drive does not appear, verify that the USB drive is connected and restart <application>Fedora Media Writer</application>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Click <guilabel>Write to disk</guilabel>. The boot media creation process will begin. Do not unplug the drive until the operation completes. Depending on the size of the ISO image and the write speed of the USB drive, writing the image can take several minutes.
+					</para>
+					<figure id="fedora-liveusb-creator">
+						<title>Fedora Media Writer</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/media/fedora-live-usb-creator.png" format="PNG" />
+							</imageobject>
+							<textobject>
+								<para>
+									Fedora Media Writer main window, showing the "Complete!" message
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						When the creation process finishes and the <computeroutput>Complete!</computeroutput> message appears, unmount the USB drive using the <guilabel>Safely remove hardware</guilabel> icon in the system's notification area.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				The USB drive is now ready to be used as a boot device. You can continue with <xref linkend="chap-booting-installer-x86" /> on AMD64 and Intel&nbsp;64 systems or <xref linkend="chap-booting-installer-ppc" /> on IBM Power&nbsp;Systems servers.
+			</para>
+		</section>
+
+		<section id="sect-making-usb-media-macosx">
+			<title>Making Installation USB Media on Mac OS X</title>
+
+
+			<indexterm>
+				<primary>USB boot media</primary>
+				<secondary>creating</secondary>
+				<tertiary>on Mac OS X</tertiary>
+			</indexterm>
+
+
+			<para>
+				This procedure involves using the <command>dd</command> command line tool to write the installation image to a USB flash drive. Note that some steps involve use of the <command>sudo</command> command, which is only available when logged in with an administrator account that requires a password.
+			</para>
+			<warning>
+				<para>
+					All data on the USB flash drive will be deleted by this procedure.
+				</para>
+			</warning>
+			<procedure id="proc-making-usb-media-macosx">
+				<title>Making USB Media on Mac OS X</title>
+				<step>
+					<para>
+						Connect a USB flash drive to the system and identify the device path with the <command>diskutil list</command> command. The device path has the format of <filename>/dev/disk<replaceable>number</replaceable></filename>, where <replaceable>number</replaceable> is the number of the disk. The disks are numbered starting at zero (0). Disk 0 is likely to be the OS X recovery disk, and Disk 1 is likely to be your main OS X installation. In the following example, it is <filename>disk2</filename>:
+					</para>
+<screen>$ <command>diskutil list</command>
+/dev/disk0
+#:                       TYPE NAME                    SIZE       IDENTIFIER
+0:      GUID_partition_scheme                        *500.3 GB   disk0
+1:                        EFI EFI                     209.7 MB   disk0s1
+2:          Apple_CoreStorage                         400.0 GB   disk0s2
+3:                 Apple_Boot Recovery HD             650.0 MB   disk0s3
+4:          Apple_CoreStorage                         98.8 GB    disk0s4
+5:                 Apple_Boot Recovery HD             650.0 MB   disk0s5
+/dev/disk1
+#:                       TYPE NAME                    SIZE       IDENTIFIER
+0:                  Apple_HFS YosemiteHD             *399.6 GB   disk1
+Logical Volume on disk0s1
+8A142795-8036-48DF-9FC5-84506DFBB7B2
+Unlocked Encrypted
+/dev/disk2
+#:                       TYPE NAME                    SIZE       IDENTIFIER
+0:     FDisk_partition_scheme                        *8.0 GB     disk2
+1:               Windows_NTFS SanDisk USB             8.0 GB     disk2s1</screen>
+					<para>
+						To identify your USB flash drive, compare the <literal>NAME</literal>, <literal>TYPE</literal> and <literal>SIZE</literal> columns to what you know about your flash drive. For example, the <literal>NAME</literal> should be the same as the title of the flash drive icon in the <application>Finder</application>. You can also compare these values to those in the flash drive's information panel; right-click on the drive icon and select <guilabel>Get Info</guilabel>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Use the <command>diskutil unmountDisk</command> command to unmount the flash drive's filesystem volumes:
+					</para>
+<screen>$ <command>diskutil unmountDisk /dev/disk<replaceable>number</replaceable></command>
+					Unmount of all volumes on disk<replaceable>number</replaceable> was successful</screen>
+					<para>
+						When you do this, the icon for the flash drive disappears from your desktop. If it does not, you might have identified the wrong disk. If you attempt to unmount the system disk accidentally, you get a <literal>failed to unmount</literal> error.
+					</para>
+				</step>
+				<step>
+					<para>
+						Use the <command>dd</command> command as a parameter of the <command>sudo</command> command to write the ISO image to the flash drive:
+					</para>
+<screen>$ <command>sudo dd if=<replaceable>/path/to/image.iso</replaceable> of=/dev/rdisk<replaceable>number</replaceable> bs=1m></command></screen>
+					<note>
+						<para>
+							Mac OS X provides both a block (<filename class="devicefile">/dev/disk*</filename>) and character device (<filename class="devicefile">/dev/rdisk*</filename>) file for each storage device. Writing an image to the <filename class="devicefile">/dev/rdisk<replaceable>number</replaceable></filename> character device is faster than to the <filename class="devicefile">/dev/disk<replaceable>number</replaceable></filename> block device.
+						</para>
+					</note>
+					<example>
+						<title>Writing an ISO Image to a Disk</title>
+						<para>
+							To write the <filename>/Users/<replaceable>user_name</replaceable>/Downloads/rhel-server-&PRODVER;x86_64-boot.iso</filename> file to the <filename>/dev/rdisk2</filename> device:
+						</para>
+<screen>$ <command>sudo dd if=/Users/<replaceable>user_name</replaceable>/Downloads/rhel-server-&PRODVER;x86_64-boot.iso of=/dev/rdisk2</command></screen>
+					</example>
+				</step>
+				<step>
+					<para>
+						Wait for the command to finish. Note that no progress bar is displayed; however, to check the status of the operation while it is still running, press <keycombo><keycap>Ctrl</keycap><keycap>t</keycap></keycombo> in the terminal:
+					</para>
+<screen>load: 1.02  cmd: dd 3668 uninterruptible 0.00u 1.91s
+112+0 records in
+111+0 records out
+116391936 bytes transferred in 114.834860 secs (1013559 bytes/sec)</screen>
+					</step>
+					<step>
+						<para>
+							The speed of the data transfer depends on the speed of your USB ports and the flash drive. After the prompt is displayed again, the data transfer is finished. You can then unplug the flash drive.
+						</para>
+					</step>
+				</procedure>
+				<para>
+					The flash drive is now ready to be used as a boot device. You can continue with <xref linkend="chap-booting-installer-x86" /> on AMD64 and Intel&nbsp;64 systems or <xref linkend="chap-booting-installer-ppc" /> on IBM Power&nbsp;Systems servers.
+				</para>
+			</section>
+		</section>
+
+
+
+		<section id="sect-making-media-additional-sources">
+			<title>Preparing Installation Sources</title>
+			<para>
+				As explained in <xref linkend="chap-download-red-hat-enterprise-linux" />, two basic types of media are available for &PRODUCT;: a minimal boot image and a full installation image (also known as a binary DVD). If you downloaded the binary DVD and created a boot DVD-ROM or USB drive from it, you can proceed with the installation immediately, as this image contains everything you need to install the system.
+			</para>
+			<para>
+				However, if you use the minimal boot image, you must also configure an additional source of the installation. This is because the minimal boot image only contains the installation program itself and tools needed to boot your system and start the installation; it does not include the software packages to be installed on your system.
+			</para>
+			<para>
+				The full installation DVD ISO image can be used as the source for the installation. If your system will require additional software not provided by Red&nbsp;Hat, you should configure additional repositories and install these packages <emphasis>after</emphasis> the installation is finished. For information about configuring additional <application>Yum</application> repositories on an installed system, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+			</para>
+			<para>
+				The installation source can be any of the following:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<literal>DVD</literal>: You can burn the binary DVD ISO image onto a DVD and configure the installation program to install packages from this disk.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<literal>Hard drive</literal>: You can place the binary DVD ISO image on a hard drive and install packages from it.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<literal>Network location</literal>: You can copy the binary DVD ISO image or the <firstterm>installation tree</firstterm> (extracted contents of the binary DVD ISO image) to a network location accessible from the installation system and perform the installation over the network using the following protocols:
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<literal>NFS</literal>: The binary DVD ISO image is placed into a <firstterm>Network File System</firstterm> (NFS) share.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<literal>HTTPS</literal>, <literal>HTTP</literal> or <literal>FTP</literal>: The installation tree is placed on a network location accessible over <systemitem class="protocol">HTTP</systemitem>, <systemitem class="protocol">HTTPS</systemitem>, or <systemitem class="protocol">FTP</systemitem>.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+			<para>
+				When booting the installation from minimal boot media, you must always configure an additional installation source. When booting the installation from the full binary DVD, it is also possible to configure another installation source, but it is not necessary - the binary DVD ISO image itself contains all packages you need to install the system, and the installation program will automatically configure the binary DVD as the source.
+			</para>
+			<para>
+				You can specify an installation source in any of the following ways:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						In the installation program's graphical interface: After the graphical installation begins and you select your preferred language, the <guilabel>Installation Summary</guilabel> screen will appear. Navigate to the <guilabel>Installation Source</guilabel> screen and select the source you want to configure. For details, see:
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<xref linkend="sect-installation-source-x86" /> for AMD64 and Intel&nbsp;64 systems
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<xref linkend="sect-installation-source-ppc" /> for IBM Power&nbsp;Systems servers
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<xref linkend="sect-installation-source-s390" /> for IBM System&nbsp;z
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Using a boot option: You can specify custom boot options to configure the installation program before it starts. One of these options allows you to specify the installation source to be used. See the <option>inst.repo=</option> option in <xref linkend="sect-boot-options-installer" /> for details.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Using a Kickstart file: You can use the <command>install</command> command in a Kickstart file and specify an installation source. See <xref linkend="sect-kickstart-commands" /> for details on the <command>install</command> Kickstart command, and <xref linkend="chap-kickstart-installations" /> for information about Kickstart installations in general.
+					</para>
+				</listitem>
+			</itemizedlist>
+
+			<section id="sect-making-media-sources-dvd">
+				<title>Installation Source on a DVD</title>
+				<para>
+					You can burn the binary DVD ISO image onto a DVD and configure the installation program to install packages from this disk while booting the installation from another drive (for example, a minimal boot ISO on a USB flash drive). This procedure is the same as creating bootable optical media - see <xref linkend="sect-making-cd-dvd-media" /> for more information.
+				</para>
+				<para>
+					When using a DVD as an installation source, make sure the DVD is in the drive when the installation begins. The <application>Anaconda</application> installation program is not able to detect media inserted after the installation begins.
+				</para>
+			</section>
+
+			<section id="sect-making-media-sources-hdd">
+				<title>Installation Source on a Hard Drive</title>
+				<para>
+					Hard drive installations use an ISO image of the binary installation DVD. To use a hard drive as the installation source, transfer the binary DVD ISO image to the drive and connect it to the installation system. Then, boot the <application>Anaconda</application> installation program.
+				</para>
+				<para>
+					You can use any type of hard drive accessible to the installation program, including USB flash drives. The binary ISO image can be in any directory of the hard drive, and it can have any name; however, if the ISO image is not in the top-level directory of the drive, or if there is more than one image in the top-level directory of the drive, you will be required to specify the image to be used. This can be done using a boot option, an entry in a Kickstart file, or manually in the <guilabel>Installation Source</guilabel> screen during a graphical installation.
+				</para>
+				<para>
+					A limitation of using a hard drive as the installation source is that the binary DVD ISO image on the hard drive must be on a partition with a file system which <application>Anaconda</application> can mount. These file systems are <literal>xfs</literal>, <literal>ext2</literal>, <literal>ext3</literal>, <literal>ext4</literal>, and <literal>vfat</literal> (<literal>FAT32</literal>). Note that on Microsoft Windows systems, the default file system used when formatting hard drives is <literal>NTFS</literal>, and the <literal>exFAT</literal> file system is also available; however, neither of these file systems can be mounted during the installation. If you are creating a hard drive or a USB drive to be used as an installation source on Microsoft Windows, make sure to format the drive as <literal>FAT32</literal>.
+				</para>
+				<important>
+					<para>
+						The <literal>FAT32</literal> file system does not support files larger than 4 GiB. Some &PRODUCT;&nbsp;7 installation media can be larger than that, which means you cannot copy them to a drive with this file system.
+					</para>
+				</important>
+				<para>
+					When using a hard drive or a USB flash drive as an installation source, make sure it is connected to the system when the installation begins. The installation program is not able to detect media inserted after the installation begins.
+				</para>
+			</section>
+
+			<section id="sect-making-media-sources-network">
+				<title>Installation Source on a Network</title>
+				<para>
+					Placing the installation source on a network has the advantage of allowing you to install multiple systems from a single source, without having to connect and disconnect any physical media. Network-based installations can be especially useful when used together with a TFTP server, which allows you to boot the installation program from the network as well. This approach completely eliminates the need for creating physical media, allowing easy deployment of &PRODUCT; on multiple systems at the same time. For further information about setting up a TFTP server, see <xref linkend="chap-installation-server-setup" />.
+				</para>
+
+				<section id="sect-making-media-sources-nfs">
+					<title>Installation Source on an NFS Server</title>
+					<para>
+						The <systemitem class="protocol">NFS</systemitem> installation method uses an ISO image of the &PRODUCT; binary DVD placed in a <systemitem class="protocol">Network File System</systemitem> server's <firstterm>exported directory</firstterm>, which the installation system must be able to read. To perform an NFS-based installation, you will need another running system which will act as the NFS host.
+					</para>
+					<para>
+						For more information about NFS servers, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Storage_Administration_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Storage Administration Guide</ulink>.
+					</para>
+					<para>
+						The following procedure is only meant as a basic outline of the process. The precise steps you must take to set up an NFS server will vary based on the system's architecture, operating system, package manager, service manager, and other factors. On &PRODUCT;&nbsp;7 systems, the procedure can be followed exactly as documented. For procedures describing the installation source creation process on earlier releases of &PRODUCT;, see the appropriate <citetitle>Installation Guide</citetitle> for that release.
+					</para>
+					<procedure id="proc-installation-server-setup-nfs">
+						<title>Preparing for Installation Using NFS</title>
+						<step>
+							<para>
+								Install the <package>nfs-utils</package> package by running the following command as <systemitem class="username">root</systemitem>:
+							</para>
+<screen><prompt>#</prompt> <command>yum install nfs-utils</command></screen>
+						</step>
+						<step>
+							<para>
+								Copy the full &PRODUCT;&nbsp;7 binary DVD ISO image to a suitable directory on the NFS server. For example, you can create directory <filename class="directory">/rhel7-install/</filename> for this purpose and save the ISO image here.
+							</para>
+						</step>
+						<step>
+							<para>
+								Open the <filename>/etc/exports</filename> file using a text editor and add a line with the following syntax:
+							</para>
+<screen><replaceable>/exported_directory/</replaceable> <replaceable>clients</replaceable></screen>
+							<para>
+								Replace <replaceable>/exported_directory/</replaceable> with the full path to the directory holding the ISO image. Instead of <replaceable>clients</replaceable>, use the host name or IP address of the computer which is to be installed from this NFS server, the subnetwork from which all computers are to have access the ISO image, or the asterisk sign (<literal>*</literal>) if you want to allow any computer with network access to the NFS server to use the ISO image. See the <systemitem>exports(5)</systemitem> man page for detailed information about the format of this field.
+							</para>
+							<para>
+								The following is a basic configuration which makes the <filename class="directory">/rhel7-install/</filename> directory available as read-only to all clients:
+							</para>
+<screen>/rhel7-install *</screen>
+						</step>
+						<step>
+							<para>
+								Save the <filename>/etc/exports</filename> file after finishing the configuration and exit the text editor.
+							</para>
+						</step>
+						<step>
+							<para>
+								Start the <systemitem class="service">nfs</systemitem> service:
+							</para>
+<screen><prompt>#</prompt> <command>systemctl start nfs.service</command></screen>
+							<para>
+								If the service was already running before you changed the <filename>/etc/exports</filename> file, enter the following command instead, in order for the running NFS server to reload its configuration:
+							</para>
+<screen><prompt>#</prompt> <command>systemctl reload nfs.service</command></screen>
+						</step>
+					</procedure>
+					<para>
+						After completing the procedure above, the ISO image is accessible over <systemitem class="protocol">NFS</systemitem> and ready to be used as an installation source.
+					</para>
+					<para>
+						When configuring the installation source before or during the installation, use <systemitem class="protocol">nfs:</systemitem> as the protocol, the server's host name or IP address, the colon sign (<literal>:</literal>), and the directory holding the ISO image. For example, if the server's host name is <literal>myserver.example.com</literal> and you have saved the ISO image in <filename class="directory">/rhel7-install/</filename>, specify <literal>nfs:myserver.example.com:/rhel7-install/</literal> as the installation source.
+					</para>
+				</section>
+
+				<section id="sect-making-media-sources-http-ftp">
+					<title>Installation Source on an HTTP, HTTPS or FTP Server</title>
+					<para>
+						This installation method allows for a network-based installation using an installation tree, which is a directory containing extracted contents of the binary DVD ISO image and a valid <filename>.treeinfo</filename> file. The installation source is accessed over <systemitem class="protocol">HTTP</systemitem>, <systemitem class="protocol">HTTPS</systemitem>, or <systemitem class="protocol">FTP</systemitem>.
+					</para>
+					<para>
+						For more information about HTTP and FTP servers, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">&PRODUCT;&nbsp;7 System Administrator's Guide</ulink>.
+					</para>
+					<para>
+						The following procedure is only meant as a basic outline of the process. The precise steps you must take to set up an FTP server will vary based on the system's architecture, operating system, package manager, service manager, and other factors. On &PRODUCT;&nbsp;7 systems, the procedure can be followed exactly as documented. For procedures describing the installation source creation process on earlier releases of &PRODUCT;, see the appropriate <citetitle>Installation Guide</citetitle> for that release.
+					</para>
+					<procedure id="proc-installation-server-setup-http">
+						<title>Preparing Installation Using HTTP or HTTPS</title>
+						<step>
+							<para>
+								Install the <package>httpd</package> package by running the following command as <systemitem class="username">root</systemitem>:
+							</para>
+<screen><prompt>#</prompt> <command>yum install httpd</command></screen>
+							<para>
+								An <systemitem class="protocol">HTTPS</systemitem> server needs additional configuration. For detailed information, see section <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/ch-Web_Servers.html#s2-apache-mod_ssl">Setting Up an SSL Server</ulink> in the Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide. However, <systemitem class="protocol">HTTPS</systemitem> is not necessary in most cases, because no sensitive data is sent between the installation source and the installer, and <systemitem class="protocol">HTTP</systemitem> is sufficient.
+							</para>
+							<warning>
+								<para>
+									If your <application>Apache</application> web server configuration enables SSL security, make sure to only enable the <systemitem>TLSv1</systemitem> protocol, and disable <systemitem>SSLv2</systemitem> and <systemitem>SSLv3</systemitem>. This is due to the POODLE SSL vulnerability (CVE-2014-3566). See <ulink url="https://access.redhat.com/solutions/1232413" /> for details.
+								</para>
+							</warning>
+							<important>
+								<para>
+									If you decide to use <systemitem class="protocol">HTTPS</systemitem> and the server is using a self-signed certificate, you must boot the installer with the <option>noverifyssl</option> option.
+								</para>
+							</important>
+						</step>
+						<step>
+							<para>
+								Copy the full &PRODUCT;&nbsp;7 binary DVD ISO image to the HTTP(S) server.
+							</para>
+						</step>
+						<step>
+							<para>
+								Mount the binary DVD ISO image, using the <command>mount</command> command, to a suitable directory:
+							</para>
+<screen><prompt>#</prompt> <command>mount -o loop,ro -t iso9660 <replaceable>/image_directory/image.iso</replaceable> <replaceable>/mount_point/</replaceable></command></screen>
+							<para>
+								Replace <replaceable>/image_directory/image.iso</replaceable> with the path to the binary DVD ISO image, and <replaceable>/mount_point/</replaceable> with the path to the directory in which you want the content of the ISO image to appear. For example, you can create directory <filename class="directory">/mnt/rhel7-install/</filename> for this purpose and use that as the parameter of the <command>mount</command> command.
+							</para>
+						</step>
+						<step>
+							<para>
+								Copy the files from the mounted image to the HTTP server root.
+							</para>
+<screen><prompt>#</prompt> <command>cp -r /mnt/rhel7-install/ /var/www/html/</command></screen>
+							<para>
+								This command creates the <filename class="directory">/var/www/html/rhel7-install/</filename> directory with the content of the image.
+							</para>
+						</step>
+						<step>
+							<para>
+								Start the <systemitem>httpd</systemitem> service:
+							</para>
+<screen><prompt>#</prompt> <command>systemctl start httpd.service</command></screen>
+						</step>
+					</procedure>
+					<para>
+						After completing the procedure above, the installation tree is accessible and ready to be used as the installation source.
+					</para>
+					<para>
+						When configuring the installation source before or during the installation, use <literal>http://</literal> or <literal>https://</literal> as the protocol, the server's host name or IP address, and the directory in which you have stored the files from the ISO image, relative to the HTTP server root. For example, if you are using <systemitem class="protocol">HTTP</systemitem>, the server's host name is <literal>myserver.example.com</literal>, and you have copied the files from the image to <filename class="directory">/var/www/html/rhel7-install/</filename>, specify <literal>http://myserver.example.com/rhel7-install/</literal> as the installation source.
+					</para>
+					<procedure id="proc-installation-server-setup-ftp">
+						<title>Preparing for Installation Using FTP</title>
+						<step>
+							<para>
+								Install the <package>vsftpd</package> package by running the following command as <systemitem class="username">root</systemitem>:
+							</para>
+<screen><prompt>#</prompt> <command>yum install vsftpd</command></screen>
+						</step>
+						<step>
+							<para>
+								Optionally, open the <filename>/etc/vsftpd/vsftpd.conf</filename> configuration file in a text editor, and edit any options you want to change. For available options, see the <systemitem>vsftpd.conf(5)</systemitem> man page. The rest of this procedure assumes that default options are used; notably, to follow the rest of the procedure, anonymous users of the FTP server must be permitted to download files.
+							</para>
+							<warning>
+								<para>
+									If you configured SSL/TLS security in your <filename>vsftpd.conf</filename> file, make sure to only enable the <systemitem>TLSv1</systemitem> protocol, and disable <systemitem>SSLv2</systemitem> and <systemitem>SSLv3</systemitem>. This is due to the POODLE SSL vulnerability (CVE-2014-3566). See <ulink url="https://access.redhat.com/solutions/1234773" /> for details.
+								</para>
+							</warning>
+						</step>
+						<step>
+							<para>
+								Copy the full &PRODUCT;&nbsp;7 binary DVD ISO image to the FTP server.
+							</para>
+						</step>
+						<step>
+							<para>
+								Mount the binary DVD ISO image, using the <command>mount</command> command, to a suitable directory:
+							</para>
+<screen><prompt>#</prompt> <command>mount -o loop,ro -t iso9660 <replaceable>/image_directory/image.iso</replaceable> <replaceable>/mount_point</replaceable></command></screen>
+							<para>
+								Replace <replaceable>/image_directory/image.iso</replaceable> with the path to the binary DVD ISO image, and <replaceable>/mount_point</replaceable> with the path to the directory in which you want the content of the ISO image to appear. For example, you can create directory <filename class="directory">/mnt/rhel7-install/</filename> for this purpose and use that as the parameter of the <command>mount</command> command.
+							</para>
+						</step>
+						<step>
+							<para>
+								Copy the files from the mounted image to the FTP server root:
+							</para>
+<screen><prompt>#</prompt> <command>cp -r /mnt/rhel7-install/ /var/ftp/</command></screen>
+							<para>
+								This command creates the <filename class="directory">/var/ftp/rhel7-install/</filename> directory with the content of the image.
+							</para>
+						</step>
+						<step>
+							<para>
+								Start the <systemitem>vsftpd</systemitem> service:
+							</para>
+<screen><prompt>#</prompt> <command>systemctl start vsftpd.service</command></screen>
+							<para>
+								If the service was already running before you changed the <filename>/etc/vsftpd/vsftpd.conf</filename> file, restart it to ensure the edited file is loaded. To restart, execute the following command:
+							</para>
+<screen><prompt>#</prompt> <command>systemctl restart vsftpd.service</command></screen>
+						</step>
+					</procedure>
+					<para>
+						After completing the procedure above, the installation tree is accessible and ready to be used as the installation source.
+					</para>
+					<para>
+						When configuring the installation source before or during the installation, use <literal>ftp://</literal> as the protocol, the server's host name or IP address, and the directory in which you have stored the files from the ISO image, relative to the FTP server root. For example, if the server's host name is <literal>myserver.example.com</literal> and you have copied the files from the image to <filename class="directory">/var/ftp/rhel7-install/</filename>, specify <literal>ftp://myserver.example.com/rhel7-install/</literal> as the installation source.
+					</para>
+				</section>
+
+				<section id="sect-making-media-sources-firewall">
+					<title>Firewall Considerations for Network-based Installations</title>
+					<para>
+						When using a network-based installation source, make sure that your firewall allows the server you are installing to access the remote installation source. The following table shows which ports must be open for each type of network-based installation
+					</para>
+					<table id="tabl-making-media-sources-firewall-ports">
+						<title>Ports Used by Network Protocols</title>
+						<tgroup cols="2">
+							<colspec colnum="1" colwidth="1*" />
+							<colspec colnum="2" colwidth="1*" />
+							<thead>
+								<row>
+									<entry>
+										Protocol used
+									</entry>
+									<entry>
+										Ports to open
+									</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry>
+										<systemitem class="protocol">FTP</systemitem>
+									</entry>
+									<entry>
+										<literal>21</literal>
+									</entry>
+								</row>
+								<row>
+									<entry>
+										<systemitem class="protocol">HTTP</systemitem>
+									</entry>
+									<entry>
+										<literal>80</literal>
+									</entry>
+								</row>
+								<row>
+									<entry>
+										<systemitem class="protocol">HTTPS</systemitem>
+									</entry>
+									<entry>
+										<literal>443</literal>
+									</entry>
+								</row>
+								<row>
+									<entry>
+										<systemitem class="protocol">NFS</systemitem>
+									</entry>
+									<entry>
+										<literal>2049</literal>, <literal>111</literal>, <literal>20048</literal>
+									</entry>
+								</row>
+								<row>
+									<entry>
+										<systemitem class="protocol">TFTP</systemitem>
+									</entry>
+									<entry>
+										<literal>69</literal>
+									</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table>
+					<para>
+						For information about opening specific firewall ports, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security Guide</ulink>.
+					</para>
+				</section>
+
+			</section>
+
+		</section>
+
+	</chapter>

@@ -1,0 +1,7 @@
+<!ENTITY PRODUCT "Red&nbsp;Hat Enterprise&nbsp;Linux">
+<!ENTITY BOOKID "doc-Installation_Guide">
+<!ENTITY YEAR "2017">
+<!ENTITY HOLDER "Red&nbsp;Hat, Inc. and others">
+<!ENTITY PRODVER "7.4">
+<!ENTITY PREVVER "6">
+<!ENTITY IGURL '<ulink url="https://access.redhat.com/documentation/en-US/" />'>

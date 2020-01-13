@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-booting-installer-x86">
+	<title>Booting the Installation on AMD64 and Intel&nbsp;64 Systems</title>
+
+
+	<indexterm>
+		<primary>BIOS (Basic Input/Output System)</primary>
+	</indexterm>
+	<indexterm>
+		<primary>UEFI (Unified Extensible Firmware Interface)</primary>
+	</indexterm>
+	<indexterm>
+		<primary>CD/DVD media</primary>
+		<secondary>booting</secondary>
+	</indexterm>
+
+	<indexterm>
+		<primary>USB media</primary>
+		<secondary>booting</secondary>
+	</indexterm>
+
+
+
+	<para>
+		You can install &PRODUCT; from the ISO images stored on hard disk, or from a network using <systemitem class="protocol">NFS</systemitem>, <systemitem class="protocol">FTP</systemitem>, <systemitem class="protocol">HTTP</systemitem>, or <systemitem class="protocol">HTTPS</systemitem> methods. Booting and installing from the full installation DVD is the easiest method to get started with. Other methods require some additional setup but provide different advantages that might suit your needs better. For example, when installing &PRODUCT; on a large number of computers at the same time, the best approach is booting from a PXE server and installing from a source in a shared network location.
+	</para>
+	<para>
+		The following table summarizes the different boot methods and recommended installation methods to use with each:
+	</para>
+	<table frame="all">
+		<title>Boot Methods and Installation Sources</title>
+
+		<tgroup align="left" cols="2" colsep="1" rowsep="1">
+			<thead>
+				<row>
+					<entry>
+						Boot method
+					</entry>
+					<entry>
+						Installation source
+					</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>
+						Full installation media (DVD or USB)
+					</entry>
+					<entry>
+						The boot media itself
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Minimal boot media (CD or USB)
+					</entry>
+					<entry>
+						Full installation DVD ISO image or the installation tree extracted from this image, placed in a network location or on a hard drive
+					</entry>
+				</row>
+				<row>
+					<entry>
+						Network boot (PXE)
+					</entry>
+					<entry>
+						Full installation DVD ISO image or the installation tree extracted from this image, placed in a network location
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</table>
+
+	<para>
+		To create a boot CD-ROM or to prepare your USB flash drive for booting or installation, see <xref linkend="sect-making-usb-media"/>.
+	</para>
+	<para>
+		This chapter covers the following topics:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				<xref linkend="sect-installation-booting-x86"/> describes how to boot the installation program using physical media (&PRODUCT; DVD, Boot CD-ROM, USB flash drive).
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<xref linkend="sect-booting-from-pxe-x86"/> describes how to boot the installation program using PXE.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				<xref linkend="sect-boot-menu-x86"/> contains information on the boot menu.
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<section id="sect-installation-starting-x86">
+		<title>Starting the Installation Program</title>
+
+
+		<indexterm>
+			<primary>installation</primary>
+			<secondary>program</secondary>
+			<tertiary>starting</tertiary>
+		</indexterm>
+		<indexterm>
+			<primary>starting</primary>
+			<secondary>installation</secondary>
+		</indexterm>
+
+
+		<para>
+			To start, first make sure that you have all necessary resources for the installation. If you have already read through <xref linkend="chap-installation-planning-x86"/>, and followed the instructions, you should be ready to start the installation process. When you have verified that you are ready to begin, boot the installation program using the &PRODUCT; DVD or any boot media that you have created.
+		</para>
+		<important>
+			<para>
+				Excessive input (for example, clicking the mouse repeatedly) during the boot sequence can cause the installer to ignore keyboard input later in the installation process.
+			</para>
+		</important>
+		<note>
+			<para>
+				Occasionally, some hardware components require a <firstterm>driver update</firstterm> during the installation. A driver update adds support for hardware that is not otherwise supported by the installation program. See <xref linkend="chap-driver-updates-x86"/> for more information.
+			</para>
+		</note>
+
+		<section id="sect-installation-booting-x86">
+			<title>Booting the Installation on AMD64 and Intel&nbsp;64 Systems from Physical Media</title>
+
+
+			<indexterm>
+				<primary>installation program</primary>
+				<secondary>AMD64 and Intel&nbsp;64</secondary>
+				<tertiary>booting</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>booting</primary>
+				<secondary>installation program</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				To start the installation program from a &PRODUCT; DVD or from minimal boot media, follow this procedure:
+			</para>
+			<procedure id="proc-how-to-start-the-installation-program-from-physical-media">
+				<title>Booting the Installation from Physical Media</title>
+				<step>
+					<para>
+						Disconnect any drives which you do not need for the installation. See <xref linkend="sect-installation-planning-usb-disks-x86"/> for more information.
+					</para>
+				</step>
+				<step>
+					<para>
+						Power on your computer system.
+					</para>
+				</step>
+				<step>
+					<para>
+						Insert the media in your computer.
+					</para>
+				</step>
+				<step>
+					<para>
+						Power off your computer with the boot media still inside.
+					</para>
+				</step>
+				<step>
+					<para>
+						Power on your computer system. Note that you might need to press a specific key or combination of keys to boot from the media or configure your system's <firstterm>Basic Input/Output System</firstterm> (<acronym>BIOS</acronym>) to boot from the media. For more information, see the documentation that came with your system.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				After a short delay, the boot screen appears, which contains information on a variety of boot options. Installation program automatically begins if you take no action within the first minute. For a description of the options available on this screen, see <xref linkend="sect-boot-menu-x86"/>.
+			</para>
+		</section>
+
+		<section id="sect-booting-from-pxe-x86">
+			<title>Booting the Installation on AMD64 and Intel&nbsp;64 Systems from the Network Using PXE</title>
+			<para>
+				To boot with
+				<indexterm>
+					<primary>PXE (Pre-boot eXecution Environment)</primary>
+
+				</indexterm>
+				PXE, you need a properly configured TFTP server, and a network interface in your computer that supports PXE. For information on how to configure a PXE server, see <xref linkend="chap-installation-server-setup"/>.
+			</para>
+
+			<para>
+				Configure the computer to boot from the network interface. This option is in the BIOS, and can be labeled <option>Network Boot</option> or <option>Boot Services</option>. Also, ensure that the BIOS is configured to boot first from the correct network interface. Some BIOS systems specify the network interface as a possible boot device, but do not support the PXE standard. See your hardware's documentation for more information. Once you properly enable PXE booting, the computer can boot the &PRODUCT; installation system without any other media.
+			</para>
+			<para>
+				Follow the procedure below to boot the installation program from a PXE server. Note that this procedure requires the use of a physical network connection, for example Ethernet. It will not work with a wireless connection.
+			</para>
+			<procedure id="proc-how-to-boot-the-installation-program-from-network-using-PXE">
+				<title>Booting the Installation from the Network Using PXE</title>
+				<step>
+					<para>
+						Ensure that the network cable is attached. The link indicator light on the network socket should be lit, even if the computer is not switched on.
+					</para>
+				</step>
+				<step>
+					<para>
+						Switch on the computer.
+					</para>
+				</step>
+				<step>
+					<para>
+						Depending on your hardware, some network setup and diagnostic information can be displayed before your computer connects to a PXE server. Once it connects, a menu is displayed according to the configuration of the PXE server. Press the number key that corresponds to the desired option. If you are not sure of which option to select, ask your server administrator.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				At this point, the installation program starts successfully and the boot screen appears, which contains information on a variety of boot options. Installation program automatically begins if you take no action within the first minute. For a description of the options available on this screen, see <xref linkend="sect-boot-menu-x86"/>.
+			</para>
+		</section>
+
+	</section>
+
+	<section id="sect-boot-menu-x86">
+		<title>The Boot Menu</title>
+		<para>
+			Once your system has completed loading the boot media, a boot menu is displayed using <application>GRUB2</application> (<application>GRand Unified Bootloader</application>, version 2). The boot menu provides several options in addition to launching the installation program. If no key is pressed within 60 seconds, the default boot option (the one highlighted in white) will be run. To choose the default, either wait for the timer to run out or press <keycap>Enter</keycap>.
+		</para>
+		<figure>
+			<title>The Boot Screen</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/boot/boot_screen.png" format="PNG" scalefit="0"/>
+				</imageobject>
+				<textobject>
+					<para>
+						The boot screen
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			To select a different option than the default, use the arrow keys on your keyboard, and press <keycap>Enter</keycap> when the correct option is highlighted.
+		</para>
+		<para>
+			To customize the boot options for a particular menu entry:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					On BIOS-based systems, the preferred way is to press the <keycap>Tab</keycap> key and add custom boot options to the command line. You can also access the <prompt>boot:</prompt> prompt by pressing the <keycap>Esc</keycap> key but no required boot options will be preset in it. In that case, you must always specify the <command>linux</command> option before using any other boot options.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					On UEFI-based systems, press the <keycap>e</keycap> key and add custom boot options to the command line. When ready press <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo> to boot the modified option.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			See <xref linkend="chap-anaconda-boot-options"/> for more information about additional boot options.
+		</para>
+		<para>
+			The boot menu options are:
+		</para>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>Install &PRODUCT;&nbsp;7.0</term>
+					<listitem>
+						<para>
+							Choose this option to install &PRODUCT; onto your computer system using the graphical installation program.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Test this media &amp; install &PRODUCT;&nbsp;7.0</term>
+					<listitem>
+						<para>
+							This option is the default. Prior to starting the installation program, a utility is launched to check the integrity of the installation media.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Troubleshooting  <literal>&gt;</literal></term>
+					<listitem>
+						<para>
+							This item is a separate menu containing options that help resolve various installation issues. When highlighted, press <keycap>Enter</keycap> to display its contents.
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+
+			<figure>
+				<title>The Troubleshooting Menu</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/boot/boot_screen_troubleshooting.png" format="PNG" scalefit="0"/>
+					</imageobject>
+					<textobject>
+						<para>
+							The troubleshooting menu
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<variablelist>
+				<varlistentry>
+					<term>Install &PRODUCT;&nbsp;7.0 in basic graphics mode</term>
+					<listitem>
+						<para>
+							This option allows you to install &PRODUCT; in graphical mode even if the installation program is unable to load the correct driver for your   video card. If your screen appears distorted or goes blank when using the <guilabel>Install &PRODUCT;&nbsp;7.0</guilabel> option, restart your computer and try this option instead.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Rescue a &PRODUCT; system</term>
+					<listitem>
+						<para>
+							Choose this option to repair a problem with your installed &PRODUCT; system that prevents you from booting normally. The rescue environment contains utility programs that allow you fix a wide variety of these problems.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Run a memory test</term>
+					<listitem>
+						<para>
+							This option runs a memory test on your system. For more information, see <xref linkend="sect-boot-options-memtest"/>.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Boot from local drive</term>
+					<listitem>
+						<para>
+							This option boots the system from the first installed disk. If you booted this disc accidentally, use this option to boot from the hard disk immediately without starting the installation program.
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</section>
+</chapter>

@@ -1,0 +1,25 @@
+diff --git a/prepare_anaconda_help_content.py b/prepare_anaconda_help_content.py
+index 75e6dbe..d39f625 100755
+--- a/prepare_anaconda_help_content.py
++++ b/prepare_anaconda_help_content.py
+@@ -237,6 +237,7 @@ def generate_help_content(output_folder,
+     template = "the full <citetitle>\&PRODUCT\; Installation Guide<\/citetitle>, available at \&IGURL\;"
+     for path in glob.glob(os.path.join(output_folder, "*.xml")):
+         os.system("sed 's/<xref\/>/%s/g' -i %s %s" % (template, path, path))
++        os.system("sed 's/Red Hat Enterprise/Scientific/g' -i %s %s" % (path, path))
+ 
+     # resolve any newly added entities
+     print("running xmllint to resolve any newly added entities")
+diff --git a/publican.cfg b/publican.cfg
+index 99f180c..401cc9b 100644
+--- a/publican.cfg
++++ b/publican.cfg
+@@ -3,7 +3,7 @@
+ 
+ xml_lang: en-US
+ brand: RedHat-201405
+-product: Red_Hat_Enterprise_Linux
++product: Scientific_Linux
+ git_branch: docs-rhel-6
+ show_remarks: 0
+ sort_order: 100

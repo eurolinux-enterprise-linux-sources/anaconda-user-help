@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-installing-using-anaconda-x86">
+	<title>Installing Using Anaconda</title>
+	<para>
+		This chapter provides step-by-step instructions for installing &PRODUCT; using the <application>Anaconda</application> installer. The bulk of this chapter describes installation using the graphical user interface. A text mode is also available for systems with no graphical display, but this mode is limited in certain aspects (for example, custom partitioning is not possible in text mode).
+	</para>
+	<para>
+		If your system does not have the ability to use the graphical mode, you can:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				Use Kickstart to automate the installation as described in <xref linkend="chap-kickstart-installations" />
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Perform the graphical installation remotely by connecting to the installation system from another computer with a graphical display using the <firstterm>VNC</firstterm> (Virtual Network Computing) protocol - see <xref linkend="chap-vnc-installations" />
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<section id="sect-installation-new-users-x86">
+		<title>Introduction to Anaconda</title>
+		<para>
+			The &PRODUCT; installer, <application>Anaconda</application>, is different from most other operating system installation programs due to its parallel nature. Most installers follow a fixed path: you must choose your language first, then you configure network, then installation type, then partitioning, and so on. There is usually only one way to proceed at any given time.
+		</para>
+		<para>
+			In <application>Anaconda</application> you are only required to select your language and locale first, and then you are presented with a central screen, where you can configure most aspects of the installation in any order you like. This does not apply to all parts of the installation process, however - for example, when installing from a network location, you must configure the network before you can select which packages to install.
+		</para>
+		<para>
+			Some screens will be automatically configured depending on your hardware and the type of media you used to start the installation. You can still change the detected settings in any screen. Screens which have not been automatically configured, and therefore require your attention before you begin the installation, are marked by an exclamation mark. You cannot start the actual installation process before you finish configuring these settings.
+		</para>
+		<para>
+			Additional differences appear in certain screens; notably the custom partitioning process is very different from other Linux distributions. These differences are described in each screen's subsection.
+		</para>
+	</section>
+
+	<section id="sect-consoles-logs-during-installation-x86">
+		<title>Consoles and Logging During the Installation</title>
+		<para>
+			The following sections describe how to access logs and an interactive shell during the installation. This is useful when troubleshooting problems, but should not be necessary in most cases.
+		</para>
+
+		<section id="sect-installation-consoles-x86">
+			<title>Accessing Consoles</title>
+			<para>
+				The &PRODUCT; installer uses the <application>tmux</application> terminal multiplexer to display and control several windows you can use in addition to the main interface. Each of these windows serves a different purpose - they display several different logs, which can be used to troubleshoot any issues during the installation, and one of the windows provides an interactive shell prompt with <systemitem class="username">root</systemitem> privileges, unless this prompt was specifically disabled using a boot option or a Kickstart command.
+			</para>
+			<note>
+				<para>
+					In general, there is no reason to leave the default graphical installation environment unless you need to diagnose an installation problem.
+				</para>
+			</note>
+			<para>
+				The terminal multiplexer is running in virtual console 1. To switch from the graphical installation environment to <application>tmux</application>, press <keycombo><keycap>Ctrl</keycap><keycap>Alt</keycap><keycap>F1</keycap></keycombo>. To go back to the main installation interface which runs in virtual console 6, press <keycombo><keycap>Ctrl</keycap><keycap>Alt</keycap><keycap>F6</keycap></keycombo>.
+			</para>
+			<note>
+				<para>
+					If you choose text mode installation, you will start in virtual console 1 (<application>tmux</application>), and switching to console 6 will open a shell prompt instead of a graphical interface.
+				</para>
+			</note>
+			<para>
+				The console running <application>tmux</application> has 5 available windows; their contents are described in the table below, along with keyboard shortcuts used to access them. Note that the keyboard shortcuts are two-part: first press <keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo>, then release both keys, and press the number key for the window you want to use.
+			</para>
+			<para>
+				You can also use <keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>n</keycap> and <keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>p</keycap> to switch to the next or previous <application>tmux</application> window, respectively.
+			</para>
+			<table id="tabl-tmux-windows-x86">
+				<title>Available tmux Windows</title>
+				<tgroup cols="2">
+					<colspec colwidth="15%" colname="keystroke" colnum="1" />
+					<colspec colwidth="85%" colname="contents" colnum="2" />
+					<thead>
+						<row>
+							<entry>
+								Shortcut
+							</entry>
+							<entry>
+								Contents
+							</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								<keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>1</keycap>
+							</entry>
+							<entry>
+								Main installation program window. Contains text-based prompts (during text mode installation or if you use VNC Direct Mode), and also some debugging information.
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>2</keycap>
+							</entry>
+							<entry>
+								Interactive shell prompt with <systemitem class="username">root</systemitem> privileges.
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>3</keycap>
+							</entry>
+							<entry>
+								Installation log; displays messages stored in <filename>/tmp/anaconda.log</filename>.
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>4</keycap>
+							</entry>
+							<entry>
+								Storage log; displays messages related storage devices from kernel and system services, stored in <filename>/tmp/storage.log</filename>.
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<keycombo><keycap>Ctrl</keycap><keycap>b</keycap></keycombo> <keycap>5</keycap>
+							</entry>
+							<entry>
+								Program log; displays messages from other system utilities, stored in <filename>/tmp/program.log</filename>.
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<para>
+				In addition to displaying diagnostic information in <application>tmux</application> windows, <application>Anaconda</application> also generates several log files, which can be transferred from the installation system. These log files are described in <xref linkend="tabl-installation-log-files-x86" />, and directions for transferring them from the installation system are available in <xref linkend="chap-troubleshooting-x86" />.
+			</para>
+		</section>
+
+		<section id="sect-installation-screenshots-x86">
+			<title>Saving Screenshots</title>
+			<para>
+				You can press <keycombo><keycap>Shift</keycap><keycap>Print Screen</keycap></keycombo> at any time during the graphical installation to capture the current screen. These screenshots are saved to <filename class="directory">/tmp/anaconda-screenshots/</filename>.
+			</para>
+			<para>
+				Additionally, you can use the <command>autostep --autoscreenshot</command> command in a Kickstart file to capture and save each step of the installation automatically. See <xref linkend="sect-kickstart-commands" /> for details.
+			</para>
+		</section>
+
+	</section>
+
+	<section id="sect-installation-text-mode-x86">
+		<title>Installing in Text Mode</title>
+		<para>
+			Text mode installation offers an interactive, non-graphical interface for installing &PRODUCT;. This can be useful on systems with no graphical capabilities; however, you should always consider the available alternatives before starting a text-based installation. Text mode is limited in the amount of choices you can make during the installation.
+		</para>
+		<important>
+			<para>
+				Red&nbsp;Hat recommends that you install &PRODUCT; using the graphical interface. If you are installing &PRODUCT; on a system that lacks a graphical display, consider performing the installation over a VNC connection - see <xref linkend="chap-vnc-installations" />. The text mode installation program will prompt you to confirm the use of text mode if it detects that a VNC-based installation is possible.
+			</para>
+			<para>
+				If your system has a graphical display, but graphical installation fails, try booting with the <command>inst.xdriver=vesa</command> option - see <xref linkend="chap-anaconda-boot-options" />.
+			</para>
+			<para>
+				Alternatively, consider a Kickstart installation. See <xref linkend="chap-kickstart-installations" /> for more information.
+			</para>
+		</important>
+		<figure>
+			<title>Text Mode Installation</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/preinstallhub/preinstall_hub_txt.png" format="PNG" scalefit="0" />
+				</imageobject>
+				<textobject>
+					<para>
+						The main menu in during a text-based installation.
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			Installation in text mode follows a pattern similar to the graphical installation: There is no single fixed progression; you can configure many settings in any order you want using the main status screen. Screens which have already been configured, either automatically or by you, are marked as <literal>[x]</literal>, and screens which require your attention before the installation can begin are marked with <literal>[!]</literal>. Available commands are displayed below the list of available options.
+		</para>
+		<note>
+			<para>
+				When related background tasks are being run, certain menu items can be temporarily unavailable or display the <computeroutput>Processing...</computeroutput> label. To refresh to the current status of text menu items, use the <keycap>r</keycap> option at the text mode prompt.
+			</para>
+		</note>
+		<para>
+			At the bottom of the screen in text mode, a green bar is displayed showing five menu options. These options represent different screens in the <application>tmux</application> terminal multiplexer; by default you start in screen 1, and you can use keyboard shortcuts to switch to other screens which contain logs and an interactive command prompt. For information about available screens and shortcuts to switch to them, see <xref linkend="sect-installation-consoles-x86" />.
+		</para>
+		<para>
+			Limits of interactive text mode installation include:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					The installer will always use the English language and the US English keyboard layout. You can configure your language and keyboard settings, but these settings will only apply to the installed system, not to the installation.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					You cannot configure any advanced storage methods (LVM, software RAID, FCoE, zFCP and iSCSI).
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					It is not possible to configure custom partitioning; you must use one of the automatic partitioning settings. You also cannot configure where the boot loader will be installed.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					You cannot select any package add-ons to be installed; they must be added after the installation finishes using the <application>Yum</application> package manager.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			To start a text mode installation, boot the installation with the <option>inst.text</option> boot option used either at the boot command line in the boot menu, or in your PXE server configuration. See <xref linkend="chap-booting-installer-x86" /> for information about booting and using boot options.
+		</para>
+	</section>
+
+	<section id="sect-installation-graphical-mode-x86">
+		<title>Installing in the Graphical User Interface</title>
+		<para>
+			The graphical installation interface is the preferred method of manually installing &PRODUCT;. It allows you full control over all available settings, including custom partitioning and advanced storage configuration, and it is also localized to many languages other than English, allowing you to perform the entire installation in a different language. The graphical mode is used by default when you boot the system from local media (a CD, DVD or a USB flash drive).
+		</para>
+		<figure>
+			<title>The <guilabel>Installation Summary</guilabel> Screen</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/preinstallhub/preinstall_hub.png" format="PNG" width="660" />
+				</imageobject>
+				<textobject>
+					<para>
+						The Installation Summary Screen
+					</para>
+				</textobject>
+			</mediaobject>
+		</figure>
+		<para>
+			The sections below discuss each screen available in the installation process. Note that due to the installer's parallel nature, most of the screens do not have to be completed in the order in which they are described here.
+		</para>
+		<para>
+			Each screen in the graphical interface contains a <guilabel>Help</guilabel> button. This button opens the <application>Yelp</application> help browser displaying the section of the <citetitle>&PRODUCT; Installation Guide</citetitle> relevant to the current screen.
+		</para>
+		<para>
+			You can also control the graphical installer with your keyboard. Following table shows you the shortcuts you can use.
+		</para>
+		<table id="tabl-graphical-installer-shortcuts-x86">
+			<title>Graphical installer keyboard shortcuts</title>
+			<tgroup cols="2">
+				<colspec colnum="1" colwidth="1*" />
+				<colspec colnum="2" colwidth="3*" />
+				<thead>
+					<row>
+						<entry>
+							Shortcut keys
+						</entry>
+						<entry>
+							Usage
+						</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>
+							<keycap>Tab</keycap> and <keycombo><keycap>Shift</keycap><keycap>Tab</keycap></keycombo>
+						</entry>
+						<entry>
+							Cycle through active control elements (buttons, check boxes, and so on.) on the current screen
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<keycap>Up</keycap> and <keycap>Down</keycap>
+						</entry>
+						<entry>
+							Scroll through lists
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<keycap>Left</keycap> and <keycap>Right</keycap>
+						</entry>
+						<entry>
+							Scroll through horizontal toolbars and table entries
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<keycap>Space</keycap> and <keycap>Enter</keycap>
+						</entry>
+						<entry>
+							Select or remove a highlighted item from selection and expand and collapse drop-down menus
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		<para>
+			Additionally, elements in each screen can be toggled using their respective shortcuts. These shortcuts are highlighted (underlined) when you hold down the <keycap>Alt</keycap> key; to toggle that element, press <keycombo><keycap>Alt</keycap><keycap><replaceable>X</replaceable></keycap></keycombo>, where <replaceable>X</replaceable> is the highlighted letter.
+		</para>
+		<para>
+			Your current keyboard layout is displayed in the top right hand corner. Only one layout is configured by default; if you configure more than layout in the <guilabel>Keyboard Layout</guilabel> screen (<xref linkend="sect-keyboard-configuration-x86" />), you can switch between them by clicking the layout indicator.
+		</para>
+	</section>
+
+	<xi:include href="WelcomeSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="SummaryHub-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="DateTimeSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="LangSupportSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="KeyboardSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="SecurityPolicySpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="SourceSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="NetworkSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="SoftwareSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="StorageSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="FilterSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="KdumpSpoke-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="Write_changes_to_disk_x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="ProgressHub-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="Complete-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</chapter>

@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-troubleshooting-ppc">
+	<title>Troubleshooting Installation on IBM Power&nbsp;Systems</title>
+
+
+	<indexterm>
+		<primary>troubleshooting</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>log files</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>anaconda.log</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>program.log</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>storage.log</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>packaging.log</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>syslog</primary>
+		<secondary>IBM Power Systems</secondary>
+	</indexterm>
+
+
+	<para>
+		This chapter discusses some common installation problems and their solutions.
+	</para>
+	<para>
+		For debugging purposes, <application>Anaconda</application> logs installation actions into files in the <filename>/tmp</filename> directory. These files are listed in the following table.
+	</para>
+	<table id="tabl-installation-log-files-ppc">
+		<title>Log Files Generated During the Installation</title>
+		<tgroup cols="2">
+			<colspec colname="c1" colwidth="1*"/>
+			<colspec colname="c2" colwidth="2*"/>
+			<thead>
+				<row>
+					<entry>
+						Log file
+					</entry>
+					<entry>
+						Contents
+					</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>
+						<filename>/tmp/anaconda.log</filename>
+					</entry>
+					<entry>
+						general <application>Anaconda</application> messages
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/program.log</filename>
+					</entry>
+					<entry>
+						all external programs run during the installation
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/storage.log</filename>
+					</entry>
+					<entry>
+						extensive storage module information
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/packaging.log</filename>
+					</entry>
+					<entry>
+						<application>yum</application> and <application>rpm</application> package installation messages
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/syslog</filename>
+					</entry>
+					<entry>
+						hardware-related system messages
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</table>
+	<para>
+		If the installation fails, the messages from these files are consolidated into <filename>/tmp/anaconda-tb-<replaceable>identifier</replaceable></filename>, where <replaceable>identifier</replaceable> is a random string.
+	</para>
+	<para>
+		After successful installation, by default, these files will be copied to the installed system under the directory <filename class="directory">/var/log/anaconda/</filename>. However, if installation is unsuccessful, or if the <option>inst.nosave=all</option> or <option>inst.nosave=logs</option> options are used when booting the installation system, these logs will only exist in the installation program's RAM disk. This means they are not saved permanently and will be lost once the system is powered down. To store them permanently, copy those files to another system on the network by using <command>scp</command> on the system running the installation program, or copy them to a mounted storage device (such as an USB flash drive). Details on how to transfer the log files over the network are below.
+	</para>
+	<note>
+		<para>
+			The following procedure requires the installation system to be able to access the network and the target system to be able to receive files over the <systemitem class="protocol">ssh</systemitem> protocol.
+		</para>
+	</note>
+	<procedure>
+		<title>Transferring Log Files Over the Network</title>
+		<step>
+			<para>
+				On the system you are installing, press <keycombo><keycap>Ctrl</keycap><keycap>Alt</keycap><keycap>F2</keycap></keycombo> to access a shell prompt. You will be logged into a root account and you will have access to the installation program's temporary file system.
+			</para>
+		</step>
+		<step>
+			<para>
+				Switch to the <filename class="directory">/tmp</filename> directory where the log files are located:
+			</para>
+<screen><prompt>#</prompt> <command>cd /tmp</command></screen>
+		</step>
+		<step>
+			<para>
+				Copy the log files onto another system on the network using the <command>scp</command> command:
+			</para>
+<screen><prompt>#</prompt> <command>scp *log <replaceable>user</replaceable>@<replaceable>address</replaceable>:<replaceable>path</replaceable></command></screen>
+			<para>
+				Replace <replaceable>user</replaceable> with a valid user name on the target system, <replaceable>address</replaceable> with the target system's address or host name, and <replaceable>path</replaceable> with the path to the directory you want to save the log files into. For example, if you want to log in as <systemitem class="username">john</systemitem> to a system with an IP address of <systemitem>192.168.0.122</systemitem> and place the log files into the <filename class="directory">/home/john/logs/</filename> directory on that system, the command will have the following form:
+			</para>
+<screen><prompt>#</prompt> <command>scp *log john@192.168.0.122:/home/john/logs/</command></screen>
+			<para>
+				When connecting to the target system for the first time, the SSH client asks you to confirm that the fingerprint of the remote system is correct and that you want to continue:
+			</para>
+<screen>
+<computeroutput>The authenticity of host '192.168.0.122 (192.168.0.122)' can't be established.</computeroutput>
+<computeroutput>ECDSA key fingerprint is a4:60:76:eb:b2:d0:aa:23:af:3d:59:5c:de:bb:c4:42.</computeroutput>
+<computeroutput>Are you sure you want to continue connecting (yes/no)?</computeroutput>
+</screen>
+			<para>
+				Type <literal>yes</literal> and press <keycap>Enter</keycap> to continue. Then, provide a valid password when prompted. The files will start transferring to the specified directory on the target system.
+			</para>
+		</step>
+	</procedure>
+	<para>
+		The log files from the installation are now permanently saved on the target system and available for review.
+	</para>
+
+	<section id="sect-trouble-beginning-installation-ppc">
+		<title>Trouble Beginning the Installation</title>
+
+
+		<indexterm>
+			<primary>troubleshooting</primary>
+			<secondary>beginning the installation</secondary>
+			<tertiary>IBM Power Systems</tertiary>
+		</indexterm>
+
+
+		<section>
+			<title>Problems with Booting into the Graphical Installation</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>GUI installation method unavailable</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				Systems with some video cards have trouble booting into the graphical installation program. If the installation program does not run using its default settings, it attempts to run in a lower resolution mode. If that still fails, the installation program attempts to run in text mode.
+			</para>
+			<para>
+				There are several possible solutions to display issues, most of which involve specifying custom boot options. For more information, see <xref linkend="sect-boot-options-installer"/>.
+			</para>
+			<variablelist>
+				<varlistentry>
+					<term>Use the basic graphics mode</term>
+					<listitem>
+						<para>
+							You can attempt to perform the installation using the basic graphics driver. To do this, edit the installation program's options at the <prompt>boot:</prompt> prompt and append <option>inst.xdriver=vesa</option> at the end of the command line.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Specify the display resolution manually</term>
+					<listitem>
+						<para>
+							If the installation program fails to detect your screen resolution, you can override the automatic detection and specify it manually. To do this, append the <option>inst.resolution=<replaceable>x</replaceable></option> option at the boot menu, where <replaceable>x</replaceable> is your display's resolution (for example, <literal>1024x768</literal>).
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</section>
+
+		<section>
+			<title>Serial Console Not Detected</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>Console unavailable</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				In some cases, attempting to install in text mode using a serial console will result in no output on the console. This happens on systems which have a graphics card, but no monitor connected. If <application>Anaconda</application> detects a graphics card, it will attempt to use it for a display, even if no display is connected.
+			</para>
+			<para>
+				If you want to perform a text-based installation on a serial console, use the <option>inst.text</option> and <option>console=</option> boot options. See <xref linkend="chap-anaconda-boot-options"/> for more details.
+			</para>
+		</section>
+
+	</section>
+
+	<section id="sect-trouble-during-installation-ppc">
+		<title>Trouble During the Installation</title>
+
+
+		<indexterm>
+			<primary>troubleshooting</primary>
+			<secondary>during the installation</secondary>
+			<tertiary>IBM Power Systems</tertiary>
+		</indexterm>
+
+
+		<section id="sect-trouble-during-no-target-ppc">
+			<title>No Disks Detected</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>no disks detected</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				In the <guilabel>Installation Destination</guilabel> screen, the following error message can appear at the bottom: <guilabel>No disks detected. Please shut down the computer, connect at least one disk, and restart to complete installation</guilabel>.
+			</para>
+			<para>
+				The message indicates that <application>Anaconda</application> did not find any writable storage devices to install to. In that case, first make sure that your system does have at least one storage device attached.
+			</para>
+			<para>
+				If your system uses a hardware RAID controller, verify that the controller is properly configured and working. See your controller's documentation for instructions.
+			</para>
+			<para>
+				If you are installing into one or more iSCSI devices and there is no local storage present on the system, make sure that all required LUNs (<firstterm>Logical Unit Numbers</firstterm>) are being presented to the appropriate HBA (<firstterm>Host Bus Adapter</firstterm>). For additional information about iSCSI, see <xref linkend="appe-iscsi-disks"/>.
+			</para>
+			<para>
+				If you made sure you have a connected and properly configured storage device and the message still appears after you reboot the system and start the installation again, it means that the installation program failed to detect the storage. In most cases this message appears when you attempt to install on an SCSI device which has not been recognized by the installation program.
+			</para>
+			<para>
+				In that case, you will have to perform a driver update before starting the installation. Check your hardware vendor's website to determine if a driver update is available that fixes your problem. For more general information on driver updates, see <xref linkend="chap-driver-updates-ppc"/>.
+			</para>
+			<para>
+				You can also consult the <citetitle>Red&nbsp;Hat Hardware Compatibility List</citetitle>, available online at <ulink url="https://hardware.redhat.com"/>.
+			</para>
+		</section>
+
+		<section id="sect-trouble-during-traceback-ppc">
+			<title>Reporting Traceback Messages</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>saving traceback messages without removable media</secondary>
+				<tertiary>IBM Power&nbsp;Systems</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>traceback messages</primary>
+				<secondary>saving traceback messages without removable media</secondary>
+				<tertiary>IBM Power&nbsp;Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				If the graphical installation program encounters an error, it presents you with a crash reporting dialog box. You can then choose to send information about the problem you encountered to Red&nbsp;Hat. To send a crash report, you will need to enter your Customer Portal credentials. If you do not have a Customer Portal account, you can register at <ulink url="https://www.redhat.com/wapps/ugc/register.html"/>. Automated crash reporting also requires a working network connection.
+			</para>
+			<figure>
+				<title>The Crash Reporting Dialog Box</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/crashreporting/crashreporting.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<para>
+							A message saying that an unknown error has occurred.
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+			<para>
+				When the dialog appears, select <guibutton>Report Bug</guibutton> to report the problem, or <guibutton>Quit</guibutton> to exit the installation.
+			</para>
+			<para>
+				Optionally, click <guilabel>More Info</guilabel> to display detailed output that can help determine the cause of the error. If you are familiar with debugging, click <guibutton>Debug</guibutton>. This will take you to virtual terminal <systemitem>tty1</systemitem>, where you can request more precise information that will enhance the bug report. To return to the graphical interface from <systemitem>tty1</systemitem>, use the <command>continue</command> command.
+			</para>
+			<figure>
+				<title>The Expanded Crash Reporting Dialog Box</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/crashreporting/crashreporting_details.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<para>
+							Details of the crash, showing the Python traceback
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+			<para>
+				If you want to report the bug to the customer portal, follow the procedure below.
+			</para>
+			<procedure>
+				<title>Reporting Errors to Red&nbsp;Hat Customer Support</title>
+				<step>
+					<para>
+						In the menu that appears, select <guilabel>Report a bug to Red&nbsp;Hat Customer Portal</guilabel>.
+					</para>
+				</step>
+				<step>
+					<para>
+						To report the bug to Red&nbsp;Hat, you first need to provide your Customer Portal credentials. Click <guibutton>Configure Red&nbsp;Hat Customer Support</guibutton>.
+					</para>
+					<figure>
+						<title>Customer Portal Credentials</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_configure1.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A message saying that the Red&nbsp;Hat Customer Support is not properly configured, with a button you can click to configure your credentials.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						A new window is now open, prompting you to enter your Customer Portal user name and password. Enter your Red&nbsp;Hat Customer Portal credentials.
+					</para>
+					<figure>
+						<title>Configure Red&nbsp;Hat Customer Support</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_configure2.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A dialog prompting you to enter your Customer Portal account details.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+					<para>
+						If your network settings require you to use a <systemitem class="protocol">HTTP</systemitem> or <systemitem class="protocol">HTTPS</systemitem> proxy, you can configure it by expanding the <guilabel>Advanced</guilabel> menu and entering the address of the proxy server.
+					</para>
+					<para>
+						When you put in all required credentials, click <guilabel>OK</guilabel> to proceed.
+					</para>
+				</step>
+				<step>
+					<para>
+						A new window appears, containing a text field. Write down any useful information and comments here. Describe how the error can be reproduced by explaining each step you took before the crash reporting dialog appeared. Provide as much relevant detail as possible, including any information you acquired when debugging. Be aware that the information you provide here can become publicly visible on the Customer Portal.
+					</para>
+					<para>
+						If you do not know what caused the error, check the box labeled <guilabel>I don't know what caused this problem</guilabel> at the bottom of the dialog.
+					</para>
+					<para>
+						Then, click <guibutton>Forward</guibutton>.
+					</para>
+					<figure>
+						<title>Describe the Problem</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_describe.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A text input field, prompting you to describe the steps you took before you encountered the error you are reporting.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						Next, review the information that will be sent to the Customer Portal. The explanation you provided is in the <guilabel>comment</guilabel> tab. Other tabs include such information as your system's host name and other details about the installation environment. You can remove any items you do not want sent to Red&nbsp;Hat, but be aware that providing less detail can affect the investigation of the issue.
+					</para>
+					<para>
+						Click <guibutton>Forward</guibutton> when you finish reviewing the information to be sent.
+					</para>
+					<figure>
+						<title>Review the Data to Be Sent</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_review.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A dialog window with several tabs, allowing you to review all information about your system that will be sent to the Customer Portal as part of the crash report.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						Review the list of files that will be sent and included in the bug report as individual attachments. These files provide system information that will assist the investigation. If you do not want to send certain files, uncheck the box next to each one. To provide additional files that can help find the problem, click <guibutton>Attach a file</guibutton>.
+					</para>
+					<para>
+						Once you have reviewed the files to be sent, check the box labeled <guilabel>I have reviewed the data and agree with submitting it</guilabel>. Then, click <guibutton>Forward</guibutton> to send the report and attachments to the Customer Portal.
+					</para>
+					<figure>
+						<title>Review the Files to Be Sent</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_checkfiles.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A dialog window allowing you to review the files to be sent along with the report, unselect files you do not want to send, and add additional files..
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						When the dialog reports that processing has finished, you can click <guilabel>Show log</guilabel> to view details of the reporting process or <guilabel>Close</guilabel> to return to the initial crash reporting dialog box. There, click <guilabel>Quit</guilabel> to exit the installation.
+					</para>
+				</step>
+			</procedure>
+		</section>
+
+		<section id="creating_pre-installation-logs-ppc">
+			<title>Creating Pre-installation Log Files</title>
+			<para>
+				To debug installation problems you can set the <option>inst.debug</option> option to create log files from the environment before the installation starts. These log files contain, for example, the current storage configuration.
+			</para>
+			<para>
+				To set the option in the &PRODUCT; installation boot menu:
+			</para>
+			<procedure>
+				<step>
+					<para>
+						Select the <guimenuitem>Install &PRODUCT; 7.3</guimenuitem> entry.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press the <keycap>Tab</keycap> key to edit the boot options.
+					</para>
+				</step>
+				<step>
+					<para>
+						Append <option>inst.debug</option> to the options. For example:
+					</para>
+<screen>&gt; vmlinuz ... <userinput>inst.debug</userinput></screen>
+					<para>
+						For further details, see <xref linkend="chap-anaconda-boot-options"/>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press <keycap>Enter</keycap> to start the setup.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				The system stores the pre-installation log files in the <filename class="directory">/tmp/pre-anaconda-logs/</filename> directory before Anaconda starts. To access the log files:
+			</para>
+			<procedure>
+				<step>
+					<para>
+						Switch to the console. See <xref linkend="sect-installation-consoles-x86"/>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Change into the <filename class="directory">/tmp/pre-anaconda-logs/</filename> directory:
+					</para>
+<screen># cd /tmp/pre-anaconda-logs/</screen>
+				</step>
+			</procedure>
+		</section>
+
+		<section id="sect-trouble-during-partitions-dialog-ppc">
+			<title>Other Partitioning Problems for IBM Power&nbsp;Systems Users</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>completing partitions</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you create partitions manually, but cannot move to the next screen, you probably have not created all the partitions necessary for installation to proceed.
+			</para>
+			<para>
+				You must have the following partitions as a bare minimum:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						A <filename>/</filename> (root) partition
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						A <literal>PReP Boot</literal> partition
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						A <filename>/boot</filename> partition (only if the root partition is a LVM logical volume or Btrfs subvolume)
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>
+				See <xref linkend="sect-recommended-partitioning-scheme-ppc"/> for more information.
+			</para>
+		</section>
+
+	</section>
+
+	<section id="sect-trouble-after-ppc">
+		<title>Problems After Installation</title>
+
+
+		<indexterm>
+			<primary>troubleshooting</primary>
+			<secondary>after the installation</secondary>
+			<tertiary>IBM Power Systems</tertiary>
+		</indexterm>
+
+
+		<section id="sect-trouble-after-graphical-boot-ppc">
+			<title>Trouble With the Graphical Boot Sequence</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>graphical boot</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				After you finish the installation and reboot your system for the first time, it is possible that the system stops responding during the graphical boot sequence, requiring a reset. In this case, the boot loader is displayed successfully, but selecting any entry and attempting to boot the system results in a halt. This usually means a problem with the graphical boot sequence; to solve this issue, you must disable graphical boot. To do this, temporarily alter the setting at boot time before changing it permanently.
+			</para>
+			<procedure>
+				<title>Disabling Graphical Boot Temporarily</title>
+				<step>
+					<para>
+						Start your computer and wait until the boot loader menu appears. If you set your boot loader timeout period to 0, hold down the <keycap>Esc</keycap> key to access it.
+					</para>
+				</step>
+				<step>
+					<para>
+						When the boot loader menu appears, use your cursor keys to highlight the entry you want to boot and press the <keycap>e</keycap> key to edit this entry's options.
+					</para>
+				</step>
+				<step>
+					<para>
+						In the list of options, find the kernel line - that is, the line beginning with the keyword <literal>linux</literal>. On this line, locate the <literal>rhgb</literal> option and delete it. The option might not be immediately visible; use the cursor keys to scroll up and down.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press <keycap>F10</keycap> or <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo> to boot your system with the edited options.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				If the system started successfully, you can log in normally. Then you will need to disable the graphical boot permanently - otherwise you will have to perform the previous procedure every time the system boots. To permanently change boot options, do the following.
+			</para>
+			<procedure>
+				<title>Disabling Graphical Boot Permanently</title>
+				<step>
+					<para>
+						Log in to the <systemitem>root</systemitem> account using the <command>su -</command> command:
+					</para>
+<screen><prompt>$</prompt> <command>su -</command></screen>
+				</step>
+				<step>
+					<para>
+						Use the <application>grubby</application> tool to find the default <application>GRUB2</application> kernel:
+					</para>
+<screen><prompt>#</prompt> <command>grubby --default-kernel</command>
+/boot/vmlinuz-3.10.0-229.4.2.el7.ppc64</screen>
+				</step>
+				<step>
+					<para>
+						Use the <application>grubby</application> tool to remove the <literal>rhgb</literal> boot option from the default kernel, identified in the last step, in your <application>GRUB2</application> configuration. For example:
+					</para>
+<screen><prompt>#</prompt> grubby --remove-args="rhgb" --update-kernel <replaceable>/boot/vmlinuz-3.10.0-229.4.2.el7.ppc64</replaceable></screen>
+				</step>
+			</procedure>
+			<para>
+				After you finish this procedure, you can reboot your computer. &PRODUCT; will not use the graphical boot sequence any more. If you want to enable graphical boot in the future, follow the same procedure, replacing the <literal>--remove-args="rhgb"</literal> parameter with the <literal>--args="rhgb"</literal> paramter. This will restore the <literal>rhgb</literal> boot option to the default kernel in your <application>GRUB2</application> configuration.
+			</para>
+			<para>
+				See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink> for more information about working with the <application>GRUB2</application> boot loader.
+			</para>
+		</section>
+
+		<section id="sect-trouble-after-graphical-login-ppc">
+			<title>Booting into a Graphical Environment</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting into a graphical environment</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting into the X Window System</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting into GNOME or KDE</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you have installed the <application>X Window System</application> but are not seeing a graphical desktop environment once you log into your system, you can start it manually using the <command>startx</command> command. Note, however, that this is just a one-time fix and does not change the log in process for future log ins.
+			</para>
+			<para>
+				To set up your system so that you can log in at a graphical login screen, you must change the default <application>systemd</application> target to <literal>graphical.target</literal>. When you are finished, reboot the computer. You will presented with a graphical login prompt after the system restarts.
+			</para>
+			<procedure>
+				<title>Setting Graphical Login as Default</title>
+				<step>
+					<para>
+						Open a shell prompt. If you are in your user account, become root by typing the <command>su -</command> command.
+					</para>
+				</step>
+				<step>
+					<para>
+						Change the default target to <systemitem>graphical.target</systemitem>. To do this, execute the following command:
+					</para>
+<screen><prompt>#</prompt> <command>systemctl set-default graphical.target</command></screen>
+				</step>
+			</procedure>
+			<para>
+				Graphical login is now enabled by default - you will be presented with a graphical login prompt after the next reboot. If you want to reverse this change and keep using the text-based login prompt, execute the following command as <systemitem>root</systemitem>:
+			</para>
+<screen><prompt>#</prompt> <command>systemctl set-default multi-user.target</command></screen>
+			<para>
+				For more information about targets in <application>systemd</application>, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+			</para>
+		</section>
+
+		<section>
+			<title>No Graphical User Interface Present</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>X (X Window System)</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you are having trouble getting <application>X</application> (the <application>X Window System</application>) to start, it is possible that it has not been installed. Some of the preset base environments you can select during the installation, such as <guilabel>Minimal install</guilabel> or <guilabel>Web Server</guilabel>, do not include a graphical interface - it has to be installed manually.
+			</para>
+			<para>
+				If you want <application>X</application>, you can install the necessary packages afterwards. See the Knowledgebase article at <ulink url="https://access.redhat.com/site/solutions/5238"/> for information on installing a graphical desktop environment.
+			</para>
+		</section>
+
+		<section>
+			<title>X Server Crashing After User Logs In</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>X server crashes</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you are having trouble with the <application>X</application> server crashing when a user logs in, one or more of your file systems can be full or nearly full. To verify that this is the problem you are experiencing, execute the following command:
+			</para>
+<screen><prompt>$</prompt> <command>df -h</command></screen>
+			<para>
+				The output will help you diagnose which partition is full - in most cases, the problem will be on the <filename>/home</filename> partition. The following is a sample output of the <command>df</command> command:
+			</para>
+<screen>
+Filesystem                                  Size  Used Avail Use% Mounted on
+/dev/mapper/vg_rhel-root                     20G  6.0G   13G  32% /
+devtmpfs                                    1.8G     0  1.8G   0% /dev
+tmpfs                                       1.8G  2.7M  1.8G   1% /dev/shm
+tmpfs                                       1.8G 1012K  1.8G   1% /run
+tmpfs                                       1.8G     0  1.8G   0% /sys/fs/cgroup
+tmpfs                                       1.8G  2.6M  1.8G   1% /tmp
+/dev/sda1                                   976M  150M  760M  17% /boot
+/dev/dm-4                                    90G   90G     0 100% /home
+</screen>
+			<para>
+				In the above example, you can see that the <filename>/home</filename> partition is full, which causes the crash. You can make some room on the partition by removing unneeded files. After you free up some disk space, start <application>X</application> using the <command>startx</command> command.
+			</para>
+			<para>
+				For additional information about <command>df</command> and an explanation of the options available (such as the <option>-h</option> option used in this example), see the <systemitem>df(1)</systemitem> man page.
+			</para>
+		</section>
+
+		<section>
+			<title>Is Your System Displaying Signal 11 Errors?</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>signal 11 error</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				A signal 11 error, commonly known as a <firstterm>segmentation fault</firstterm>, means that a program accessed a memory location that was not assigned to it. A signal 11 error can occur due to a bug in one of the software programs that is installed, or faulty hardware.
+			</para>
+			<para>
+				If you receive a fatal signal 11 error during the installation, first make sure you are using the most recent installation images, and let <application>Anaconda</application> verify them to make sure they are not corrupted. Bad installation media (such as an improperly burned or scratched optical disk) are a common cause of signal 11 errors. Verifying the integrity of the installation media is recommended before every installation.
+			</para>
+			<para>
+				For information about obtaining the most recent installation media, see <xref linkend="chap-download-red-hat-enterprise-linux"/>. To perform a media check before the installation starts, append the <option>rd.live.check</option> boot option at the boot menu. See <xref linkend="sect-boot-options-mediacheck"/> for details.
+			</para>
+			<para>
+				Other possible causes are beyond this document's scope. Consult your hardware manufacturer's documentation for more information.
+			</para>
+		</section>
+
+		<section>
+			<title>Unable to IPL from Network Storage Space (*NWSSTG)</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>IPL NWSSTG</secondary>
+				<tertiary>IBM Power Systems</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you are experiencing difficulties when trying to IPL from Network Storage Space (*NWSSTG), in most cases the reason is a missing <systemitem>PReP</systemitem> partition. In this case, you must reinstall the system and make sure to create this partition during the partitioning phase or in the Kickstart file.
+			</para>
+		</section>
+		<section>
+			<title>The GRUB2 <literal>next_entry</literal> variable can behave unexpectedly in a virtualized environment</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>GRUB2</secondary>
+				<tertiary>next_entry</tertiary>
+			</indexterm>
+
+
+			<para>
+				IBM Power System users booting their virtual environment with SLOF firmware must manually unset the <literal>next_entry</literal> grub environment variable after a system reboot. The SLOF firmware does not support block writes at boot time by design thus the bootloader is unable to clear this variable at boot time.
+			</para>
+		</section>
+	</section>
+
+</chapter>

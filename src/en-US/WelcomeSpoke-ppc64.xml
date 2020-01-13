@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-language-selection-ppc">
+	<title>Welcome Screen and Language Selection</title>
+
+
+	<indexterm>
+		<primary>keymap</primary>
+		<secondary>selecting language</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>language</primary>
+		<secondary>configuration</secondary>
+	</indexterm>
+
+
+	<para>
+		The first screen of the installation program is the <guilabel>Welcome to &PRODUCT;</guilabel> screen. Here you select the language that <application>Anaconda</application> will use for the rest of the installation. This selection will also become the default for the installated system, unless changed later. In the left panel, select your language of choice, for example <guilabel>English</guilabel>. Then you can select a locale specific to your region in the right panel, for example <guilabel>English (United States)</guilabel>.
+	</para>
+
+
+	<note>
+		<para>
+			One language is pre-selected by default on top of the list. If network access is configured at this point (for example, if you booted from a network server instead of local media), the pre-selected language will be determined based on automatic location detection using the <systemitem>GeoIP</systemitem> module.
+		</para>
+	</note>
+
+
+	<para>
+		Alternatively, type your preferred language into the search box as shown below.
+	</para>
+
+
+
+
+	<para>
+		Once you have made your selection, click the <guibutton>Continue</guibutton> button to proceed to the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+
+	<figure>
+		<title>Language Configuration</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/langselection/langselection-GUI.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Language selection screen
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+
+
+	<para>
+		After you click the <guibutton>Continue</guibutton> button, the unsupported hardware dialog may appear.
+		This happens if you are using hardware that the kernel does not support.
+	</para>
+</section>

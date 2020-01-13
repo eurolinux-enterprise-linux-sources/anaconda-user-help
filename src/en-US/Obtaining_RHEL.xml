@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-download-red-hat-enterprise-linux">
+	<title>Downloading &PRODUCT;</title>
+
+
+	<indexterm>
+		<primary>DVD media</primary>
+		<secondary>downloading</secondary>
+		<seealso>ISO images</seealso>
+	</indexterm>
+	<indexterm>
+		<primary>ISO images</primary>
+		<secondary>downloading</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>USB flash media</primary>
+		<secondary>downloading</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>Installation media</primary>
+		<secondary>downloading</secondary>
+	</indexterm>
+
+
+	<para>
+		If you have a Red&nbsp;Hat subscription, you can download <firstterm>ISO image files</firstterm> of the &PRODUCT;&nbsp;7 installation DVD from the Red&nbsp;Hat Customer Portal. If you do not have a subscription, either purchase one or obtain a free evaluation subscription from the Software &amp; Download Center at <ulink url="https://access.redhat.com/downloads/" />.
+	</para>
+	<para>
+		There are two basic types of installation media available on the AMD64 and Intel&nbsp;64 (x86_64) and IBM Power&nbsp;Systems (ppc64) architectures:
+	</para>
+	<variablelist>
+		<varlistentry>
+			<term>Binary DVD</term>
+			<listitem>
+				<para>
+					A full installation image which can be used to boot the installation program and perform an entire installation without additional package repositories.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>boot.iso</term>
+			<listitem>
+				<para>
+					A minimal boot image which can be used to boot the installation program, but requires access to additional package repositories from which software will be installed. Red&nbsp;Hat does not provide such a repository; you must create it using the full installation ISO image.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Supplementary DVD</term>
+			<listitem>
+				<para>
+					An image containing additional packages, such as the IBM Java Runtime Environment, and additional virtualization drivers.
+				</para>
+			</listitem>
+		</varlistentry>
+	</variablelist>
+	<note>
+		<para>
+			Binary DVDs are also available for IBM System&nbsp;z. They can be used to boot the installation program using a SCSI DVD drive or as installation sources.
+		</para>
+	</note>
+	<para>
+		The following table indicates the types of boot and installation media available for different architectures and notes the image file that you need to produce the media.
+	</para>
+	<table id="tabl-installation-media">
+		<title>Boot and Installation Media</title>
+		<tgroup cols="3">
+			<colspec colname="c1" colwidth="1*"></colspec>
+			<colspec colname="c2" colwidth="2*"></colspec>
+			<colspec colname="c3" colwidth="2*"></colspec>
+			<thead>
+				<row>
+					<entry>
+						Architecture
+					</entry>
+					<entry>
+						Minimal boot image
+					</entry>
+					<entry>
+						Full installation image
+					</entry>
+				</row>
+			</thead>
+			<tfoot>
+				<row>
+					<entry nameend="c3" namest="c1">
+						Replace <replaceable>variant</replaceable> with your chosen variant of &PRODUCT; (for example, <literal>server</literal> or <literal>workstation</literal>).
+					</entry>
+				</row>
+			</tfoot>
+			<tbody>
+				<row>
+					<entry>
+						AMD64 and Intel&nbsp;64
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-x86_64-boot.iso</filename>
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-x86_64-dvd.iso</filename>
+					</entry>
+				</row>
+				<row>
+					<entry>
+						IBM Power&nbsp;Systems (big endian)
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-ppc64-boot.iso</filename>
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-ppc64-dvd.iso</filename>
+					</entry>
+				</row>
+				<row>
+					<entry>
+						IBM Power&nbsp;Systems (little endian)
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-ppc64le-boot.iso</filename>
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-ppc64le-dvd.iso</filename>
+					</entry>
+				</row>
+				<row>
+					<entry>
+						IBM System&nbsp;z
+					</entry>
+					<entry>
+						Not available
+					</entry>
+					<entry>
+						<filename>rhel-<replaceable>variant</replaceable>-&PRODVER;-s390x-dvd.iso</filename>
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</table>
+
+	<para>
+		If you have a subscription or evaluation subscription, follow these steps to obtain the &PRODUCT;&nbsp;7 ISO image files:
+	</para>
+	<procedure id="proc-downloading-rhel-images">
+		<title>Downloading &PRODUCT; ISO Images</title>
+		<step>
+			<para>
+				Visit the Customer Portal at <ulink url="https://access.redhat.com/home" />. If you are not logged in, click <guilabel>LOG IN</guilabel> on the right side of the page. Enter your account credentials when prompted.
+			</para>
+		</step>
+		<step>
+			<para>
+				Click <guilabel>DOWNLOADS</guilabel> at the top of the page.
+			</para>
+		</step>
+		<step>
+			<para>
+				Click <guilabel>&PRODUCT;</guilabel>.
+			</para>
+		</step>
+		<step>
+			<para>
+				Ensure that you select the appropriate <guilabel>Product Variant </guilabel> and <guilabel>Architecture</guilabel> for your installation target. By default, <literal>&PRODUCT; Server</literal> and <literal>x86_64</literal> are selected. If you are not sure which variant best suits your needs, see <ulink url="http://www.redhat.com/en/technologies/linux-platforms/enterprise-linux" />. Additionally, a list of packages available for every variant is available in the <ulink url="http://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Package_Manifest/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Package Manifest</ulink>.
+			</para>
+		</step>
+		<step>
+			<para>
+				A list of available downloads is displayed; most notably, a minimal <guilabel>Boot ISO</guilabel> image and a full installation <guilabel>Binary DVD</guilabel> ISO image. These files are described above. Additional images can be available, such as preconfigured virtual machine images, which are beyond the scope of this document.
+			</para>
+		</step>
+		<step>
+			<para>
+				Choose the image file that you want to use. You have two ways to download it from the Customer Portal:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						Click its name to begin downloading it to your computer using your web browser.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Right-click the name and then click <guimenuitem>Copy Link Location</guimenuitem> or a similar menu item, the exact wording of which depends on the browser that you are using. This action copies the URL of the file to your clipboard, which allows you to use an alternative application to download the file to your computer. This approach is especially useful if your Internet connection is unstable: in that case, you browser might fail to download the whole file, and an attempt to resume the interrupted download process fails because the download link contains an authentication key which is only valid for a short time. Specialized applications such as <application>curl</application> can, however, be used to resume interrupted download attempts from the Customer Portal, which means that you need not download the whole file again and thus you save your time and bandwidth consumption.
+					</para>
+					<procedure id="proc-downloading-rhel-images-with-curl">
+						<title>Using curl to Download Installation Media</title>
+						<step>
+							<para>
+								Make sure the <package>curl</package> package is installed by running the following command as root:
+							</para>
+<screen># <command>yum install curl</command></screen>
+							<para>
+								If your Linux distribution does not use <application>yum</application>, or if you do not use Linux at all, download the most appropriate software package from the <ulink url="http://curl.haxx.se/download.html">curl web site</ulink>.
+							</para>
+						</step>
+						<step>
+							<para>
+								Open a terminal window, enter a suitable directory, and type the following command:
+							</para>
+<screen>$ <command>curl -o <replaceable>filename.iso</replaceable> '<replaceable>copied_link_location</replaceable>'</command></screen>
+							<para>
+								Replace <replaceable>filename.iso</replaceable> with the ISO image name as displayed in the Customer Portal, such as <filename>rhel-server-7.0-x86_64-dvd.iso</filename>. This is important because the download link in the Customer Portal contains extra characters which <application>curl</application> would otherwise use in the downloaded file name, too. Then, keep the single quotation mark in front of the next parameter, and replace <replaceable>copied_link_location</replaceable> with the link that you have copied from the Customer Portal; copy it again if you copied the commands above in the meantime. Note that in Linux, you can paste the content of the clipboard into the terminal window by middle-clicking anywhere in the window, or by pressing <keycombo><keycap>Shift</keycap><keycap>Insert</keycap></keycombo>. Finally, use another single quotation mark after the last parameter, and press <keycap>Enter</keycap> to run the command and start transferring the ISO image. The single quotation marks prevent the command line interpreter from misinterpreting any special characters that might be included in the download link.
+							</para>
+							<example id="exam-downloading-rhel-images-with-curl-first">
+								<title>Downloading an ISO image with curl</title>
+								<para>
+									The following is an example of a <application>curl</application> command line:
+								</para>
+<screen>$ <command>curl -o rhel-server-7.0-x86_64-dvd.iso 'https://access.cdn.redhat.com//content/origin/files/sha256/85/85a...46c/rhel-server-7.0-x86_64-dvd.iso?_auth_=141...7bf'</command></screen>
+								<para>
+									Note that the actual download link is much longer because it contains complicated identifiers.
+								</para>
+							</example>
+						</step>
+						<step>
+							<para>
+								If your Internet connection does drop before the transfer is complete, refresh the download page in the Customer Portal; log in again if necessary. Copy the new download link, use the same basic <command>curl</command> command line parameters as earlier but be sure to use the new download link, and add <option>-C -</option> to instruct <application>curl</application> to automatically determine where it should continue based on the size of the already downloaded file.
+							</para>
+							<example id="exam-downloading-rhel-images-with-curl-resumed">
+								<title>Resuming an interrupted download attempt</title>
+								<para>
+									The following is an example of a <application>curl</application> command line that you use if you have only partially downloaded the ISO image of your choice:
+								</para>
+<screen>$ <command>curl -o rhel-server-7.0-x86_64-dvd.iso 'https://access.cdn.redhat.com//content/origin/files/sha256/85/85a...46c/rhel-server-7.0-x86_64-dvd.iso?_auth_=141...963' -C -</command></screen>
+							</example>
+						</step>
+					</procedure>
+				</listitem>
+			</itemizedlist>
+		</step>
+		<step>
+			<para>
+				Optionally, you can use a checksum utility such as <application>sha256sum</application> to verify the integrity of the image file after the download finishes. All downloads on the Download &PRODUCT; page are provided with their checksums for reference:
+			</para>
+<screen>$ <command>sha256sum rhel-server-7.0-x86_64-dvd.iso</command>
+			<computeroutput>85a...46c  rhel-server-7.0-x86_64-dvd.iso</computeroutput></screen>
+			<para>
+				Similar tools are available for <ulink url="http://www.labtestproject.com/files/win/sha256sum/sha256sum.exe">Microsoft Windows</ulink> and <ulink url="https://itunes.apple.com/us/app/hashtab/id517065482">Mac OS X</ulink>. You can also use the installation program to verify the media when starting the installation; see <xref linkend="sect-boot-options-mediacheck" /> for details.
+			</para>
+		</step>
+	</procedure>
+	<para>
+		After you have downloaded an ISO image file from the Customer Portal, you can:
+	</para>
+	<itemizedlist>
+		<listitem>
+			<para>
+				Burn it to a CD or DVD as described in <xref linkend="sect-making-cd-dvd-media" />.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Use it to create a bootable USB drive; see <xref linkend="sect-making-usb-media" />.
+			</para>
+
+		</listitem>
+		<listitem>
+			<para>
+				Place it on a server to prepare for a network installation. For specific directions, see <xref linkend="sect-making-media-sources-network" />.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Place it on a hard drive to use the drive as an installation source. For specific instructions, see <xref linkend="sect-making-media-sources-hdd" />.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Use it to prepare a <firstterm>Preboot Execution Environment</firstterm> (PXE) server, which allows you to boot the installation system over a network. See <xref linkend="chap-installation-server-setup" /> for instructions.
+			</para>
+		</listitem>
+	</itemizedlist>
+</chapter>

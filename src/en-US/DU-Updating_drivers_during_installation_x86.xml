@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-driver-updates-x86">
+	<title>Updating Drivers During Installation on AMD64 and Intel&nbsp;64 Systems</title>
+
+	<para>
+		In most cases, &PRODUCT; already includes drivers for the devices that make up your system. However, if your system contains hardware that has been released very recently, drivers for this hardware might not yet be included. Sometimes, a driver update that provides support for a new device might be available from Red&nbsp;Hat or your hardware vendor on a <firstterm>driver disc</firstterm> that contains <firstterm>RPM packages</firstterm>. Typically, the driver disc is available for download as an <firstterm>ISO image file</firstterm>.
+	</para>
+
+	<important>
+		<para>
+			Driver updates should only be performed if a missing driver prevents you to complete the installation successfully. The drivers included in the kernel should always be preferred over drivers provided by other means.
+		</para>
+	</important>
+
+	<para>
+		Often, you do not need the new hardware during the installation process. For example, if you use a DVD to install to a local hard drive, the installation will succeed even if drivers for your network card are not available. In such a situation, complete the installation and add support for the new hardware afterward - see <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink> for details of adding this support.
+	</para>
+
+	<para>
+		In other situations, you might want to add drivers for a device during the installation process to support a particular configuration. For example, you might want to install drivers for a network device or a storage adapter card to give the installation program access to the storage devices that your system uses. You can use a driver disc to add this support during installation in one of two ways:
+
+		<orderedlist>
+			<listitem>
+				<para>
+					place the ISO image file of the driver disc in a location accessible to the installation program, on a local hard drive, on a USB flash drive, or on a CD or DVD.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					create a driver disc by extracting the image file onto a CD or a DVD, or a USB flash drive. See the instructions for making installation discs in <xref linkend="sect-making-cd-dvd-media"/> for more information on burning ISO image files to a CD or DVD, and <xref linkend="sect-making-usb-media"/> for instructions on writing ISO images to USB drives.
+				</para>
+			</listitem>
+
+		</orderedlist>
+	</para>
+
+	<para>
+		If Red&nbsp;Hat, your hardware vendor, or a trusted third party told you that you will require a driver update during the installation process, choose a method to supply the update from the methods described in this chapter and test it before beginning the installation. Conversely, do not perform a driver update during installation unless you are certain that your system requires it. The presence of a driver on a system for which it was not intended can complicate support.
+	</para>
+
+	<warning>
+		<para>
+			Driver update disks sometimes disable conflicting kernel drivers, where necessary. In rare cases, unloading a kernel module in this way can cause installation errors.
+		</para>
+	</warning>
+	<section id="sect-driver-updates-limitations-x86">
+		<title>Limitations of Driver Updates During Installation</title>
+		<para>
+			On UEFI systems with the Secure Boot technology enabled, all drivers being loaded must be signed with a valid certificate, otherwise the system will refuse them. All drivers provided by Red&nbsp;Hat are signed by one of Red&nbsp;Hat's private keys and authenticated by the corresponding Red&nbsp;Hat public key in the kernel. If you load any other drivers (ones not provided on the &PRODUCT; installation DVD), you must make sure that they are signed as well.
+		</para>
+		<para>
+			More information about signing custom drivers can be found in the Working with Kernel Modules chapter in the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+		</para>
+	</section>
+	<section id="sect-driver-updates-during-installation-preparing-x86">
+		<title>Preparing for a Driver Update During Installation</title>
+
+		<para>
+			If a driver update is necessary and available for your hardware, Red&nbsp;Hat, your hardware vendor, or another trusted third party will typically provide it in the form of an image file in ISO format. Once you obtain the ISO image, you must decide on the method you want to use to perform the driver update.
+		</para>
+
+		<para>
+			The available methods are:
+		</para>
+
+		<variablelist>
+			<varlistentry>
+				<term>Automatic driver update</term>
+				<listitem>
+					<para>
+						When starting the installation, the <application>Anaconda</application> installation program will attempt to detect all attached storage devices. If there is a storage device labeled <literal>OEMDRV</literal> present when the installation begins, <application>Anaconda</application> will always treat it like a driver update disc and attempt to load drivers present on it.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Assisted driver update</term>
+				<listitem>
+					<para>
+						You can specify the <option>inst.dd</option> boot option when starting the installation. If you use this option without any parameters, <application>Anaconda</application> will display a list of all storage devices connected to the system, and it will prompt you to select a device which contains a driver update.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Manual driver update</term>
+				<listitem>
+					<para>
+						You can specify the <option>inst.dd=<replaceable>location</replaceable></option> boot option when starting the installation, where <replaceable>location</replaceable> is the path to a driver update disc or ISO image. When you specify this option, <application>Anaconda</application> will attempt to load any driver updates it finds at the specified location. With manual driver updates, you can specify either locally available storage devices, or a network location (an <systemitem class="protocol">HTTP</systemitem>, <systemitem class="protocol">HTTPS</systemitem> or <systemitem class="protocol">FTP</systemitem> server).
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+
+		<note>
+			<para>
+				You can also use both <option>inst.dd=<replaceable>location</replaceable></option> and <option>inst.dd</option> at the same time. However, what <application>Anaconda</application> does in this case depends  on the type of <replaceable>location</replaceable> that you use. If it is a device, <application>Anaconda</application> prompts you to select drivers to update from the specified device and then it offers you   additional devices. If <replaceable>location</replaceable> is a network location, <application>Anaconda</application> first prompts you to select a device containing a driver update and then it lets you update  drivers from the specified network location.
+			</para>
+		</note>
+
+		<para>
+			If you want to use the automatic driver update method, you must create a storage device labeled <literal>OEMDRV</literal>, and it must be physically connected to the installation system. To use the assisted method, you can use any local storage device any label other than <literal>OEMDRV</literal>. To use the manual method, you can use any local storage with a different label, or a network location accessible from the installation system.
+		</para>
+
+		<important>
+			<para>
+				Make sure to initialize the network using the <option>ip=</option> option when loading a driver update from a network location. See <xref linkend="sect-boot-options-installer"/> for details.
+			</para>
+		</important>
+
+		<section id="sect-driver-updates-image-preparing-x86">
+			<title>Preparing to Use a Driver Update Image File on Local Storage</title>
+
+			<para>
+				If you use a local storage device to provide the ISO file, such as a hard drive or USB flash drive, you can make the installation program to recognize it automatically by properly labeling the device. Only if it is not possible, install the update manually as described below.
+			</para>
+
+
+			<itemizedlist>
+				<listitem>
+					<para>
+						In order for the installation program to automatically recognize the driver disk, the volume label of the storage device must be <literal>OEMDRV</literal>. Also, you will need to extract the contents of the ISO image file to the root directory of the storage device rather than copy the ISO image itself. See <xref linkend="sect-driver-updates-automatic-x86"/>. Note that installation of a driver from a device labeled <literal>OEMDRV</literal> is always recommended and preferable to the manual installation.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						For manual installation, simply copy the ISO image, as a single file, onto the storage device. You can rename the file if you find it helpful but you must not change the file name extension, which must remain <literal>.iso</literal>, for example <filename>dd.iso</filename>. See <xref linkend="sect-driver-updates-manual-x86"/> to learn how to select the driver update manually during installation.
+					</para>
+				</listitem>
+			</itemizedlist>
+
+		</section>
+
+		<section id="sect-driver-updates-preparing-x86">
+			<title>Preparing a Driver Disc</title>
+
+			<para>
+				You can create a driver update disc on a CD or DVD. See <xref linkend="sect-making-cd-dvd-media"/> to learn more about burning discs from image files.
+			</para>
+
+
+			<para>
+				After you burn a driver update disc CD or DVD, verify that the disc was created successfully by inserting it into your system and browsing to it using the file manager. You should see a single file named <filename>rhdd3</filename>, which is a signature file that contains the driver disc's description, and a directory named <filename>rpms</filename>, which contains the RPM packages with the actual drivers for various architectures.
+			</para>
+
+
+			<para>
+				If you see only a single file ending in <literal>.iso</literal>, then you have not created the disc correctly and should try again. Ensure that you choose an option similar to <guilabel>Burn from Image</guilabel> if you use a Linux desktop other than <application>GNOME</application>, or if you use a different operating system.
+			</para>
+
+
+		</section>
+	</section>
+	<section id="sect-driver-updates-performing-x86">
+		<title>Performing a Driver Update During Installation</title>
+
+		<para>
+			At the very beginning of the installation process, you can perform a driver update in the following ways:
+
+			<itemizedlist>
+				<listitem>
+					<para>
+						let the installation program automatically find and offer a driver update for installation,
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						let the installation program prompt you to locate a driver update,
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						manually specify a path to a driver update image or an RPM package.
+					</para>
+				</listitem>
+			</itemizedlist>
+
+			<important>
+				<para>
+					Always make sure to put your driver update discs on a standard disk partition. Advanced storage, such as RAID or LVM volumes, might not be accessible during the early stage of the installation when you perform driver updates.
+				</para>
+			</important>
+		</para>
+
+		<section id="sect-driver-updates-automatic-x86">
+			<title>Automatic Driver Update</title>
+			<para>
+				To have the installation program automatically recognize a driver update disc, connect a block device with the <literal>OEMDRV</literal> volume label to your computer before starting the installation process.
+			</para>
+			<note>
+				<para>
+					Starting with &PRODUCT;&nbsp;7.2, you can also use the <literal>OEMDRV</literal> block device to automatically load a Kickstart file. This file must be named <filename>ks.cfg</filename> and placed in the root of the device to be loaded. See <xref linkend="chap-kickstart-installations"/> for more information about Kickstart installations.
+				</para>
+			</note>
+			<para>
+				When the installation begins, the installation program detects all available storage connected to the system. If it finds a storage device labeled <literal>OEMDRV</literal>, it will treat it as a driver update disc and attempt to load driver updates from this device. You will be prompted to select which drivers to load:
+			</para>
+
+			<figure>
+				<title>Selecting a Driver</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/driverupdates/selecting_drivers.png" format="PNG" scalefit="0"/>
+					</imageobject>
+					<textobject>
+						<para>
+							Selecting a Driver
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<para>
+				Use number keys to toggle selection on individual drivers. When ready, press <keycap>c</keycap> to install the selected drivers and proceed to the <application>Anaconda</application> graphical user interface.
+			</para>
+		</section>
+		<section id="sect-driver-updates-assited-x86">
+			<title>Assisted Driver Update</title>
+
+			<para>
+				It is always recommended to have a block device with the <literal>OEMDRV</literal> volume label available to install a driver during installation. However, if no such device is detected and the <option>inst.dd</option> option was specified at the boot command line, the installation program lets you find the driver disk in interactive mode. In the first step, select a local disk partition from the list for <application>Anaconda</application> to scan for ISO files. Then, select one of the detected ISO files. Finally, select one or more available drivers. The image below demonstrates the process in the text user interface with individual steps highlighted.
+			</para>
+
+			<figure>
+				<title>Selecting a Driver Interactively</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/driverupdates/selecting_drivers_interactive.png" format="PNG" scalefit="0"/>
+					</imageobject>
+					<textobject>
+						<para>
+							Selecting a Driver Interactively
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<note>
+				<para>
+					If you extracted your ISO image file and burned it on a CD or DVD but the media does not have the <literal>OEMDRV</literal> volume label, either use the <option>inst.dd</option> option with no arguments and use the menu to select the device, or use the following boot option for the installation program to scan the media for drivers:
+				</para>
+
+<screen>inst.dd=/dev/sr0</screen>
+			</note>
+
+			<para>
+				Hit number keys to toggle selection on individual drivers. When ready, press <keycap>c</keycap> to install the selected drivers and proceed to the <application>Anaconda</application> graphical user interface.
+			</para>
+		</section>
+		<section id="sect-driver-updates-manual-x86">
+			<title>Manual Driver Update</title>
+			<para>
+				For manual driver installation, prepare an ISO image file containing your drivers to an accessible location, such a USB flash drive or a web server, and connect it to your computer. At the welcome screen, hit <keycap>Tab</keycap> to display the boot command line and append the <option>inst.dd=<replaceable>location</replaceable></option> to it, where <replaceable>location</replaceable> is a path to the driver update disc:
+			</para>
+
+			<figure>
+				<title>Specifying a Path to a Driver Update</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/driverupdates/exampleurl.png" format="PNG" scalefit="0"/>
+					</imageobject>
+					<textobject>
+						<para>
+							Specifying a Path to a Driver Update
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+
+			<para>
+				Typically, the image file is located on a web server (for example, <replaceable>http://server.example.com/dd.iso</replaceable>) or on a USB flash drive (for example, <replaceable>/dev/sdb1</replaceable>). It is also possible to specify an RPM package containing the driver update (for example <replaceable>http://server.example.com/dd.rpm</replaceable>).
+			</para>
+
+			<para>
+				When ready, hit <keycap>Enter</keycap> to execute the boot command. Then, your selected drivers will be loaded and the installation process will proceed normally.
+			</para>
+		</section>
+		<section id="sect-blacklisting-a-driver-x86">
+			<title>Blacklisting a Driver</title>
+			<para>
+				A malfunctioning driver can prevent a system from booting normally during installation. When this happens, you can disable (or blacklist) the driver by customizing the boot command line. At the boot menu, display the boot command line by hitting the <keycap>Tab</keycap> key. Then, append the <option>modprobe.blacklist=<replaceable>driver_name</replaceable></option> option to it. Replace <replaceable>driver_name</replaceable> with names of a driver or drivers you want to disable, for example:
+			</para>
+
+<screen>modprobe.blacklist=ahci</screen>
+
+			<para>
+				Note that the drivers blacklisted during installation using the <option>modprobe.blacklist=</option> boot option will remain disabled on the installed system and appear in the <filename>/etc/modprobe.d/anaconda-blacklist.conf</filename> file. See <xref linkend="chap-anaconda-boot-options"/> for more information about blacklisting drivers and other boot options.
+			</para>
+		</section>
+	</section>
+</chapter>

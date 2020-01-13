@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-installation-planning-s390">
+	<title>Planning for Installation on IBM System&nbsp;z</title>
+	<section id="sect-pre-installation-s390">
+		<title>Pre-installation</title>
+
+		<indexterm>
+			<primary>Planning for Installation</primary>
+			<secondary>System&nbsp;z</secondary>
+		</indexterm>
+
+		<para>
+			&PRODUCT;&nbsp;7 runs on zEnterprise&nbsp;196 or later IBM mainframe systems.
+		</para>
+		<para>
+			The installation process assumes that you are familiar with the IBM System&nbsp;z and can set up <firstterm>logical partitions</firstterm> (LPARs) and z/VM guest virtual machines. For additional information on System&nbsp;z, see <ulink url="http://www.ibm.com/systems/z"/>.
+		</para>
+		<para>
+			For installation of &PRODUCT; on System&nbsp;z, Red&nbsp;Hat supports DASD (Direct Access Storage Device) and FCP (Fiber Channel Protocol) storage devices.
+		</para>
+		<para>
+			Before you install &PRODUCT;, you must decide on the following:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					Decide whether you want to run the operating system on an LPAR or as a z/VM guest operating system.
+				</para>
+
+			</listitem>
+			<listitem>
+				<para>
+					Decide if you need swap space and if so, how much. Although it is possible (and recommended) to assign enough memory to a z/VM guest virtual machine and let z/VM do the necessary swapping, there are cases where the amount of required RAM is hard to predict. Such instances should be examined on a case-by-case basis. See <xref linkend="sect-recommended-partitioning-scheme-s390"/>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Decide on a network configuration. &PRODUCT;&nbsp;7 for IBM System&nbsp;z supports the following network devices:
+				</para>
+				<itemizedlist>
+					<listitem>
+						<para>
+							Real and virtual <firstterm>Open Systems Adapter</firstterm> (OSA)
+						</para>
+
+					</listitem>
+					<listitem>
+						<para>
+							Real and virtual HiperSockets
+						</para>
+
+					</listitem>
+					<listitem>
+						<para>
+							<firstterm>LAN channel station</firstterm> (LCS) for real OSA
+						</para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+		</itemizedlist>
+		<para>
+			You require the following hardware:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					Disk space. Calculate how much disk space you need and allocate sufficient disk space on DASDs<footnote>
+					<para>
+						<firstterm>Direct Access Storage Devices</firstterm> (DASDs) are hard disks that allow a maximum of three partitions per device. For example, <systemitem>dasda</systemitem> can have partitions <literal>dasda1</literal>, <literal>dasda2</literal>, and <literal>dasda3</literal>.
+					</para>
+				</footnote> or SCSI<footnote>
+				<para>
+					Using the SCSI-over-Fibre Channel device driver (the <systemitem>zfcp</systemitem> device driver) and a switch, SCSI LUNs can be presented to Linux on System&nbsp;z as if they were locally attached SCSI drives.
+				</para>
+			</footnote> disks. You require at least 10&nbsp;GB for a server installation, and 20&nbsp;GB if you want to install all packages. You also require disk space for any application data. After the installation, you can add or delete more DASD or SCSI disk partitions.
+		</para>
+		<para>
+			The disk space used by the newly installed &PRODUCT; system (the Linux instance) must be separate from the disk space used by other operating systems you have installed on your system.
+		</para>
+		<para>
+			For more information about disks and partition configuration, see <xref linkend="sect-recommended-partitioning-scheme-s390"/>.
+		</para>
+	</listitem>
+	<listitem>
+		<para>
+			RAM. Acquire 1&nbsp;GB (recommended) for the Linux instance. With some tuning, an instance might run with as little as 512&nbsp;MB RAM.
+		</para>
+	</listitem>
+</itemizedlist>
+<note>
+	<para>
+		When initializing swap space on an FBA (<firstterm>Fixed Block Architecture</firstterm>) DASD using the <application>SWAPGEN</application> utility, the <option>FBAPART</option> option must be used.
+	</para>
+</note>
+
+</section>
+<section id="sect-installation-overview-s390">
+	<title>Overview of the System&nbsp;z Installation Procedure</title>
+	<para>
+		You can install &PRODUCT; on System&nbsp;z interactively or in unattended mode. Installation on System&nbsp;z differs from installation on other architectures in that it is typically performed over a network and not from a local media. The installation consists of two phases:
+	</para>
+	<procedure>
+		<step>
+			<title>Booting the Installation</title>
+			<para>
+				Connect with the mainframe, then perform an <firstterm>initial program load</firstterm> (IPL), or boot, from the medium containing the installation program. See <xref linkend="chap-installer-booting-ipl-s390"/> for details.
+			</para>
+		</step>
+		<step>
+			<title>Anaconda</title>
+			<para>
+				Use the <application>Anaconda</application> installation program to configure network, specify language support, installation source, software packages to be installed, and to perform the rest of the installation. See <xref linkend="chap-installing-using-anaconda-s390"/> for more information.
+			</para>
+		</step>
+	</procedure>
+
+	<section id="sect-installation-overview-booting-s390">
+		<title>Booting the Installation</title>
+		<para>
+			After establishing a connection with the mainframe, you need to perform an initial program load (IPL), or boot, from the medium containing the installation program. This document describes the most common methods of installing &PRODUCT; on System&nbsp;z. In general, you can use any method to boot the Linux installation system, which consists of a kernel (<filename>kernel.img</filename>) and initial RAM disk (<filename>initrd.img</filename>) with at least the parameters in the <filename>generic.prm</filename> file. Additionally, a <filename>generic.ins</filename> file is loaded which determines file names and memory addresses for the initrd, kernel and generic.prm.
+		</para>
+		<para>
+			The Linux installation system is also called the <firstterm>installation program</firstterm> in this book.
+		</para>
+		<para>
+			The control point from where you can start the IPL process depends on the environment where your Linux is to run. If your Linux is to run as a z/VM guest operating system, the control point is the <firstterm>control program</firstterm> (CP) of the hosting z/VM. If your Linux is to run in LPAR mode, the control point is the mainframe's <firstterm>Support Element</firstterm> (SE) or an attached IBM System&nbsp;z <firstterm>Hardware Management Console</firstterm> (HMC).
+		</para>
+		<para>
+			You can use the following boot media only if Linux is to run as a guest operating system under z/VM:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					z/VM reader - see <xref linkend="sect-installing-zvm-reader-s390"/> for details.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			You can use the following boot media only if Linux is to run in LPAR mode:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					SE or HMC through a remote FTP server - see <xref linkend="sect-installing-lpar-ftp-s390"/> for details.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					SE or HMC DVD - see <xref linkend="sect-installing-lpar-fcp-dvd-s390"/> for details.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			You can use the following boot media for both z/VM and LPAR:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					DASD - see <xref linkend="sect-installing-zvm-prepared-dasd-s390"/> for z/VM or <xref linkend="sect-installing-lpar-dasd-s390"/> for LPAR.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					SCSI device that is attached through an FCP channel - see <xref linkend="sect-installing-zvm-prepared-fcp-scsi-s390"/> for z/VM or <xref linkend="sect-installing-lpar-fcp-scsi-s390"/> for LPAR.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					FCP-attached SCSI DVD - see <xref linkend="sect-installing-zvm-prepared-fcp-dvd-s390"/> for z/VM or <xref linkend="sect-installing-lpar-fcp-dvd-s390"/> for LPAR
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			If you use DASD and FCP-attached SCSI devices (except SCSI DVDs) as boot media, you must have a configured <systemitem>zipl</systemitem> boot loader.
+		</para>
+	</section>
+
+	<section id="sect-installation-overview-anaconda-s390">
+		<title>Installation using Anaconda</title>
+		<para>
+			In the second installation phase, you will use the <application>Anaconda</application> installation program in graphical, text-based, or command-line mode:
+		</para>
+		<variablelist>
+			<varlistentry>
+				<term>Graphical Mode</term>
+				<listitem>
+					<para>
+						Graphical installation is done through a VNC client. You can use your mouse and keyboard to navigate through the screens, click buttons, and type into text fields. For more information on performing a graphical installation using VNC, see <xref linkend="chap-vnc-installations"/>.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Text-based Mode</term>
+				<listitem>
+					<para>
+						This interface does not offer all interface elements of the GUI and does not support all settings. Use this for interactive installations if you cannot use a VNC client. For more information about text-based installations, see <xref linkend="sect-installation-text-mode-s390"/>.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Command-line Mode</term>
+				<listitem>
+					<para>
+						This is intended for automated and non-interactive installations on System&nbsp;z. Note that if the installation program encounters an invalid or missing kickstart command, the system will reboot. For more information about automated installation, see <xref linkend="chap-kickstart-installations"/>.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+
+		<para>
+			In &PRODUCT;&nbsp;7 the text-based installation has been reduced to minimize user interaction. Features like installation on FCP-attached SCSI devices, customizing partition layout, or package add-on selection are only available with the graphical user interface installation. Use the graphical installation whenever possible. See <xref linkend="chap-installing-using-anaconda-s390"/> for more details.
+		</para>
+	</section>
+</section>
+</chapter>

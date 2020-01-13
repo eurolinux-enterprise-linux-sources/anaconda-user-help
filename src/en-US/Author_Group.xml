@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE authorgroup PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<authorgroup>
+	<author>
+		<firstname>Petr</firstname>
+		<surname>Bokoč</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+		<email>pbokoc@redhat.com</email>
+	</author>
+	<author>
+		<firstname>Clayton</firstname>
+		<surname>Spicer</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Tomáš</firstname>
+		<surname>Čapek</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Barbora</firstname>
+		<surname>Ančincová</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Yoana</firstname>
+		<surname>Ruseva</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Brian</firstname>
+		<surname>Exelbierd</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Jack</firstname>
+		<surname>Reed</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Radek</firstname>
+		<surname>Bíba</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+	<author>
+		<firstname>Zac</firstname>
+		<surname>Dover</surname>
+		<affiliation>
+			<orgname>Red&nbsp;Hat</orgname>
+			<orgdiv>Customer Content Services</orgdiv>
+		</affiliation>
+	</author>
+</authorgroup>

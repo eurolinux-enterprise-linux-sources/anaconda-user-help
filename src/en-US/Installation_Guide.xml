@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<book>
+	<xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="getting-started.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Obtaining_RHEL.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Making_Media.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<part id="part-installation-intel-amd">
+		<title>AMD64 and Intel&nbsp;64 - Installation and Booting</title>
+		<partintro>
+			<para>
+				This part of the <citetitle>&PRODUCT; Installation Guide</citetitle> discusses the installation of &PRODUCT;&nbsp;7 on 64-bit AMD and Intel systems as well as some basic troubleshooting. For advanced installation options, see <xref linkend="part-advanced-installation-options" />.
+			</para>
+		</partintro>
+		<xi:include href="Simple_Installation.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Steps-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="DU-Updating_drivers_during_installation_x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Boot_x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Graphical_Installation-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Trouble-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</part>
+	<part id="part-installation-ibm-power">
+		<title>IBM Power&nbsp;Systems - Installation and Booting</title>
+		<partintro>
+			<para>
+				This part of the <citetitle>&PRODUCT; Installation Guide</citetitle> includes information about installation and basic post-installation troubleshooting for IBM Power&nbsp;Systems servers. IBM Power&nbsp;Systems servers include IBM PowerLinux servers and POWER7 and POWER8 Power&nbsp;Systems servers running Linux. For advanced installation options, see <xref linkend="part-advanced-installation-options" />.
+			</para>
+			<important>
+				<para>
+					Previous releases of &PRODUCT; supported 32-bit and 64-bit Power&nbsp;Systems servers (<literal>ppc</literal> and <literal>ppc64</literal>, respectively). &PRODUCT;&nbsp;7 supports only 64-bit Power&nbsp;Systems servers (<literal>ppc64</literal>).
+				</para>
+			</important>
+		</partintro>
+		<xi:include href="Steps-ppc.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="DU-Updating_drivers_during_installation_ppc.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Boot_ppc.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Graphical_Installation-ppc.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Trouble-ppc.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</part>
+	<part id="part-installation-system-z">
+		<title>IBM System&nbsp;z Architecture - Installation and Booting</title>
+		<partintro>
+			<para>
+				This part discusses booting, or <firstterm>initial program load</firstterm> (IPL), and installation of &PRODUCT; on IBM System&nbsp;z.
+			</para>
+		</partintro>
+		<xi:include href="Steps-s390.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="S390_Steps_Boot.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Graphical_Installation-s390.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Trouble-s390.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="S390_Moreinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="S390_Param.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="S390_References.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</part>
+	<part id="part-advanced-installation-options">
+		<title>Advanced Installation Options</title>
+		<partintro>
+			<para>
+				This part of the <citetitle>&PRODUCT; Installation Guide</citetitle> covers more advanced or uncommon methods of installing &PRODUCT;, including:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						customizing the installation program's behavior by specifying boot options
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						setting up a PXE server to boot the installation program over a network
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						installing with remote access through VNC
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						using a Kickstart file to automate the installation process
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						installing into a disk image instead of a physical drive
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						upgrading a previous release of &PRODUCT; to the current version
+					</para>
+				</listitem>
+			</itemizedlist>
+		</partintro>
+		<xi:include href="adminoptions.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="pxe-server.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="vnc-installations.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="headless-installations.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Kickstart2.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="disk-image-install.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Upgrade-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</part>
+	<part id="part-after-installation">
+		<title>After Installation</title>
+		<partintro>
+			<para>
+				This part of the <citetitle>&PRODUCT; Installation Guide</citetitle> covers finalizing the installation, as well as some installation tasks related to installation that you might perform at some time in the future. These include:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						performing common post-installation tasks, such as registering the system to Red&nbsp;Hat Subscription Management services
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						using a &PRODUCT; installation disc to rescue a damaged system
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						removing &PRODUCT; from your computer
+					</para>
+				</listitem>
+			</itemizedlist>
+		</partintro>
+		<xi:include href="InitialSetupHub-common.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="nextsteps.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Rescue_Mode.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Deregister_RHN_entitlement.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="uninstall.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</part>
+	<part id="part-technical-appendixes">
+		<title>Technical Appendixes</title>
+		<partintro>
+			<para>
+				The appendixes in this section do not contain instructions on installing &PRODUCT;. Instead, they provide technical background that you might find helpful to understand the options that &PRODUCT; offers you at various points in the installation process.
+			</para>
+		</partintro>
+		<xi:include href="Partitions-x86.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="iSCSI.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="Understanding_LVM.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="techref.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="ext4_to_xfs_command_reference_table.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+		<xi:include href="data_size_appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	</part>
+	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<index />
+</book>

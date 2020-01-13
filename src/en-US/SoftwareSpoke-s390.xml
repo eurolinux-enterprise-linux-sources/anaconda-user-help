@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-package-selection-s390">
+	<title>Software Selection</title>
+
+
+	<indexterm>
+		<primary>packages</primary>
+		<secondary>installing</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>packages</primary>
+		<secondary>selecting</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>selecting</primary>
+		<secondary>packages</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>installing packages</primary>
+	</indexterm>
+	<indexterm>
+		<primary>packages</primary>
+		<secondary>groups</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>packages</primary>
+		<secondary>groups</secondary>
+		<tertiary>selecting</tertiary>
+	</indexterm>
+
+
+
+
+	<para>
+		To specify which packages will be installed, select <guilabel>Software Selection</guilabel> at the <guilabel>Installation Summary</guilabel> screen. The package groups are organized into <emphasis>Base Environments</emphasis>. These environments are pre-defined sets of packages with a specific purpose; for example, the <guilabel>Virtualization Host</guilabel> environment contains a set of software packages needed for running virtual machines on the system. Only one software environment can be selected at installation time.
+	</para>
+
+	<para>
+		For each environment, there are additional packages available in the form of <emphasis>Add-ons</emphasis>. Add-ons are presented in the right part of the screen and the list of them is refreshed when a new environment is selected. You can select multiple add-ons for your installation environment.
+	</para>
+
+	<para>
+		A horizontal line separates the list of add-ons into two areas:
+	</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>
+				Add-ons listed <emphasis>above</emphasis> the horizontal line are specific to the environment you selected. If you select any add-ons in this part of the list and then select a different environment, your selection will be lost.
+			</para>
+		</listitem>
+		<listitem>
+			<para>
+				Add-ons listed <emphasis>below</emphasis> the horizontal line are available for all environments. Selecting a different environment will not impact the selections made in this part of the list.
+			</para>
+		</listitem>
+	</itemizedlist>
+
+	<figure>
+		<title>Example of a Software Selection for a Server Installation</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/pkgselection/pkg-group.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Example of a Software Selection for a Server Installation
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+
+	<para>
+		The availability of base environments and add-ons depends on the variant of the installation ISO image which you are using as the installation source. For example, the <literal>server</literal> variant provides environments designed for servers, while the <literal>workstation</literal> variant has several choices for deployment as a developer workstation, and so on.
+	</para>
+
+	<para>
+		The installation program does not show which packages are contained in the available environments. To see which packages are contained in a specific environment or add-on, see the <filename>repodata/*-comps-<replaceable>variant</replaceable>.<replaceable>architecture</replaceable>.xml</filename> file on the &PRODUCT; Installation DVD which you are using as the installation source. This file contains a structure describing available environments (marked by the <literal>&lt;environment&gt;</literal> tag) and add-ons (the <literal>&lt;group&gt;</literal> tag).
+	</para>
+
+	<para>
+		<important>
+			<para>
+				The pre-defined environments and add-ons allow you to customize your system, but in a manual installation, there is no way to select individual packages to install. If you are not sure what package should be installed, Red&nbsp;Hat recommends you to select the <guilabel>Minimal Install</guilabel> environment.  <guilabel>Minimal install</guilabel> only installs a basic version of &PRODUCT; with only a minimal amount of additional software. This will substantially reduce the chance of the system being affected by a vulnerability. After the system finishes installing and you log in for the first time, you can use the <application>Yum</application> package manager to install any additional software you need. For more details on <guilabel>Minimal install</guilabel>, see the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Installing_the_Minimum_Amount_of_Packages_Required.html">Installing the Minimum Amount of Packages Required</ulink> section of the Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security Guide.
+			</para>
+		</important>
+	</para>
+
+	<para>
+		Alternatively, automating the installation with a Kickstart file allows for a much higher degree of control over installed packages. You can specify environments, groups and individual packages in the <command>%packages</command> section of the Kickstart file. See <xref linkend="sect-kickstart-packages"/> for instructions on selecting packages to install in a Kickstart file, and <xref linkend="chap-kickstart-installations"/> for general information about automating the installation with Kickstart.
+	</para>
+
+	<para>
+		Once you have selected an environment and add-ons to be installed, click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+
+
+	<section id="sect-mandatory-services-s390">
+		<title>Core Network Services</title>
+
+		<para>
+			All &PRODUCT; installations include the following network services:
+		</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					centralized logging through the <systemitem>rsyslog</systemitem> service
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					email through SMTP (Simple Mail Transfer Protocol)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					network file sharing through NFS (Network File System)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					remote access through SSH (Secure SHell)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					resource advertising through mDNS (multicast DNS)
+				</para>
+			</listitem>
+		</itemizedlist>
+
+
+
+
+
+		<para>
+			Some automated processes on your &PRODUCT; system use the email service to send reports and messages to the system administrator. By default, the email, logging, and printing services do not accept connections from other systems.
+		</para>
+
+		<para>
+			You can configure your &PRODUCT; system after installation to offer email, file sharing, logging, printing, and remote desktop access services. The SSH service is enabled by default. You can also use NFS to access files on other systems without enabling the NFS sharing service.
+		</para>
+
+	</section>
+</section>

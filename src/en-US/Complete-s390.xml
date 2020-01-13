@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-installation-complete-s390">
+	<title>Installation Complete</title>
+
+	<para>
+		Congratulations! Your &PRODUCT; installation is now complete!
+	</para>
+
+	<para>
+		The installation program prompts you to prepare your system for reboot.
+	</para>
+
+	<para>
+		The installation program automatically reboots into the installed system.
+	</para>
+	<para>
+		Should the installation program not reboot, the installation program shows information from which device to do an IPL (boot). Accept the shutdown option and after shutdown, IPL from the DASD or SCSI LUN where the <filename>/boot</filename> partition for &PRODUCT; has been installed.
+	</para>
+
+	<section id="sect-installation-complete-ipl-zvm-s390">
+		<title>IPL under z/VM</title>
+
+		<para>
+			To IPL from a DASD, for example using the DASD device 200 on the 3270 console, issue the command:
+		</para>
+
+<screen><command>#cp i 200</command></screen>
+
+		<para>
+			In DASD only environments where automatic partitioning (clearing data from all partitions) was used, the first activated DASD is where the <filename>/boot</filename> partition is typically located.
+		</para>
+		<para>
+			Using <filename>/boot</filename> on an FCP LUN, you must provide the WWPN and LUN for the FCP-attached device from which to IPL.
+		</para>
+
+		<procedure>
+			<para>
+				To IPL from an FCP-attached device:
+			</para>
+			<step>
+				<para>
+					Provide FCP routing information to an FCP-attached device, for example, where <literal>0x50050763050B073D</literal> is the WWPN, and <literal>0x4020400100000000</literal> is the FCP LUN:
+				</para>
+<screen><command>#cp set loaddev portname 50050763 050B073D lun 40204001 00000000</command></screen>
+			</step>
+			<step>
+				<para>
+					IPL the FCP adapter, for example <literal>FC00</literal>:
+				</para>
+<screen><command>#cp ipl FC00</command></screen>
+			</step>
+		</procedure>
+		<note>
+			<para>
+				To disconnect from the 3270 terminal without stopping the Linux running in your virtual machine, use <command>#cp disconnect</command> instead of <command>#cp logoff</command>. When your virtual machine is re-connected using the usual logon procedure, it might be placed in CP console function mode (<literal>CP READ</literal>). If so, to resume execution on your virtual machine, enter the <command>BEGIN</command> command.
+			</para>
+		</note>
+	</section>
+
+	<section id="sect-installation-complete-ipl-lpar-s390">
+		<title>IPL on an LPAR</title>
+		<para>
+			For LPAR-based installations, on the HMC, issue a load command to the LPAR, specifying the particular DASD, or the FCP adapter, WWPN, and FCP LUN where the <filename>/boot</filename> partition is located.
+		</para>
+	</section>
+
+	<section id="sect-installation-complete-reipl-s390">
+		<title>Continuing after Reboot (re-IPL)</title>
+
+		<para>
+			Following the automatic reboot or the manual IPL of the installed &PRODUCT; operating system, you can log on to the system through <application>ssh</application>. Note that the only place from which you can log in as root is from the 3270 terminal or from other terminal devices listed in <filename>/etc/securetty</filename>.
+		</para>
+
+		<para>
+			The first time you start your &PRODUCT; system in a graphical environment, you can use <application>Initial Setup</application> to guide you through &PRODUCT; configuration. <application>Initial Setup</application> lets you configure your environment at the beginning, so that you can get started using your &PRODUCT; system quickly.
+		</para>
+
+
+
+		<para>
+			See <xref linkend="chap-initial-setup"/> for information about the configuration process.
+		</para>
+	</section>
+</section>

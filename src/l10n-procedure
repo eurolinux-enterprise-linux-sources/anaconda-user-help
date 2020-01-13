@@ -1,0 +1,22 @@
+1. Clean up tmp/:
+	publican clean
+
+2. Comment out all xrefs in the book:
+	To comment: s/<xref linkend="([^"]*)" />/<!-- L10N <xref linkend="$1" /> -->/
+	To uncomment: s/<!-- L10N <xref linkend="([^"]*)" /> -->/<xref linkend="$1" />/
+
+3. Checkout en-US/Installation_Guide.xml:
+	git checkout -- en-US/Installation_Guide.xml
+
+4. Comment out everything that isn't complete using <!-- L10N -->
+
+5. Run publican print_unused and copy the output into a file in the book's root named "unused"; remove all spaces
+
+6. Remove all unused files:
+	for files in $(cat unused); do git rm -f en-US/$files; done
+
+7. Make sure it builds
+
+8. ???
+
+9. PROFIT!

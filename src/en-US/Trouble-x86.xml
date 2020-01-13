@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-troubleshooting-x86">
+	<title>Troubleshooting Installation on AMD64 and Intel&nbsp;64 Systems</title>
+
+
+	<indexterm>
+		<primary>troubleshooting</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>log files</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>anaconda.log</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>program.log</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>storage.log</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>packaging.log</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>syslog</primary>
+		<secondary>AMD64 and Intel&nbsp;64</secondary>
+	</indexterm>
+
+
+	<para>
+		This chapter discusses some common installation problems and their solutions.
+	</para>
+	<para>
+		For debugging purposes, <application>Anaconda</application> logs installation actions into files in the <filename>/tmp</filename> directory. These files are listed in the following table.
+	</para>
+	<table id="tabl-installation-log-files-x86">
+		<title>Log Files Generated During the Installation</title>
+		<tgroup cols="2">
+			<colspec colname="c1" colwidth="1*"/>
+			<colspec colname="c2" colwidth="2*"/>
+			<thead>
+				<row>
+					<entry>
+						Log file
+					</entry>
+					<entry>
+						Contents
+					</entry>
+				</row>
+			</thead>
+			<tbody>
+				<row>
+					<entry>
+						<filename>/tmp/anaconda.log</filename>
+					</entry>
+					<entry>
+						general <application>Anaconda</application> messages
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/program.log</filename>
+					</entry>
+					<entry>
+						all external programs run during the installation
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/storage.log</filename>
+					</entry>
+					<entry>
+						extensive storage module information
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/packaging.log</filename>
+					</entry>
+					<entry>
+						<application>yum</application> and <application>rpm</application> package installation messages
+					</entry>
+				</row>
+				<row>
+					<entry>
+						<filename>/tmp/syslog</filename>
+					</entry>
+					<entry>
+						hardware-related system messages
+					</entry>
+				</row>
+			</tbody>
+		</tgroup>
+	</table>
+	<para>
+		If the installation fails, the messages from these files are consolidated into <filename>/tmp/anaconda-tb-<replaceable>identifier</replaceable></filename>, where <replaceable>identifier</replaceable> is a random string.
+	</para>
+	<para>
+		After successful installation, by default, these files will be copied to the installed system under the directory <filename class="directory">/var/log/anaconda/</filename>. However, if installation is unsuccessful, or if the <option>inst.nosave=all</option> or <option>inst.nosave=logs</option> options are used when booting the installation system, these logs will only exist in the installation program's RAM disk. This means they are not saved permanently and will be lost once the system is powered down. To store them permanently, copy those files to another system on the network by using <command>scp</command> on the system running the installation program, or copy them to a mounted storage device (such as an USB flash drive). Details on how to transfer the log files over the network are below. Note that if you use an USB flash drive or other removable media, you should make sure to back up any data on it before starting the procedure.
+	</para>
+	<procedure>
+		<title>Transferring Log Files Onto a USB Drive</title>
+		<step>
+			<para>
+				On the system you are installing, press <keycombo><keycap>Ctrl</keycap><keycap>Alt</keycap><keycap>F2</keycap></keycombo> to access a shell prompt. You will be logged into a root account and you will have access to the installation program's temporary file system.
+			</para>
+		</step>
+		<step>
+			<para>
+				Connect a USB flash drive to the system and execute the <command>dmesg</command> command. A log detailing all recent events will be displayed. At the bottom of this log, you will see a set of messages caused by the USB flash drive you just connected. It will look like a set of lines similar to the following:
+			</para>
+<screen><computeroutput>[  170.171135] sd 5:0:0:0: [sdb] Attached SCSI removable disk</computeroutput></screen>
+			<para>
+				Note the name of the connected device - in the above example, it is <literal>sdb</literal>.
+			</para>
+		</step>
+		<step>
+			<para>
+				Go to the <filename>/mnt</filename> directory and once there, create new directory which will serve as the mount target for the USB drive. The name of the directory does not matter; this example uses the name <literal>usb</literal>.
+			</para>
+<screen><prompt>#</prompt> <command>mkdir usb</command></screen>
+		</step>
+		<step>
+			<para>
+				Mount the USB flash drive onto the newly created directory. Note that in most cases, you do not want to mount the whole drive, but a partition on it. Therefore, do not use the name <literal>sdb</literal> - use the name of the partition you want to write the log files to. In this example, the name <literal>sdb1</literal> is used.
+			</para>
+<screen><prompt>#</prompt> <command>mount /dev/sdb1 /mnt/usb</command></screen>
+			<para>
+				You can now verify that you mounted the correct device and partition by accessing it and listing its contents - the list should match what you expect to be on the drive.
+			</para>
+<screen><prompt>#</prompt> <command>cd /mnt/usb</command></screen>
+<screen><prompt>#</prompt> <command>ls</command></screen>
+		</step>
+		<step>
+			<para>
+				Copy the log files to the mounted device.
+			</para>
+<screen><prompt>#</prompt> <command>cp /tmp/*log /mnt/usb</command></screen>
+		</step>
+		<step>
+			<para>
+				Unmount the USB flash drive. If you get an error message saying that the target is busy, change your working directory to outside the mount (for example, <filename>/</filename>).
+			</para>
+<screen><prompt>#</prompt> <command>umount /mnt/usb</command></screen>
+		</step>
+	</procedure>
+
+	<para>
+		The log files from the installation are now saved on the USB flash drive.
+	</para>
+
+	<procedure>
+		<title>Transferring Log Files Over the Network</title>
+		<step>
+			<para>
+				On the system you are installing, press <keycombo><keycap>Ctrl</keycap><keycap>Alt</keycap><keycap>F2</keycap></keycombo> to access a shell prompt. You will be logged into a root account and you will have access to the installation program's temporary file system.
+			</para>
+		</step>
+		<step>
+			<para>
+				Switch to the <filename class="directory">/tmp</filename> directory where the log files are located:
+			</para>
+<screen><prompt>#</prompt> <command>cd /tmp</command></screen>
+		</step>
+		<step>
+			<para>
+				Copy the log files onto another system on the network using the <command>scp</command> command:
+			</para>
+<screen><prompt>#</prompt> <command>scp *log <replaceable>user</replaceable>@<replaceable>address</replaceable>:<replaceable>path</replaceable></command></screen>
+			<para>
+				Replace <replaceable>user</replaceable> with a valid user name on the target system, <replaceable>address</replaceable> with the target system's address or host name, and <replaceable>path</replaceable> with the path to the directory you want to save the log files into. For example, if you want to log in as <systemitem class="username">john</systemitem> to a system with an IP address of <systemitem>192.168.0.122</systemitem> and place the log files into the <filename class="directory">/home/john/logs/</filename> directory on that system, the command will have the following form:
+			</para>
+<screen><prompt>#</prompt> <command>scp *log john@192.168.0.122:/home/john/logs/</command></screen>
+			<para>
+				When connecting to the target system for the first time, the SSH client asks you to confirm that the fingerprint of the remote system is correct and that you want to continue:
+			</para>
+<screen>
+<computeroutput>The authenticity of host '192.168.0.122 (192.168.0.122)' can't be established.</computeroutput>
+<computeroutput>ECDSA key fingerprint is a4:60:76:eb:b2:d0:aa:23:af:3d:59:5c:de:bb:c4:42.</computeroutput>
+<computeroutput>Are you sure you want to continue connecting (yes/no)?</computeroutput>
+</screen>
+			<para>
+				Type <literal>yes</literal> and press <keycap>Enter</keycap> to continue. Then, provide a valid password when prompted. The files will start transferring to the specified directory on the target system.
+			</para>
+		</step>
+	</procedure>
+
+	<para>
+		The log files from the installation are now permanently saved on the target system and available for review.
+	</para>
+
+	<section id="sect-trouble-beginning-installation-x86">
+		<title>Trouble Beginning the Installation</title>
+
+
+		<indexterm>
+			<primary>troubleshooting</primary>
+			<secondary>beginning the installation</secondary>
+			<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+		</indexterm>
+
+
+		<section id="sect-troubleshooting-beta-secure-boot" condition="beta">
+			<title>System Does Not Boot When UEFI Secure Boot Is Enabled</title>
+			<para>
+				Beta releases of &PRODUCT;&nbsp;7 have their kernels signed with a special public key which is not recognized by standard UEFI Secure Boot implementations. This prevents the system from booting when the Secure Boot technology is enabled.
+			</para>
+			<para>
+				To fix this issue, you must disable UEFI Secure Boot, install the system, and then import the Beta public key using the <firstterm>Machine Owner Key</firstterm> facility. See <xref linkend="sect-installation-planning-beta-secure-boot"/> for instructions.
+			</para>
+		</section>
+
+		<section>
+			<title>Problems with Booting into the Graphical Installation</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>GUI installation method unavailable</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				Systems with some video cards have trouble booting into the graphical installation program. If the installation program does not run using its default settings, it attempts to run in a lower resolution mode. If that still fails, the installation program attempts to run in text mode.
+			</para>
+			<para>
+				There are several possible solutions to display issues, most of which involve specifying custom boot options. For more information, see <xref linkend="sect-boot-options-installer"/>.
+			</para>
+			<variablelist>
+				<varlistentry>
+					<term>Use the basic graphics mode</term>
+					<listitem>
+						<para>
+							You can attempt to perform the installation using the basic graphics driver. To do this, either select <guimenu>Troubleshooting</guimenu> &gt; <guimenuitem>Install &PRODUCT; in basic graphics mode</guimenuitem> in the boot menu, or edit the installation program's boot options and append <option>inst.xdriver=vesa</option> at the end of the command line.
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Specify the display resolution manually</term>
+					<listitem>
+						<para>
+							If the installation program fails to detect your screen resolution, you can override the automatic detection and specify it manually. To do this, append the <option>inst.resolution=<replaceable>x</replaceable></option> option at the boot menu, where <replaceable>x</replaceable> is your display's resolution (for example, <literal>1024x768</literal>).
+						</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Use an alternate video driver</term>
+					<listitem>
+						<para>
+							You can also attempt to specify a custom video driver, overriding the installation program's automatic detection. To specify a driver, use the <option>inst.xdriver=<replaceable>x</replaceable></option> option, where <replaceable>x</replaceable> is the device driver you want to use (for example, <literal>nouveau</literal>).
+						</para>
+						<note>
+							<para>
+								If specifying a custom video driver solves your problem, you should report it as a bug at <ulink url="https://bugzilla.redhat.com"/> under the <literal>anaconda</literal> component. <application>Anaconda</application> should be able to detect your hardware automatically and use the appropriate driver without your intervention.
+							</para>
+						</note>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>Perform the installation using VNC</term>
+					<listitem>
+						<para>
+							If the above options fail, you can use a separate system to access the graphical installation over the network, using the <firstterm>Virtual Network Computing</firstterm> (VNC) protocol. For details on installing using VNC, see <xref linkend="chap-vnc-installations"/>.
+						</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</section>
+
+		<section>
+			<title>Serial Console Not Detected</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>Console unavailable</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				In some cases, attempting to install in text mode using a serial console will result in no output on the console. This happens on systems which have a graphics card, but no monitor connected. If <application>Anaconda</application> detects a graphics card, it will attempt to use it for a display, even if no display is connected.
+			</para>
+			<para>
+				If you want to perform a text-based installation on a serial console, use the <option>inst.text</option> and <option>console=</option> boot options. See <xref linkend="chap-anaconda-boot-options"/> for more details.
+			</para>
+		</section>
+
+	</section>
+
+	<section id="sect-trouble-during-installation-x86">
+		<title>Trouble During the Installation</title>
+
+
+		<indexterm>
+			<primary>troubleshooting</primary>
+			<secondary>during the installation</secondary>
+			<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+		</indexterm>
+
+
+		<section id="sect-trouble-during-no-target-x86">
+			<title>No Disks Detected</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>no disks detected</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				In the <guilabel>Installation Destination</guilabel> screen, the following error message can appear at the bottom: <guilabel>No disks detected. Please shut down the computer, connect at least one disk, and restart to complete installation</guilabel>.
+			</para>
+			<para>
+				The message indicates that <application>Anaconda</application> did not find any writable storage devices to install to. In that case, first make sure that your system does have at least one storage device attached.
+			</para>
+			<para>
+				If your system uses a hardware RAID controller, verify that the controller is properly configured and working. See your controller's documentation for instructions.
+			</para>
+			<para>
+				If you are installing into one or more iSCSI devices and there is no local storage present on the system, make sure that all required LUNs (<firstterm>Logical Unit Numbers</firstterm>) are being presented to the appropriate HBA (<firstterm>Host Bus Adapter</firstterm>). For additional information about iSCSI, see <xref linkend="appe-iscsi-disks"/>.
+			</para>
+			<para>
+				If you made sure you have a connected and properly configured storage device and the message still appears after you reboot the system and start the installation again, it means that the installation program failed to detect the storage. In most cases this message appears when you attempt to install on an SCSI device which has not been recognized by the installation program.
+			</para>
+			<para>
+				In that case, you will have to perform a driver update before starting the installation. Check your hardware vendor's website to determine if a driver update is available that fixes your problem. For more general information on driver updates, see <xref linkend="chap-driver-updates-x86"/>.
+			</para>
+			<para>
+				You can also consult the <citetitle>Red&nbsp;Hat Hardware Compatibility List</citetitle>, available online at <ulink url="https://hardware.redhat.com"/>.
+			</para>
+		</section>
+
+		<section id="sect-trouble-during-traceback-x86">
+			<title>Reporting Traceback Messages</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>saving traceback messages without removable media</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>traceback messages</primary>
+				<secondary>saving traceback messages without removable media</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				If the graphical installation program encounters an error, it presents you with a crash reporting dialog box. You can then choose to send information about the problem you encountered to Red&nbsp;Hat. To send a crash report, you will need to enter your Customer Portal credentials. If you do not have a Customer Portal account, you can register at <ulink url="https://www.redhat.com/wapps/ugc/register.html"/>. Automated crash reporting also requires a working network connection.
+			</para>
+			<figure>
+				<title>The Crash Reporting Dialog Box</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/crashreporting/crashreporting.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<para>
+							A message saying that an unknown error has occurred.
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+			<para>
+				When the dialog appears, select <guibutton>Report Bug</guibutton> to report the problem, or <guibutton>Quit</guibutton> to exit the installation.
+			</para>
+			<para>
+				Optionally, click <guilabel>More Info</guilabel> to display detailed output that can help determine the cause of the error. If you are familiar with debugging, click <guibutton>Debug</guibutton>. This will take you to virtual terminal <systemitem>tty1</systemitem>, where you can request more precise information that will enhance the bug report. To return to the graphical interface from <systemitem>tty1</systemitem>, use the <command>continue</command> command.
+			</para>
+			<figure>
+				<title>The Expanded Crash Reporting Dialog Box</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/crashreporting/crashreporting_details.png" format="PNG"/>
+					</imageobject>
+					<textobject>
+						<para>
+							Details of the crash, showing the Python traceback
+						</para>
+					</textobject>
+				</mediaobject>
+			</figure>
+			<para>
+				If you want to report the bug to the customer portal, follow the procedure below.
+			</para>
+			<procedure>
+				<title>Reporting Errors to Red&nbsp;Hat Customer Support</title>
+				<step>
+					<para>
+						In the menu that appears, select <guilabel>Report a bug to Red&nbsp;Hat Customer Portal</guilabel>.
+					</para>
+				</step>
+				<step>
+					<para>
+						To report the bug to Red&nbsp;Hat, you first need to provide your Customer Portal credentials. Click <guibutton>Configure Red&nbsp;Hat Customer Support</guibutton>.
+					</para>
+					<figure>
+						<title>Customer Portal Credentials</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_configure1.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A message saying that the Red&nbsp;Hat Customer Support is not properly configured, with a button you can click to configure your credentials.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						A new window is now open, prompting you to enter your Customer Portal user name and password. Enter your Red&nbsp;Hat Customer Portal credentials.
+					</para>
+					<figure>
+						<title>Configure Red&nbsp;Hat Customer Support</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_configure2.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A dialog prompting you to enter your Customer Portal account details.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+					<para>
+						If your network settings require you to use a <systemitem class="protocol">HTTP</systemitem> or <systemitem class="protocol">HTTPS</systemitem> proxy, you can configure it by expanding the <guilabel>Advanced</guilabel> menu and entering the address of the proxy server.
+					</para>
+					<para>
+						When you put in all required credentials, click <guilabel>OK</guilabel> to proceed.
+					</para>
+				</step>
+				<step>
+					<para>
+						A new window appears, containing a text field. Write down any useful information and comments here. Describe how the error can be reproduced by explaining each step you took before the crash reporting dialog appeared. Provide as much relevant detail as possible, including any information you acquired when debugging. Be aware that the information you provide here can become publicly visible on the Customer Portal.
+					</para>
+					<para>
+						If you do not know what caused the error, check the box labeled <guilabel>I don't know what caused this problem</guilabel> at the bottom of the dialog.
+					</para>
+					<para>
+						Then, click <guibutton>Forward</guibutton>.
+					</para>
+					<figure>
+						<title>Describe the Problem</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_describe.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A text input field, prompting you to describe the steps you took before you encountered the error you are reporting.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						Next, review the information that will be sent to the Customer Portal. The explanation you provided is in the <guilabel>comment</guilabel> tab. Other tabs include such information as your system's host name and other details about the installation environment. You can remove any items you do not want sent to Red&nbsp;Hat, but be aware that providing less detail can affect the investigation of the issue.
+					</para>
+					<para>
+						Click <guibutton>Forward</guibutton> when you finish reviewing the information to be sent.
+					</para>
+					<figure>
+						<title>Review the Data to Be Sent</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_review.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A dialog window with several tabs, allowing you to review all information about your system that will be sent to the Customer Portal as part of the crash report.
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						Review the list of files that will be sent and included in the bug report as individual attachments. These files provide system information that will assist the investigation. If you do not want to send certain files, uncheck the box next to each one. To provide additional files that can help find the problem, click <guibutton>Attach a file</guibutton>.
+					</para>
+					<para>
+						Once you have reviewed the files to be sent, check the box labeled <guilabel>I have reviewed the data and agree with submitting it</guilabel>. Then, click <guibutton>Forward</guibutton> to send the report and attachments to the Customer Portal.
+					</para>
+					<figure>
+						<title>Review the Files to Be Sent</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/crashreporting/crashreporting_checkfiles.png" format="PNG"/>
+							</imageobject>
+							<textobject>
+								<para>
+									A dialog window allowing you to review the files to be sent along with the report, unselect files you do not want to send, and add additional files..
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						When the dialog reports that processing has finished, you can click <guilabel>Show log</guilabel> to view details of the reporting process or <guilabel>Close</guilabel> to return to the initial crash reporting dialog box. There, click <guilabel>Quit</guilabel> to exit the installation.
+					</para>
+				</step>
+			</procedure>
+		</section>
+
+		<section id="creating_pre-installation-logs-x86">
+			<title>Creating Pre-installation Log Files</title>
+			<para>
+				To debug installation problems you can set the <option>inst.debug</option> option to create log files from the environment before the installation starts. These log files contain, for example, the current storage configuration.
+			</para>
+			<para>
+				To set the option in the &PRODUCT; installation boot menu:
+			</para>
+			<procedure>
+				<step>
+					<para>
+						Select the <guimenuitem>Install &PRODUCT; 7.3</guimenuitem> entry.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press the <keycap>Tab</keycap> key to edit the boot options.
+					</para>
+				</step>
+				<step>
+					<para>
+						Append <option>inst.debug</option> to the options. For example:
+					</para>
+<screen>&gt; vmlinuz ... <userinput>inst.debug</userinput></screen>
+					<para>
+						For further details, see <xref linkend="chap-anaconda-boot-options"/>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press <keycap>Enter</keycap> to start the setup.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				The system stores the pre-installation log files in the <filename class="directory">/tmp/pre-anaconda-logs/</filename> directory before Anaconda starts. To access the log files:
+			</para>
+			<procedure>
+				<step>
+					<para>
+						Switch to the console. See <xref linkend="sect-installation-consoles-x86"/>.
+					</para>
+				</step>
+				<step>
+					<para>
+						Change into the <filename class="directory">/tmp/pre-anaconda-logs/</filename> directory:
+					</para>
+<screen># cd /tmp/pre-anaconda-logs/</screen>
+				</step>
+			</procedure>
+		</section>
+
+	</section>
+
+	<section id="sect-trouble-after-x86">
+		<title>Problems After Installation</title>
+
+		<indexterm>
+			<primary>troubleshooting</primary>
+			<secondary>after the installation</secondary>
+			<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+		</indexterm>
+
+		<section>
+			<title>Are You Unable to Boot With Your RAID Card?</title>
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting</secondary>
+				<tertiary>RAID cards</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>RAID</primary>
+				<secondary>trouble booting from drive attached to RAID card</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+			<para>
+				If you have performed an installation and cannot boot your system properly, you might need to reinstall and partition your system's storage differently.
+			</para>
+			<para>
+				Some BIOS types do not support booting from RAID cards. After you finish the installation and reboot the system for the first time, a text-based screen showing the boot loader prompt (for example, <prompt>grub&gt;</prompt>) and a flashing cursor might be all that appears. If this is the case, you must repartition your system and move your <filename>/boot</filename> partition and the boot loader outside the RAID array. The <filename>/boot</filename> partition and the boot loader must be on the same drive.
+			</para>
+			<para>
+				Once these changes have been made, you should be able to finish your installation and boot the system properly. For more information about partitioning, see <xref linkend="sect-disk-partitioning-setup-x86"/>.
+			</para>
+		</section>
+
+		<section id="sect-trouble-after-graphical-boot-x86">
+			<title>Trouble With the Graphical Boot Sequence</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>graphical boot</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				After you finish the installation and reboot your system for the first time, it is possible that the system stops responding during the graphical boot sequence, requiring a reset. In this case, the boot loader is displayed successfully, but selecting any entry and attempting to boot the system results in a halt. This usually means a problem with the graphical boot sequence; to solve this issue, you must disable graphical boot. To do this, temporarily alter the setting at boot time before changing it permanently.
+			</para>
+			<procedure>
+				<title>Disabling Graphical Boot Temporarily</title>
+				<step>
+					<para>
+						Start your computer and wait until the boot loader menu appears. If you set your boot loader timeout period to 0, hold down the <keycap>Esc</keycap> key to access it.
+					</para>
+				</step>
+				<step>
+					<para>
+						When the boot loader menu appears, use your cursor keys to highlight the entry you want to boot and press the <keycap>e</keycap> key to edit this entry's options.
+					</para>
+				</step>
+				<step>
+					<para>
+						In the list of options, find the kernel line - that is, the line beginning with the keyword <literal>linux</literal> (or, in some cases, <literal>linux16</literal> or <literal>linuxefi</literal>). On this line, locate the <literal>rhgb</literal> option and delete it. The option might not be immediately visible; use the cursor keys to scroll up and down.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press <keycap>F10</keycap> or <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo> to boot your system with the edited options.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				If the system started successfully, you can log in normally. Then you will need to disable the graphical boot permanently - otherwise you will have to perform the previous procedure every time the system boots. To permanently change boot options, do the following.
+			</para>
+			<procedure>
+				<title>Disabling Graphical Boot Permanently</title>
+				<step>
+					<para>
+						Log in to the <systemitem>root</systemitem> account using the <command>su -</command> command:
+					</para>
+<screen><prompt>$</prompt> <command>su -</command></screen>
+				</step>
+				<step>
+					<para>
+						Use the <application>grubby</application> tool to find the default <application>GRUB2</application> kernel:
+					</para>
+<screen><prompt>#</prompt> <command>grubby --default-kernel</command>
+/boot/vmlinuz-3.10.0-229.4.2.el7.x86_64
+					</screen>
+				</step>
+				<step>
+					<para>
+						Use the <application>grubby</application> tool to remove the <literal>rhgb</literal> boot option from the default kernel, identified in the last step, in your <application>GRUB2</application> configuration. For example:
+					</para>
+<screen><prompt>#</prompt> grubby --remove-args="rhgb" --update-kernel <replaceable>/boot/vmlinuz-3.10.0-229.4.2.el7.x86_64</replaceable></screen>
+				</step>
+			</procedure>
+			<para>
+				After you finish this procedure, you can reboot your computer. &PRODUCT; will not use the graphical boot sequence any more. If you want to enable graphical boot in the future, follow the same procedure, replacing the <literal>--remove-args="rhgb"</literal> parameter with the <literal>--args="rhgb"</literal> paramter. This will restore the <literal>rhgb</literal> boot option to the default kernel in your <application>GRUB2</application> configuration.
+			</para>
+			<para>
+				See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink> for more information about working with the <application>GRUB2</application> boot loader.
+			</para>
+		</section>
+
+		<section id="sect-trouble-after-graphical-login-x86">
+			<title>Booting into a Graphical Environment</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting into a graphical environment</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting into the X Window System</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>booting into GNOME or KDE</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you have installed the <application>X Window System</application> but are not seeing a graphical desktop environment once you log into your system, you can start it manually using the <command>startx</command> command. Note, however, that this is just a one-time fix and does not change the log in process for future log ins.
+			</para>
+			<para>
+				To set up your system so that you can log in at a graphical login screen, you must change the default <application>systemd</application> target to <literal>graphical.target</literal>. When you are finished, reboot the computer. You will presented with a graphical login prompt after the system restarts.
+			</para>
+			<procedure>
+				<title>Setting Graphical Login as Default</title>
+				<step>
+					<para>
+						Open a shell prompt. If you are in your user account, become root by typing the <command>su -</command> command.
+					</para>
+				</step>
+				<step>
+					<para>
+						Change the default target to <systemitem>graphical.target</systemitem>. To do this, execute the following command:
+					</para>
+<screen><prompt>#</prompt> <command>systemctl set-default graphical.target</command></screen>
+				</step>
+			</procedure>
+			<para>
+				Graphical login is now enabled by default - you will be presented with a graphical login prompt after the next reboot. If you want to reverse this change and keep using the text-based login prompt, execute the following command as <systemitem>root</systemitem>:
+			</para>
+<screen><prompt>#</prompt> <command>systemctl set-default multi-user.target</command></screen>
+			<para>
+				For more information about targets in <application>systemd</application>, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+			</para>
+		</section>
+
+		<section>
+			<title>No Graphical User Interface Present</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>X (X Window System)</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you are having trouble getting <application>X</application> (the <application>X Window System</application>) to start, it is possible that it has not been installed. Some of the preset base environments you can select during the installation, such as <guilabel>Minimal install</guilabel> or <guilabel>Web Server</guilabel>, do not include a graphical interface - it has to be installed manually.
+			</para>
+			<para>
+				If you want <application>X</application>, you can install the necessary packages afterwards. See the Knowledgebase article at <ulink url="https://access.redhat.com/site/solutions/5238"/> for information on installing a graphical desktop environment.
+			</para>
+		</section>
+
+		<section>
+			<title>X Server Crashing After User Logs In</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>X server crashes</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				If you are having trouble with the <application>X</application> server crashing when a user logs in, one or more of your file systems can be full or nearly full. To verify that this is the problem you are experiencing, execute the following command:
+			</para>
+<screen><prompt>$</prompt> <command>df -h</command></screen>
+			<para>
+				The output will help you diagnose which partition is full - in most cases, the problem will be on the <filename>/home</filename> partition. The following is a sample output of the <command>df</command> command:
+			</para>
+<screen>
+Filesystem                                  Size  Used Avail Use% Mounted on
+/dev/mapper/vg_rhel-root                     20G  6.0G   13G  32% /
+devtmpfs                                    1.8G     0  1.8G   0% /dev
+tmpfs                                       1.8G  2.7M  1.8G   1% /dev/shm
+tmpfs                                       1.8G 1012K  1.8G   1% /run
+tmpfs                                       1.8G     0  1.8G   0% /sys/fs/cgroup
+tmpfs                                       1.8G  2.6M  1.8G   1% /tmp
+/dev/sda1                                   976M  150M  760M  17% /boot
+/dev/dm-4                                    90G   90G     0 100% /home
+</screen>
+			<para>
+				In the above example, you can see that the <filename>/home</filename> partition is full, which causes the crash. You can make some room on the partition by removing unneeded files. After you free up some disk space, start <application>X</application> using the <command>startx</command> command.
+			</para>
+			<para>
+				For additional information about <command>df</command> and an explanation of the options available (such as the <option>-h</option> option used in this example), see the <systemitem>df(1)</systemitem> man page.
+			</para>
+		</section>
+
+		<section id="sect-trouble-after-ram-x86">
+			<title>Is Your RAM Not Being Recognized?</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>RAM not recognized</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				In some cases the kernel does not recognize all of your memory (RAM), which causes the system to use less memory than is installed. You can find out how much RAM is being utilized using the <command>free -m</command> command. If the displayed total amount of memory does not match your expectations, it is likely that at least one of your memory modules is faulty. On BIOS-based systems, you can use the <application>Memtest86+</application> utility to test your system's memory - see <xref linkend="sect-boot-options-memtest"/> for details.
+			</para>
+			<note>
+				<para>
+					Some hardware configurations have a part of the system's RAM reserved and unavailable to the main system. Notably, laptop computers with integrated graphics cards will reserve some memory for the GPU. For example, a laptop with 4&nbsp;GiB of RAM and an integrated Intel graphics card will show only roughly 3.7&nbsp;GiB of available memory.
+				</para>
+				<para>
+					Additionally, the <application>kdump</application> crash kernel dumping mechanism, which is enabled by default on most &PRODUCT; systems, reserves some memory for the secondary kernel used in case of the primary kernel crashing. This reserved memory will also not be displayed as available when using the <command>free</command> command. For details about <application>kdump</application> and its memory requirements, see the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Kernel_Crash_Dump_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Kernel Crash Dump Guide</ulink>.
+				</para>
+			</note>
+			<para>
+				If you made sure that your memory does not have any issues, you can try and set the amount of memory manually using the <option>mem=</option> kernel option.
+			</para>
+			<procedure>
+				<title>Configuring the Memory Manually</title>
+				<step>
+					<para>
+						Start your computer and wait until the boot loader menu appears. If you set your boot loader timeout period to 0, hold down the <keycap>Esc</keycap> key to access it.
+					</para>
+				</step>
+				<step>
+					<para>
+						When the boot loader menu appears, use your cursor keys to highlight the entry you want to boot and press the <keycap>e</keycap> key to edit this entry's options.
+					</para>
+				</step>
+				<step>
+					<para>
+						In the list of options, find the kernel line - that is, the line beginning with the keyword <literal>linux</literal> (or, in some cases, <literal>linux16</literal>). Append the following option to the end of this line:
+					</para>
+<screen>mem=<replaceable>xx</replaceable>M</screen>
+					<para>
+						Replace <replaceable>xx</replaceable> with the amount of RAM you have in MiB.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press <keycap>F10</keycap> or <keycombo><keycap>Ctrl</keycap><keycap>X</keycap></keycombo> to boot your system with the edited options.
+					</para>
+				</step>
+				<step>
+					<para>
+						Wait for the system to boot and log in. Then, open a command line and execute the <command>free -m</command> command again. If total amount of RAM displayed by the command matches your expectations, append the following to the line beginning with <literal>GRUB_CMDLINE_LINUX</literal> in the <filename>/etc/default/grub</filename> file to make the change permanent:
+					</para>
+<screen>mem=<replaceable>xx</replaceable>M</screen>
+					<para>
+						Replace <replaceable>xx</replaceable> with the amount of RAM you have in MiB.
+					</para>
+				</step>
+				<step>
+					<para>
+						After you updated the file and saved it, refresh the boot loader configuration so that the change will take effect. Run the following command with root privileges:
+					</para>
+<screen><prompt>#</prompt> <command>grub2-mkconfig --output=/boot/grub2/grub.cfg</command></screen>
+				</step>
+			</procedure>
+			<para>
+				In <filename>/etc/default/grub</filename>, the above example would look similar to the following:
+			</para>
+<screen>
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="$(sed 's, release.*$,,g' /etc/system-release)"
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_CMDLINE_LINUX="rd.lvm.lv=rhel/root vconsole.font=latarcyrheb-sun16 rd.lvm.lv=rhel/swap $([ -x /usr/sbin/rhcrashkernel.param ] &amp;&amp; /usr/sbin/rhcrashkernel-param || :) vconsole.keymap=us rhgb quiet mem=1024M"
+GRUB_DISABLE_RECOVERY="true"
+</screen>
+			<para>
+				See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink> for more information about working with the <application>GRUB2</application> boot loader.
+			</para>
+		</section>
+
+		<section>
+			<title>Is Your System Displaying Signal 11 Errors?</title>
+
+
+			<indexterm>
+				<primary>troubleshooting</primary>
+				<secondary>signal 11 error</secondary>
+				<tertiary>AMD64 and Intel&nbsp;64</tertiary>
+			</indexterm>
+
+
+			<para>
+				A signal 11 error, commonly known as a <firstterm>segmentation fault</firstterm>, means that a program accessed a memory location that was not assigned to it. A signal 11 error can occur due to a bug in one of the software programs that is installed, or faulty hardware.
+			</para>
+			<para>
+				If you receive a fatal signal 11 error during the installation, first make sure you are using the most recent installation images, and let <application>Anaconda</application> verify them to make sure they are not corrupted. Bad installation media (such as an improperly burned or scratched optical disk) are a common cause of signal 11 errors. Verifying the integrity of the installation media is recommended before every installation.
+			</para>
+			<para>
+				For information about obtaining the most recent installation media, see <xref linkend="chap-download-red-hat-enterprise-linux"/>. To perform a media check before the installation starts, append the <option>rd.live.check</option> boot option at the boot menu. See <xref linkend="sect-boot-options-mediacheck"/> for details.
+			</para>
+			<para>
+				If you performed a media check without any errors and you still have issues with segmentation faults, it usually means that your system encountered a hardware error. In this case, the problem is most likely in the system's memory (RAM). This can be a problem even if you previously used a different operating system on the same computer without any errors. On BIOS-based systems, you can use the <application>Memtest86+</application> memory testing module included on the installation media to perform a thorough test of your system's memory. See <xref linkend="sect-boot-options-memtest"/> for details.
+			</para>
+			<para>
+				Other possible causes are beyond this document's scope. Consult your hardware manufacturer's documentation and also see the <citetitle>Red&nbsp;Hat Hardware Compatibility List</citetitle>, available online at <ulink url="https://hardware.redhat.com"/>.
+			</para>
+		</section>
+
+
+
+	</section>
+
+</chapter>

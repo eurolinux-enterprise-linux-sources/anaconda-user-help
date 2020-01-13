@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-account-configuration-user-x86">
+  <title>Create a User Account</title>
+
+  <para>
+    To create a regular (non-root) user account during the installation, click <guilabel>User Settings</guilabel> on the progress screen. The <guilabel>Create User</guilabel> screen appears, allowing you to set up the regular user account and configure its parameters. Though recommended to do during installation, this step is optional and can be performed after the installation is complete.
+  </para>
+
+  <note>
+    <para>
+      You must always set up at least one way to gain root privileges to the installed system: either using a <systemitem>root</systemitem> account, or by creating a user account with administrative privileges (member of the  <systemitem>wheel</systemitem> group), or both.
+    </para>
+  </note>
+
+  <para>
+    To leave the user creation screen after you have entered it, without creating a user, leave all the fields empty and click <guibutton>Done</guibutton>.
+  </para>
+
+  <figure>
+    <title>User Account Configuration Screen</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/accountconfig/createuser.png" format="PNG" width="660"/>
+      </imageobject>
+      <textobject>
+        <para>
+          User Account Configuration Screen
+        </para>
+      </textobject>
+    </mediaobject>
+  </figure>
+  <para>
+    Enter the full name and the user name in their respective fields. Note that the system user name must be shorter than 32 characters and cannot contain spaces. It is highly recommended to set up a password for the new account.
+  </para>
+
+
+  <para>
+    When setting up a strong password even for a non-root user, follow the guidelines described in <xref linkend="sect-account-configuration-x86"/>.
+  </para>
+
+  <para>
+    Click the <guibutton>Advanced</guibutton> button to open a new dialog with additional settings.
+  </para>
+
+  <figure>
+    <title>Advanced User Account Configuration</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/accountconfig/advuserconfig.png" format="PNG" scalefit="0"/>
+      </imageobject>
+      <textobject>
+        <para>
+          Advanced User Account Configuration Screen
+        </para>
+      </textobject>
+    </mediaobject>
+  </figure>
+  <para>
+    By default, each user gets a home directory corresponding to their user name. In most scenarios, there is no need to change this setting.
+  </para>
+
+  <para>
+    You can also manually define a system identification number for the new user and their default group by selecting the check boxes. The range for regular user IDs starts at the number <literal>1000</literal>. At the bottom of the dialog, you can enter the comma-separated list of additional groups, to which the new user shall belong. The new groups will be created in the system. To customize group IDs, specify the numbers in parenthesis.
+  </para>
+
+  <note>
+    <para>
+      Consider setting IDs of regular users and their default groups at range starting at <literal>5000</literal> instead of <literal>1000</literal>. That is because the range reserved for system users and groups, <literal>0</literal>-<literal>999</literal>, might increase in the future and thus overlap with IDs of regular users.
+    </para>
+    <para>
+      For creating users with custom IDs using kickstart, see <xref linkend="varlist-kickstart-user-options"/>.
+    </para>
+    <para>
+      For changing the minimum UID and GID limits after the installation, which ensures that your chosen UID and GID ranges are applied automatically on user creation, see <ulink url="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-managing_users_and_groups#s1-users-groups-introduction">the Users and Groups chapter of the System Administrator's Guide</ulink>.
+    </para>
+  </note>
+
+  <para>
+    Once you have customized the user account, click <guibutton>Save Changes</guibutton> to return to the <guilabel>User Settings</guilabel> screen.
+  </para>
+
+
+</section>

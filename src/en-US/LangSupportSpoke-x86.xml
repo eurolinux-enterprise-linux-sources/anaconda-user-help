@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-language-support-x86">
+	<title>Language Support</title>
+
+
+	<indexterm>
+		<primary>language</primary>
+		<secondary>configuration</secondary>
+	</indexterm>
+
+
+	<para>
+		To install support for additional locales and language dialects, select <guilabel>Language Support</guilabel> from the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+	<para>
+		Use your mouse to select the language for which you would like to install support. In the left panel, select your language of choice, for example <literal>Español</literal>. Then you can select a locale specific to your region in the right panel, for example  <literal>Español (Costa Rica)</literal>. You can select multiple languages and multiple locales. The selected languages are highlighted in bold in the left panel.
+	</para>
+
+	<figure>
+		<title>Configuring Language Support</title>
+		<mediaobject>
+			<imageobject>
+				<imagedata fileref="images/langselection/langsupport.png" format="PNG" width="660"/>
+			</imageobject>
+			<textobject>
+				<para>
+					Language support configuration screen.
+				</para>
+			</textobject>
+		</mediaobject>
+	</figure>
+	<para>
+		Once you have made your selections, click <guibutton>Done</guibutton> to return to the <guilabel>Installation Summary</guilabel> screen.
+	</para>
+
+	<note>
+		<para>
+			To change your language support configuration after you have completed the installation, visit the <application>Region &amp; Language</application> section of the <application>Settings</application> dialog window.
+		</para>
+	</note>
+
+</section>

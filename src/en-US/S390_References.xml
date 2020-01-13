@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-additional-references-s390">
+	<title>IBM System&nbsp;z References</title>
+	<section>
+		<title>IBM System&nbsp;z Publications</title>
+		<para>
+			Current versions of the Linux on System&nbsp;z publications can be found at <ulink url="http://www.ibm.com/developerworks/linux/linux390/documentation_red_hat.html" />. They include:
+		</para>
+		<bibliolist>
+			<biblioentry>
+				<title>Linux on System&nbsp;z - How to use FC-attached SCSI devices with Linux on System&nbsp;z9 and zSeries</title>
+				<authorgroup>
+					<corpauthor>
+						IBM
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2008</pubdate>
+				<biblioid>SC33-8413</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>Linux on System&nbsp;z - How to Improve Performance with PAV</title>
+				<authorgroup>
+					<corpauthor>
+						IBM
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2008</pubdate>
+				<biblioid>SC33-8414</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>z/VM - Getting Started with Linux on System&nbsp;z</title>
+				<authorgroup>
+					<corpauthor>
+						IBM
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2009</pubdate>
+				<biblioid>SC24-6194</biblioid>
+			</biblioentry>
+		</bibliolist>
+	</section>
+
+	<section id="sect-additional-references-ibm-redbooks-s390">
+		<title>IBM Redbooks Publications for System&nbsp;z</title>
+		<para>
+			Current versions of IBM Redbooks publications can be found at <ulink url="http://www.redbooks.ibm.com/" />. They include:
+		</para>
+		<bibliolist>
+			<title>Introductory publications</title>
+			<biblioentry>
+				<title>Introduction to the New Mainframe: z/VM Basics</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2007</pubdate>
+				<biblioid>SG24-7316</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>Practical Migration to Linux on System&nbsp;z</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2009</pubdate>
+				<biblioid>SG24-7727</biblioid>
+			</biblioentry>
+		</bibliolist>
+
+		<bibliolist>
+			<title>Performance and high availability</title>
+			<biblioentry>
+				<title>Linux on IBM System&nbsp;z: Performance Measurement and Tuning</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2011</pubdate>
+				<biblioid>SG24-6926</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>Achieving High Availability on Linux for System&nbsp;z with Linux-HA Release 2</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2009</pubdate>
+				<biblioid>SG24-7711</biblioid>
+			</biblioentry>
+		</bibliolist>
+
+		<bibliolist>
+			<title>Security</title>
+			<biblioentry>
+				<title>Security for Linux on System&nbsp;z</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2013</pubdate>
+				<biblioid>SG24-7728</biblioid>
+			</biblioentry>
+		</bibliolist>
+
+		<bibliolist>
+			<title>Networking</title>
+			<biblioentry>
+				<title>IBM System&nbsp;z Connectivity Handbook</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2013</pubdate>
+				<biblioid>SG24-5444</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>OSA Express Implementation Guide</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2009</pubdate>
+				<biblioid>SG24-5948</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>HiperSockets Implementation Guide</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2007</pubdate>
+				<biblioid>SG24-6816</biblioid>
+			</biblioentry>
+			<biblioentry>
+				<title>Fibre Channel Protocol for Linux and z/VM on IBM System&nbsp;z</title>
+				<authorgroup>
+					<corpauthor>
+						IBM Redbooks
+					</corpauthor>
+				</authorgroup>
+				<pubdate>2007</pubdate>
+				<biblioid>SG24-7266</biblioid>
+			</biblioentry>
+		</bibliolist>
+	</section>
+
+	<section id="sect-additional-references-online-s390">
+		<title>Online Resources</title>
+		<bibliolist>
+			<biblioentry>
+				<bibliomisc>
+					<phrase>For z/VM publications, refer to <ulink url="http://www.vm.ibm.com/library/" /></phrase>
+				</bibliomisc>
+			</biblioentry>
+			<biblioentry>
+				<bibliomisc>
+					<phrase>For System&nbsp;z I/O connectivity information, refer to <ulink url="http://www.ibm.com/systems/z/hardware/connectivity/index.html" /></phrase>
+				</bibliomisc>
+			</biblioentry>
+			<biblioentry>
+				<bibliomisc>
+					<phrase>For System&nbsp;z cryptographic coprocessor information, refer to <ulink url="http://www.ibm.com/security/cryptocards/" /></phrase>
+				</bibliomisc>
+			</biblioentry>
+			<biblioentry>
+				<bibliomisc>
+					<phrase>For System&nbsp;z DASD storage information, refer to <ulink url="http://www-01.ibm.com/support/knowledgecenter/linuxonibm/com.ibm.linux.z.lgdd/lgdd_t_dasd_wrk.html" /></phrase>
+				</bibliomisc>
+			</biblioentry>
+		</bibliolist>
+	</section>
+
+</chapter>

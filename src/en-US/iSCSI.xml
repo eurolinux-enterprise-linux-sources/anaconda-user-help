@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<appendix id="appe-iscsi-disks">
+	<title>iSCSI Disks</title>
+	<para>
+		<firstterm>Internet Small Computer System Interface</firstterm> (iSCSI) is a protocol that allows computers to communicate with storage devices by SCSI requests and responses carried over TCP/IP. Because iSCSI is based on the standard SCSI protocols, it uses some terminology from SCSI. The device on the SCSI bus to which requests get sent, and which answers these requests, is known as the <firstterm>target</firstterm> and the device issuing requests is known as the <firstterm>initiator</firstterm>. In other words, an iSCSI disk is a target and the iSCSI software equivalent of a SCSI controller or SCSI Host Bus Adapter (HBA) is called an initiator. This appendix only covers Linux as an iSCSI initiator; how Linux uses iSCSI disks, but not how Linux hosts iSCSI disks.
+	</para>
+	<para>
+		Linux has a software iSCSI initiator in the kernel that takes the place and form of a SCSI HBA driver and therefore allows Linux to use iSCSI disks. However, as iSCSI is a fully network-based protocol, iSCSI initiator support requires more than just the ability to send SCSI packets over the network. Before Linux can use an iSCSI target, Linux must find the target on the network and make a connection to it. In some cases, Linux must send authentication information to gain access to the target. Linux must also detect any failure of the network connection and must establish a new connection, including logging in again if necessary.
+	</para>
+	<para>
+		The discovery, connection, and logging in is handled in user space by the <application>iscsiadm</application> utility, while errors are handled, also in user space, by the <application>iscsid</application> utility.
+	</para>
+	<para>
+		Both <application>iscsiadm</application> and <application>iscsid</application> are part of the <application>iscsi-initiator-utils</application> package under &PRODUCT;.
+	</para>
+	<section id="sect-iscsi-disks-anaconda">
+		<title>iSCSI Disks in Anaconda</title>
+		<para>
+			The <application>Anaconda</application> installation program can discover and log in to iSCSI disks in two ways:
+		</para>
+		<orderedlist>
+			<listitem>
+				<para>
+					When <application>Anaconda</application> starts, it checks if the BIOS or add-on boot ROMs of the system support <firstterm>iSCSI Boot Firmware Table</firstterm> (iBFT), a BIOS extension for systems which can boot from iSCSI. If the BIOS supports iBFT, <application>Anaconda</application> will read the iSCSI target information for the configured boot disk from the BIOS and log in to this target, making it available as an installation target.
+				</para>
+				<important>
+					<para>
+						To connect automatically to an iSCSI target, a network device for accessing the target needs to be activated. The recommended way to do so is to use <option>ip=ibft</option> boot option.
+					</para>
+				</important>
+
+			</listitem>
+			<listitem>
+				<para>
+					You can discover and add iSCSI targets manually in the graphical user interface in <application>anaconda</application>. From the main menu, the Installation Summary screen, click the Installation Destination option. Then click the <guibutton>Add a disk</guibutton> in the <guilabel>Specialized &amp; Network Disks</guilabel> section of the screen. A tabbed list of available storage devices appears. In the lower right corner, click the <guibutton>Add iSCSI Target</guibutton> button and proceed with the discovery process. See <xref linkend="sect-storage-device-selection-x86" /> for more information.
+				</para>
+				<para>
+					The <filename class="partition">/boot</filename> partition cannot be placed on iSCSI targets which have been added manually using this method - an iSCSI target containing a <filename class="partition">/boot</filename> partition must be configured for use with iBFT.
+				</para>
+
+			</listitem>
+		</orderedlist>
+		<para>
+			While <application>Anaconda</application> uses <application>iscsiadm</application> to find and log into iSCSI targets, <application>iscsiadm</application> automatically stores any information about these targets in the iscsiadm iSCSI database. <application>Anaconda</application> then copies this database to the installed system and marks any iSCSI targets not used for <filename class="directory">/</filename> so that the system will automatically log in to them when it starts. If <filename>/</filename> is placed on an iSCSI target, <application>initrd</application> will log into this target and <application>Anaconda</application> does not include this target in start up scripts to avoid multiple attempts to log into the same target.
+		</para>
+	</section>
+
+	<section id="sect-iscsi-disks-startup">
+		<title>iSCSI Disks During Start Up</title>
+		<para>
+			Events related to iSCSI might occur at a number of points while the system is starting:
+		</para>
+		<orderedlist>
+			<listitem>
+				<para>
+					The init script in the <application>initrd</application> will log into iSCSI targets used for <filename>/</filename>, if any. This is done using the <application>iscsistart</application> utility, without requiring <application>iscsid</application> to run.
+				</para>
+				<note>
+					<para>
+						If the root file system is on an iSCSI disk connected using IPv6, ensure that the installed system is using the correct <option>ip=</option> boot option, for example <option>ip=eth0:auto6</option>. If this option is not set, the installed system can spend up to 20 minutes at boot time attempting to establish a connection, before eventually succeeding. Using the correct <option>ip=</option> option eliminates this delay.
+					</para>
+				</note>
+			</listitem>
+			<listitem>
+				<para>
+					When the root file system has been mounted and the various service init scripts are running, the <application>iscsi</application> init script will get called. This script then starts the <application>iscsid</application> daemon if any iSCSI targets are used for <filename>/</filename>, or if any targets in the iSCSI database are marked to be logged into automatically.
+				</para>
+
+			</listitem>
+			<listitem>
+				<para>
+					After the classic network service script has been run, the <application>iscsi</application> init script will run. If the network is accessible, this will log into any targets in the iSCSI database that are marked to be logged into automatically. If the network is not accessible, this script will exit quietly.
+				</para>
+
+			</listitem>
+			<listitem>
+				<para>
+					When using <application>NetworkManager</application> to access the network, instead of the classic network service script, <application>NetworkManager</application> will call the <application>iscsi</application> init script. Also see the <filename>/etc/NetworkManager/dispatcher.d/04-iscsi</filename> file for further reference.
+				</para>
+				<important>
+					<para>
+						Because <application>NetworkManager</application> is installed in the <filename>/usr</filename> directory, you cannot use it to configure network access if <filename>/usr</filename> is on network-attached storage such as an iSCSI target.
+					</para>
+				</important>
+			</listitem>
+		</orderedlist>
+		<para>
+			If <application>iscsid</application> is not needed as the system starts, it will not start automatically. If you start <application>iscsiadm</application>, <application>iscsiadm</application> will start <application>iscsid</application> in turn.
+		</para>
+
+	</section>
+
+</appendix>

@@ -1,0 +1,7 @@
+publish/**/*
+tmp/**/*
+*.cfg~
+*.swp
+*~
+*#
+anaconda_help_content/

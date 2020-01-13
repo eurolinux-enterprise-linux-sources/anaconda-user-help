@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<appendix id="appe-technical-references">
+	<title>Other Technical Documentation</title>
+	<para>
+		Both <application>Anaconda</application> and &PRODUCT; systems use a common set of software components. For detailed information on key technologies, see the web sites listed below.
+	</para>
+	<variablelist>
+		<varlistentry>
+			<term>Boot Loader</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>GRUB2</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					&PRODUCT; uses the <command>GRUB2</command> boot loader. See the corresponding chapter in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/ch-Working_with_the_GRUB_2_Boot_Loader.html"><citetitle>RRed&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</citetitle></ulink>.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Storage Management</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>LVM</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					Logical Volume Management (LVM) provides administrators with a range of facilities to manage storage. By default, the &PRODUCT; installation process formats drives as LVM volumes. For further details about LVM, see the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Logical_Volume_Manager_Administration/index.html"><citetitle pubwork="book">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Logical Volume Manager Administration Guide</citetitle></ulink>.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Remote Displays</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>VNC (Virtual Network Computing)</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					&PRODUCT; and <application>Anaconda</application> include VNC (Virtual Network Computing) software to enable remote access to graphical displays. For more information about VNC, see the TigerVNC chapter in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/ch-TigerVNC.html"><citetitle>Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</citetitle></ulink>.
+				</para>
+				<para>
+					You can also use the <ulink url="https://access.redhat.com/labs/vncconfig/">VNC Configurator</ulink> application on the Red&nbsp;Hat Customer Portal to guide you through VNC server and client setup.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Remote System Access</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>OpenSSH</primary>
+						<seealso>SSH</seealso>
+					</indexterm>
+					<indexterm>
+						<primary>SSH (Secure SHell)</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					<indexterm>
+						<primary>scp</primary>
+						<seealso>SSH</seealso>
+					</indexterm>
+					&PRODUCT; incorporates the OpenSSH suite to provide remote access to the system. The SSH service enables a number of functions, which include access to the command-line from other systems, remote command execution, and network file transfers. During the installation process, <command>Anaconda</command> might use the <command>scp</command> feature of OpenSSH to transfer crash reports to remote systems. For further details about OpenSSH, see the corresponding section in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</ulink>.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Access Control</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>SELinux</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					SELinux provides Mandatory Access Control (MAC) capabilities that supplement the standard Linux security features. See the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/SELinux_Users_and_Administrators_Guide/index.html"><citetitle pubwork="book">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 SELinux User's and Administrator's Guide</citetitle></ulink> for further information.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Firewall</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>firewall</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					&PRODUCT; uses <application>firewalld</application> to provide firewall features. For further information, see the corresponding chapter in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Using_Firewalls.html"><citetitle pubwork="book">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 SELinux User's and Administrator's Guide</citetitle></ulink>.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Software Installation</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>yum</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					&PRODUCT; uses <command>yum</command> to manage the RPM packages that make up the system. See the corresponding chapter in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/part-Installing_and_Managing_Software.html"><citetitle pubwork="book">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Administrator's Guide</citetitle></ulink> for further information.
+				</para>
+			</listitem>
+		</varlistentry>
+		<varlistentry>
+			<term>Virtualization</term>
+			<listitem>
+				<para>
+					<indexterm>
+						<primary>Virtualization</primary>
+						<secondary>documentation</secondary>
+					</indexterm>
+					Virtualization provides the capability to simultaneously run multiple operating systems on the same computer. &PRODUCT; also includes tools to install and manage the secondary systems on a &PRODUCT; host. You can select virtualization support during the installation process, or at any time thereafter. See the <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Virtualization_Deployment_and_Administration_Guide/index.html">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Virtualization Deployment and Administration Guide</ulink> for more information.
+				</para>
+			</listitem>
+		</varlistentry>
+	</variablelist>
+</appendix>

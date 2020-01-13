@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<appendix id="appe-disk-partitions-overview">
+  <title>An Introduction to Disk Partitions</title>
+
+
+  <indexterm>
+    <primary>partitioning</primary>
+    <secondary>basic concepts</secondary>
+  </indexterm>
+  <indexterm>
+    <primary>hard disk</primary>
+    <secondary>partitioning of</secondary>
+  </indexterm>
+
+
+  <note>
+    <para>
+      This appendix is not necessarily applicable to architectures other than AMD64 and Intel&nbsp;64. However, the general concepts mentioned here might apply.
+    </para>
+  </note>
+  <para>
+    This section discusses basic disk concepts, disk repartitioning strategies, the partition naming scheme used by Linux systems, and related topics.
+  </para>
+  <para>
+    If you are comfortable with disk partitions, you can skip ahead to <xref linkend="sect-disk-partitions-making-room"/> for more information on the process of freeing up disk space to prepare for a &PRODUCT; installation.
+  </para>
+
+  <section id="sect-disk-partitions-basic-concepts">
+    <title>Hard Disk Basic Concepts</title>
+
+
+    <indexterm>
+      <primary>hard disk</primary>
+      <secondary>basic concepts</secondary>
+    </indexterm>
+
+    <para>
+      Hard disks perform a very simple function - they store data and reliably retrieve it on command.
+    </para>
+    <para>
+      When discussing issues such as disk partitioning, it is important to have a understanding of the underlying hardware; however, since the theory is very complicated and expansive, only the basic concepts will be explained here. This appendix uses a set of simplified diagrams of a disk drive to help explain what is the process and theory behind partitions.
+    </para>
+    <para>
+      <xref linkend="figu-partitions-unused-drive"/>, shows a brand-new, unused disk drive.
+    </para>
+    <figure id="figu-partitions-unused-drive">
+      <title>An Unused Disk Drive</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/partitions/unused-drive.png" format="PNG"/>
+        </imageobject>
+        <textobject>
+          <para>
+            Image of an unused disk drive.
+          </para>
+        </textobject>
+      </mediaobject>
+    </figure>
+    <section id="sect-disk-partitions-file-systems">
+      <title>File Systems</title>
+
+
+      <indexterm>
+        <primary>hard disk</primary>
+        <secondary>file system formats</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>file system</primary>
+        <secondary>formats, overview of</secondary>
+      </indexterm>
+
+
+      <para>
+        To store data on a disk drive, it is necessary to <firstterm>format</firstterm> the disk drive first. Formatting (usually known as "making a <firstterm>file system</firstterm>") writes information to the drive, creating order out of the empty space in an unformatted drive.
+      </para>
+      <figure id="figu-partitions-formatted-drive">
+        <title>Disk Drive with a File System</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/formatted-drive.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a formatted disk drive.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        As the previous diagram implies, the order imposed by a file system involves some trade-offs:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            A small percentage of the driver's available space is used to store file system-related data and can be considered as overhead.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            A file system splits the remaining space into small, consistently-sized segments. For Linux, these segments are known as <firstterm>blocks</firstterm>.
+            <footnote>
+              <para>
+                Blocks really <emphasis>are</emphasis> consistently sized, unlike our illustrations. Keep in mind, also, that an average disk drive contains thousands of blocks. The picture is simplified for the purposes of this discussion.
+              </para>
+            </footnote>
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Note that there is no single, universal file system. As the following diagram shows, a disk drive can have one of many different file systems written on it. Different file systems tend to be incompatible; that is, an operating system that supports one file system (or a handful of related file system types) might not support another. However, for example, &PRODUCT; supports a wide variety of file systems (including many commonly used by other operating systems), making data interchange between different file systems easy.
+      </para>
+      <figure id="figu-partitions-different-file-system">
+        <title>Disk Drive with a Different File System</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/other-formatted-drive.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a disk drive with a different file system.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        Writing a file system to disk is only the first step. The goal of this process is to actually <emphasis>store</emphasis> and <emphasis>retrieve</emphasis> data. The figure below shows a drive disk after some data have been written to it:
+      </para>
+      <figure id="figu-partitions-drive-with-data">
+        <title>Disk Drive with Data Written to It</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/used-formatted-drive.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a disk drive with data written to it.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        As the previous diagram shows, some of the previously empty blocks are now holding data. However, by just looking at this picture, we cannot determine exactly how many files reside on this drive. There might only be one file or many, as all files use at least one block and some files use multiple blocks. Another important point to note is that the used blocks do not have to form a contiguous region; used and unused blocks can be interspersed. This is known as <firstterm>fragmentation</firstterm>. Fragmentation can play a part when attempting to resize an existing partition.
+      </para>
+      <para>
+        As with most computer-related technologies, disk drives changed over time after their introduction. In particular, they got bigger. Not larger in physical size, but bigger in their capacity to store information. And, this additional capacity drove a fundamental change in the way disk drives were used.
+      </para>
+    </section>
+    <section id="sect-disk-partitions-basics">
+      <title>Partitions: Turning One Drive Into Many</title>
+
+
+      <indexterm>
+        <primary>hard disk</primary>
+        <secondary>partition introduction</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>introduction to</secondary>
+      </indexterm>
+
+
+      <para>
+        Disk drives can be divided into <firstterm>partitions</firstterm>. Each partition can be accessed as if it was a separate disk. This is done through the addition of a <firstterm>partition table</firstterm>.
+      </para>
+      <para>
+        There are several reasons for allocating disk space into separate disk partitions, for example:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            Logical separation of the operating system data from the user data
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Ability to use different file systems
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Ability to run multiple operating systems on one machine
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        There are currently two partitioning layout standards for physical hard disks: Master Boot Record (<acronym>MBR</acronym>) and GUID Partition Table (<acronym>GPT</acronym>). <acronym>MBR</acronym> is an older method of disk partitioning used with BIOS-based computers. <acronym>GPT</acronym> is a newer partitioning layout that is a part of the Unified Extensible Firmware Interface (<acronym>UEFI</acronym>). This section and <xref linkend="sect-disk-partitions-extended"/> mainly describe the <firstterm>Master Boot Record</firstterm> (<acronym>MBR</acronym>) disk partitioning scheme. For information about the <firstterm>GUID Partition Table</firstterm> (<acronym>GPT</acronym>) partitioning layout, see <xref linkend="sect-disk-partitioning-guid-partition-table"/>.
+      </para>
+      <note>
+        <para>
+          While the diagrams in this chapter show the partition table as being separate from the actual disk drive, this is not entirely accurate. In reality, the partition table is stored at the very start of the disk, before any file system or user data. But for clarity, they are separate in our diagrams.
+        </para>
+      </note>
+      <figure id="figu-partitions-partition-table">
+        <title>Disk Drive with Partition Table</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/unused-partitioned-drive.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of an unused disk drive with a partition table.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+
+
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>how many partitions</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>primary partitions</secondary>
+      </indexterm>
+
+
+      <para>
+        As the previous diagram shows, the partition table is divided into four sections or four <firstterm>primary</firstterm> partitions. A primary partition is a partition on a hard drive that can contain only one logical drive (or section). Each section can hold the information necessary to define a single partition, meaning that the partition table can define no more than four partitions.
+      </para>
+      <para>
+        Each partition table entry contains several important characteristics of the partition:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            The points on the disk where the partition starts and ends
+          </para>
+
+        </listitem>
+        <listitem>
+          <para>
+            Whether the partition is "active"
+          </para>
+
+        </listitem>
+        <listitem>
+          <para>
+            The partition's type
+          </para>
+
+        </listitem>
+      </itemizedlist>
+      <para>
+        The starting and ending points define the partition's size and location on the disk. The "active" flag is used by some operating systems' boot loaders. In other words, the operating system in the partition that is marked "active" is booted.
+      </para>
+      <para>
+        The type is a number that identifies the partition's anticipated usage. Some operating systems use the partition type to denote a specific file system type, to flag the partition as being associated with a particular operating system, to indicate that the partition contains a bootable operating system, or some combination of the three.
+      </para>
+      <para>
+        The following shows an example of a disk drive with single partition:
+      </para>
+      <figure id="figu-partitions-single-part">
+        <title>Disk Drive With Single Partition</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/dos-single-partition.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a disk drive with a single partition.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        The single partition in this example is labeled as <literal>DOS</literal>. This label shows the <emphasis>partition type</emphasis>, with <literal>DOS</literal> being one of the most common ones. The table below shows a list of some of the commonly used partition types and hexadecimal numbers used to represent them.
+      </para>
+
+
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>types of partitions</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>hard disk</primary>
+        <secondary>partition types</secondary>
+      </indexterm>
+
+
+      <table id="tabl-partition-types">
+        <title>Partition Types</title>
+        <tgroup cols="4">
+          <colspec colnum="1" colwidth="2*"/>
+          <colspec colnum="2" colwidth="1*"/>
+          <colspec colnum="3" colwidth="2*"/>
+          <colspec colnum="4" colwidth="1*"/>
+          <thead>
+            <row>
+              <entry>
+                Partition Type
+              </entry>
+              <entry>
+                Value
+              </entry>
+              <entry>
+                Partition Type
+              </entry>
+              <entry>
+                Value
+              </entry>
+
+            </row>
+
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                Empty
+              </entry>
+              <entry>
+                00
+              </entry>
+              <entry>
+                Novell Netware 386
+              </entry>
+              <entry>
+                65
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                DOS 12-bit FAT
+              </entry>
+              <entry>
+                01
+              </entry>
+              <entry>
+                PIC/IX
+              </entry>
+              <entry>
+                75
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                XENIX root
+              </entry>
+              <entry>
+                02
+              </entry>
+              <entry>
+                Old MINIX
+              </entry>
+              <entry>
+                80
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                XENIX usr
+              </entry>
+              <entry>
+                03
+              </entry>
+              <entry>
+                Linux/MINUX
+              </entry>
+              <entry>
+                81
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                DOS 16-bit &lt;=32M
+              </entry>
+              <entry>
+                04
+              </entry>
+              <entry>
+                Linux swap
+              </entry>
+              <entry>
+                82
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Extended
+              </entry>
+              <entry>
+                05
+              </entry>
+              <entry>
+                Linux native
+              </entry>
+              <entry>
+                83
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                DOS 16-bit &gt;=32
+              </entry>
+              <entry>
+                06
+              </entry>
+              <entry>
+                Linux extended
+              </entry>
+              <entry>
+                85
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                OS/2 HPFS
+              </entry>
+              <entry>
+                07
+              </entry>
+              <entry>
+                Amoeba
+              </entry>
+              <entry>
+                93
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                AIX
+              </entry>
+              <entry>
+                08
+              </entry>
+              <entry>
+                Amoeba BBT
+              </entry>
+              <entry>
+                94
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                AIX bootable
+              </entry>
+              <entry>
+                09
+              </entry>
+              <entry>
+                BSD/386
+              </entry>
+              <entry>
+                a5
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                OS/2 Boot Manager
+              </entry>
+              <entry>
+                0a
+              </entry>
+              <entry>
+                OpenBSD
+              </entry>
+              <entry>
+                a6
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Win95 FAT32
+              </entry>
+              <entry>
+                0b
+              </entry>
+              <entry>
+                NEXTSTEP
+              </entry>
+              <entry>
+                a7
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Win95 FAT32 (LBA)
+              </entry>
+              <entry>
+                0c
+              </entry>
+              <entry>
+                BSDI fs
+              </entry>
+              <entry>
+                b7
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Win95 FAT16 (LBA)
+              </entry>
+              <entry>
+                0e
+              </entry>
+              <entry>
+                BSDI swap
+              </entry>
+              <entry>
+                b8
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Win95 Extended (LBA)
+              </entry>
+              <entry>
+                0f
+              </entry>
+              <entry>
+                Syrinx
+              </entry>
+              <entry>
+                c7
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Venix 80286
+              </entry>
+              <entry>
+                40
+              </entry>
+              <entry>
+                CP/M
+              </entry>
+              <entry>
+                db
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Novell
+              </entry>
+              <entry>
+                51
+              </entry>
+              <entry>
+                DOS access
+              </entry>
+              <entry>
+                e1
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                PReP Boot
+              </entry>
+              <entry>
+                41
+              </entry>
+              <entry>
+                DOS R/O
+              </entry>
+              <entry>
+                e3
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                GNU HURD
+              </entry>
+              <entry>
+                63
+              </entry>
+              <entry>
+                DOS secondary
+              </entry>
+              <entry>
+                f2
+              </entry>
+
+            </row>
+            <row>
+              <entry>
+                Novell Netware 286
+              </entry>
+              <entry>
+                64
+              </entry>
+              <entry>
+                BBT
+              </entry>
+              <entry>
+                ff
+              </entry>
+
+            </row>
+
+          </tbody>
+
+        </tgroup>
+
+      </table>
+    </section>
+    <section id="sect-disk-partitions-extended">
+      <title>Partitions Within Partitions - An Overview of Extended Partitions</title>
+
+
+      <indexterm>
+        <primary>hard disk</primary>
+        <secondary>extended partitions</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>extended partitions</primary>
+      </indexterm>
+      <indexterm>
+        <primary>partition</primary>
+        <secondary>extended</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>extended partitions</secondary>
+      </indexterm>
+
+
+      <para>
+        In case four partitions are insufficient for your needs, you can use <firstterm>extended partitions</firstterm> to create up additional partitions. You do this by setting the type of a partition to "Extended".
+      </para>
+      <para>
+        An extended partition is like a disk drive in its own right - it has its own partition table which points to one or more partitions (now called <firstterm>logical partitions</firstterm>, as opposed to the four <firstterm>primary partitions</firstterm>) contained entirely within the extended partition itself. The following diagram shows a disk drive with one primary partition and one extended partition containing two logical partitions (along with some unpartitioned free space):
+      </para>
+      <figure id="figu-partitions-extended">
+        <title>Disk Drive With Extended Partition</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/extended-partitions.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a disk drive with an extended partition.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        As this figure implies, there is a difference between primary and logical partitions - there can only be four primary partitions, but there is no fixed limit to the number of logical partitions that can exist. However, due to the way in which partitions are accessed in Linux, no more than 12 logical partitions should be defined on a single disk drive.
+      </para>
+    </section>
+    <section id="sect-disk-partitioning-guid-partition-table">
+      <title>GUID Partition Table (GPT)</title>
+      <para>
+        GUID Partition Table (<acronym>GPT</acronym>) is a newer partitioning scheme based on using Globally Unique Identifiers (<acronym>GUID</acronym>). <acronym>GPT</acronym> was developed to cope with limitations of the <acronym>MBR</acronym> partition table, especially with the limited maximum addressable storage space of a disk. Unlike <acronym>MBR</acronym>, which is unable to address storage space larger than 2 TiB (equivalent to approximately 2.2 TB), <acronym>GPT</acronym> can be used with hard disks larger than this; the maximum addressable disk size is 2.2 ZiB. In addition <acronym>GPT</acronym>, by default, supports creating up to 128 primary partitions. This number could be extended by allocating more space to the partition table.
+      </para>
+      <para>
+        <acronym>GPT</acronym> disks use logical block addressing (LBA) and the partition layout is as follows:
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            To preserve backward compatibility with MBR disks, the first sector (<acronym>LBA</acronym> 0) of <acronym>GPT</acronym> is reserved for <acronym>MBR</acronym> data and it is called <quote>protective MBR</quote>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The <firstterm>primary <acronym>GPT</acronym> header</firstterm> begins on the second logical block (<acronym>LBA</acronym> 1) of the device. The header contains the disk GUID, the location of the primary partition table, the location of the secondary GPT header, and CRC32 checksums of itself and the primary partition table. It also specifies the number of partition entries of the table.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The <firstterm>primary <acronym>GPT</acronym> table</firstterm> includes, by default, 128 partition entries, each with an entry size 128 bytes, its partition type GUID and unique partition GUID.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The <firstterm>secondary <acronym>GPT</acronym> table</firstterm> is identical to the primary <acronym>GPT</acronym> table. It is used mainly as a backup table for recovery in case the primary partition table is corrupted.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The <firstterm>secondary <acronym>GPT</acronym> header</firstterm> is located on the last logical sector of the disk and it can be used to recover <acronym>GPT</acronym> information in case the primary header is corrupted. It contains the disk GUID, the location of the secondary partition table and the primary <acronym>GPT</acronym> header, CRC32 checksums of itself and the secondary partition table, and the number of possible partition entries.
+          </para>
+        </listitem>
+      </itemizedlist>
+      <important>
+        <para>
+          There must be a BIOS boot partition for the boot loader to be installed successfully onto a disk that contains a GPT (GUID Partition Table). This includes disks initialized by <application>Anaconda</application>. If the disk already contains a BIOS boot partition, it can be reused.
+        </para>
+      </important>
+    </section>
+  </section>
+  <section id="sect-disk-partitions-making-room">
+    <title>Strategies for Disk Repartitioning</title>
+
+
+    <indexterm>
+      <primary>partitioning</primary>
+      <secondary>making room for partitions</secondary>
+    </indexterm>
+
+    <para>
+      There are several different ways that a disk can be repartitioned. This section discusses the following possible approaches:
+      <itemizedlist>
+        <listitem>
+          <para>
+            Unpartitioned free space is available
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            An unused partition is available
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Free space in an actively used partition is available
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Note that this section discusses the aforementioned concepts only theoretically and it does not include any procedures showing how to perform disk repartitioning step-by-step. Such detailed information are beyond the scope of this document.
+    </para>
+    <note>
+      <para>
+        Keep in mind that the following illustrations are simplified in the interest of clarity and do not reflect the exact partition layout that you encounter when actually installing &PRODUCT;.
+      </para>
+    </note>
+
+    <section id="sect-disk-partitions-using-free-space">
+      <title>Using Unpartitioned Free Space</title>
+
+
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>using free space</secondary>
+      </indexterm>
+
+
+      <para>
+        In this situation, the partitions already defined do not span the entire hard disk, leaving unallocated space that is not part of any defined partition. The following diagram shows what this might look like:
+      </para>
+      <figure id="figu-partitions-unused-space">
+        <title>Disk Drive with Unpartitioned Free Space</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/unpart-space.png" format="PNG" width="444"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a disk drive with unpartitioned free space, where <wordasword>1</wordasword> represents an undefined partition with unallocated space and <wordasword>2</wordasword> represents a defined partition with allocated space.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        In the above example, <wordasword>1</wordasword> represents an undefined partition with unallocated space and <wordasword>2</wordasword> represents a defined partition with allocated space.
+      </para>
+      <para>
+        An unused hard disk also falls into this category. The only difference is that <emphasis>all</emphasis> the space is not part of any defined partition.
+      </para>
+      <para>
+        In any case, you can create the necessary partitions from the unused space. Unfortunately, this scenario, although very simple, is not very likely (unless you have just purchased a new disk just for &PRODUCT;). Most pre-installed operating systems are configured to take up all available space on a disk drive (see <xref linkend="sect-disk-partitions-active-partition"/>).
+      </para>
+    </section>
+
+    <section id="sect-disk-partitions-unused-partition">
+      <title>Using Space from an Unused Partition</title>
+
+
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>using unused partition</secondary>
+      </indexterm>
+
+
+      <para>
+        In this case, maybe you have one or more partitions that you do not use any longer. The following diagram illustrates such a situation.
+      </para>
+      <figure id="figu-partitions-unused-partition">
+        <title>Disk Drive with an Unused Partition</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/partitions/unused-partition.png" format="PNG" width="444"/>
+          </imageobject>
+          <textobject>
+            <para>
+              Image of a disk drive with an unused partition, where <wordasword>1</wordasword> represents an unused partition and <wordasword>2</wordasword> represents reallocating an unused partition for Linux.
+            </para>
+          </textobject>
+        </mediaobject>
+      </figure>
+      <para>
+        In the above example, <wordasword>1</wordasword> represents an unused partition and <wordasword>2</wordasword> represents reallocating an unused partition for Linux.
+      </para>
+      <para>
+        In this situation, you can use the space allocated to the unused partition. You first must delete the partition and then create the appropriate Linux partition(s) in its place. You can delete the unused partition and manually create new partitions during the installation process.
+      </para>
+    </section>
+
+    <section id="sect-disk-partitions-active-partition">
+      <title>Using Free Space from an Active Partition</title>
+
+
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>using in-use partition</secondary>
+      </indexterm>
+
+
+      <para>
+        This is the most common situation. It is also, unfortunately, the hardest to handle. The main problem is that, even if you have enough free space, it is presently allocated to a partition that is already in use. If you purchased a computer with pre-installed software, the hard disk most likely has one massive partition holding the operating system and data.
+      </para>
+      <para>
+        Aside from adding a new hard drive to your system, you have two choices:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>
+            <indexterm>
+              <primary>partitioning</primary>
+              <secondary>destructive</secondary>
+            </indexterm>
+            <emphasis>Destructive Repartitioning</emphasis>
+          </term>
+
+          <listitem>
+            <para>
+              In this case, the single large partition is deleted and several smaller ones are created instead. Any data held in the original partition is destroyed. This means that making a complete backup is necessary. It is highly recommended to make two backups, use verification (if available in your backup software), and try to read data from the backup <emphasis>before</emphasis> deleting the partition.
+            </para>
+            <warning>
+              <para>
+                If an operating system was installed on that partition, it must be reinstalled if you want to use that system as well. Be aware that some computers sold with pre-installed operating systems might not include the installation media to reinstall the original operating system. You should check whether this applies to your system is <emphasis>before</emphasis> you destroy your original partition and its operating system installation.
+              </para>
+            </warning>
+            <para>
+              After creating a smaller partition for your existing operating system, you can reinstall software, restore your data, and start your &PRODUCT; installation.
+            </para>
+            <figure id="figu-partitions-destructive-repartitioning">
+              <title>Disk Drive Being Destructively Repartitioned</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="images/partitions/dstrct-reprt.png" format="PNG" width="444"/>
+                </imageobject>
+                <textobject>
+                  <para>
+                    Image of a disk drive being destructively repartitioned, where <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+                  </para>
+                </textobject>
+              </mediaobject>
+            </figure>
+            <para>
+              In the above example, <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+            </para>
+            <warning>
+              <para>
+                Any data previously present in the original partition is lost.
+              </para>
+            </warning>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            <indexterm>
+              <primary>partitioning</primary>
+              <secondary>non-destructive</secondary>
+            </indexterm>
+            <emphasis>Non-Destructive Repartitioning</emphasis>
+          </term>
+          <listitem>
+            <para>
+              With non-destructive repartitioning you execute a program that makes a big partition smaller without losing any of the files stored in that partition. This method is usually reliable, but can be very time-consuming on large drives.
+            </para>
+            <para>
+              While the process of non-destructive repartitioning is rather straightforward, there are three steps involved:
+            </para>
+            <orderedlist>
+              <listitem>
+                <para>
+                  Compress and backup existing data
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  Resize the existing partition
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  Create new partition(s)
+                </para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        Each step is described further in more detail.
+      </para>
+      <section id="sect-disk-partitions-compress-data">
+        <title>Compress Existing Data</title>
+        <para>
+          As the following figure shows, the first step is to compress the data in your existing partition. The reason for doing this is to rearrange the data such that it maximizes the available free space at the "end" of the partition.
+        </para>
+        <figure id="figu-partitions-compress-data">
+          <title>Disk Drive Being Compressed</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/partitions/compression.png" format="PNG" width="444"/>
+            </imageobject>
+            <textobject>
+              <para>
+                Image of a disk drive being compressed, where <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+              </para>
+            </textobject>
+          </mediaobject>
+        </figure>
+        <para>
+          In the above example, <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+        </para>
+        <para>
+          This step is crucial. Without it, the location of the data could prevent the partition from being resized to the extent desired. Note also that, for one reason or another, some data cannot be moved. If this is the case (and it severely restricts the size of your new partitions), you might be forced to destructively repartition your disk.
+        </para>
+      </section>
+      <section id="sect-disk-partitions-resize-existing">
+        <title>Resize the Existing Partition</title>
+        <para>
+          <xref linkend="figu-partitions-resize-existing"/> shows the actual resizing process. While the actual result of the resizing operation varies depending on the software used, in most cases the newly freed space is used to create an unformatted partition of the same type as the original partition.
+        </para>
+        <figure id="figu-partitions-resize-existing">
+          <title>Disk Drive with Partition Resized</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/partitions/part-resize.png" format="PNG" width="444"/>
+            </imageobject>
+            <textobject>
+              <para>
+                Image of a disk drive with a resized partition, where <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+              </para>
+            </textobject>
+          </mediaobject>
+        </figure>
+        <para>
+          In the above example, <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+        </para>
+        <para>
+          It is important to understand what the resizing software you use does with the newly freed space, so that you can take the appropriate steps. In the case illustrated here, it would be best to delete the new DOS partition and create the appropriate Linux partition(s).
+        </para>
+      </section>
+      <section id="sect-disk-partitions-create-new">
+        <title>Create new partitions</title>
+        <para>
+          As the previous step implied, it might or might not be necessary to create new partitions. However, unless your resizing software supports systems with Linux installed, it is likely that you must delete the partition that was created during the resizing process.
+        </para>
+        <figure id="figu-partitions-final-configuration">
+          <title>Disk Drive with Final Partition Configuration</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/partitions/nondestruct-fin.png" format="PNG" width="444"/>
+            </imageobject>
+            <textobject>
+              <para>
+                Image of a disk drive with final partition configuration, where <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+              </para>
+            </textobject>
+          </mediaobject>
+        </figure>
+        <para>
+          In the above example, <wordasword>1</wordasword> represents before and <wordasword>2</wordasword> represents after.
+        </para>
+      </section>
+    </section>
+  </section>
+  <section id="sect-partitioning-naming-schemes-and-mount-points">
+    <title>Partition Naming Schemes and Mount Points</title>
+    <para>
+      A common source of confusion for users unfamiliar with Linux is the matter of how partitions are used and accessed by the Linux operating system. In DOS/Windows, it is relatively simple: Each partition gets a "drive letter." You then use the correct drive letter to refer to files and directories on its corresponding partition. This is entirely different from how Linux deals with partitions and, for that matter, with disk storage in general. This section describes the main principles of partition naming scheme and the way how partitions are accessed in &PRODUCT;.
+    </para>
+
+    <section id="sect-disk-partitions-naming-scheme">
+      <title>Partition Naming Scheme</title>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>numbering partitions</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>naming partitions</secondary>
+      </indexterm>
+      <para>
+        &PRODUCT; uses a naming scheme that is file-based, with file names in the form of <filename>/dev/<replaceable>xxyN</replaceable></filename>.
+      </para>
+      <para>
+        Device and partition names consist of the following:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term><filename>/dev/</filename></term>
+          <listitem>
+            <para>
+              This is the name of the directory in which all device files reside. Because partitions reside on hard disks, and hard disks are devices, the files representing all possible partitions reside in <filename>/dev/</filename>.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><filename><replaceable>xx</replaceable></filename></term>
+          <listitem>
+            <para>
+              The first two letters of the partition name indicate the type of device on which the partition resides, usually <filename>sd</filename>.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><filename><replaceable>y</replaceable></filename></term>
+          <listitem>
+            <para>
+              This letter indicates which device the partition is on. For example, <filename>/dev/sda</filename> for the first hard disk, <filename>/dev/sdb</filename> for the second, and so on.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><filename><replaceable>N</replaceable></filename></term>
+          <listitem>
+            <para>
+              The final number denotes the partition. The first four (primary or extended) partitions are numbered <filename>1</filename> through <filename>4</filename>. Logical partitions start at <filename>5</filename>. So, for example, <filename>/dev/sda3</filename> is the third primary or extended partition on the first hard disk, and <filename>/dev/sdb6</filename> is the second logical partition on the second hard disk.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <note>
+        <para>
+          Even if &PRODUCT; can identify and refer to <emphasis>all</emphasis> types of disk partitions, it might not be able to read the file system and therefore access stored data on every partition type. However, in many cases, it is possible to successfully access data on a partition dedicated to another operating system.
+        </para>
+      </note>
+    </section>
+    <section id="sect-disk-partitions-mount-points">
+      <title>Disk Partitions and Mount Points</title>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>mount points and</secondary>
+      </indexterm>
+      <indexterm>
+        <primary>mount points</primary>
+        <secondary>partitions and</secondary>
+      </indexterm>
+      <para>
+        In &PRODUCT; each partition is used to form part of the storage necessary to support a single set of files and directories. This is done by associating a partition with a directory through a process known as <firstterm>mounting</firstterm>. Mounting a partition makes its storage available starting at the specified directory (known as a <firstterm>mount point</firstterm>).
+      </para>
+      <para>
+        For example, if partition <filename>/dev/sda5</filename> is mounted on <filename>/usr/</filename>, that would mean that all files and directories under <filename>/usr/</filename> physically reside on <filename>/dev/sda5</filename>. So the file <filename>/usr/share/doc/FAQ/txt/Linux-FAQ</filename> would be stored on <filename>/dev/sda5</filename>, while the file <filename>/etc/gdm/custom.conf</filename> would not.
+      </para>
+      <para>
+        Continuing the example, it is also possible that one or more directories below <filename>/usr/</filename> would be mount points for other partitions. For instance, a partition (say, <filename>/dev/sda7</filename>) could be mounted on <filename>/usr/local/</filename>, meaning that <filename>/usr/local/man/whatis</filename> would then reside on <filename>/dev/sda7</filename> rather than <filename>/dev/sda5</filename>.
+      </para>
+    </section>
+    <section id="sect-disk-partitions-how-many">
+      <title>How Many Partitions?</title>
+      <indexterm>
+        <primary>partitioning</primary>
+        <secondary>how many partitions</secondary>
+      </indexterm>
+      <para>
+        At this point in the process of preparing to install &PRODUCT;, you must give some consideration to the number and size of the partitions to be used by your new operating system. However, there is no one right answer to this question. It depends on your needs and requirements.
+      </para>
+      <para>
+        Keeping this in mind, Red&nbsp;Hat recommends that, unless you have a reason for doing otherwise, you should <emphasis>at least</emphasis> create the following partitions: <filename>swap</filename>, <filename>/boot/</filename>, and <filename>/</filename> (root).
+      </para>
+      <para>
+        For more information, see <xref linkend="sect-recommended-partitioning-scheme-x86"/> for AMD64 and Intel&nbsp;64 systems, <xref linkend="sect-recommended-partitioning-scheme-ppc"/> for IBM Power&nbsp;Systems servers, and <xref linkend="sect-recommended-partitioning-scheme-s390"/> for IBM System&nbsp;z.
+      </para>
+    </section>
+  </section>
+</appendix>

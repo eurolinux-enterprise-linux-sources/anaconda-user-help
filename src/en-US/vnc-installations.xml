@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-vnc-installations">
+	<title>Using VNC</title>
+
+
+	<indexterm>
+		<primary>VNC</primary>
+		<secondary>usage during installation</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>installation</primary>
+		<secondary>using VNC</secondary>
+	</indexterm>
+	<indexterm>
+		<primary>remote installation</primary>
+		<secondary>using VNC</secondary>
+	</indexterm>
+
+
+	<para>
+		The graphical installation interface is the recommended method of installing &PRODUCT;. However, in some cases, accessing the graphical interface directly is difficult or impossible. Many enterprise systems, notably servers (IBM Power&nbsp;Systems and IBM System&nbsp;z), lack the capability to connect a display and a keyboard, making VNC a necessity for manual (non-Kickstart) installations.
+	</para>
+	<para>
+		To allow manual installations on <firstterm>headless systems</firstterm> (systems without a directly connected display, keyboard and mouse), the <application>Anaconda</application> installation program includes a <firstterm>Virtual Network Computing</firstterm> (VNC) installation which allows the graphical mode of the installation program to run locally, but display on a system connected to the network. The VNC installation provides you with the full range of installation options, even in situations where the system lacks a display or input devices.
+	</para>
+	<para>
+		This chapter provides instructions on activating VNC mode on the installation system and connecting to it using a VNC viewer.
+	</para>
+
+	<section id="sect-vnc-installations-viewer">
+		<title>Installing a VNC Viewer</title>
+
+
+		<indexterm>
+			<primary>VNC</primary>
+			<secondary>viewer</secondary>
+		</indexterm>
+		<indexterm>
+			<primary>TigerVNC</primary>
+		</indexterm>
+		<indexterm>
+			<primary>Vinagre</primary>
+		</indexterm>
+		<indexterm>
+			<primary>KRDC</primary>
+		</indexterm>
+
+
+		<para>
+			Performing a VNC installation requires a VNC viewer running on your workstation or another terminal computer. VNC viewers are available in the repositories of most Linux distributions; free VNC viewers are also available for other operating systems such as Windows. On Linux systems, use your package manager to search for a viewer for your distribution.
+		</para>
+		<para>
+			The following VNC viewers are available in &PRODUCT;:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<application>TigerVNC</application> - A basic viewer independent of your desktop environment. Installed as the <package>tigervnc</package> package.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<application>Vinagre</application> - A viewer for the <application>GNOME</application> desktop environment. Installed as the <package>vinagre</package> package.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<application>KRDC</application> - A viewer integrated with the <application>KDE</application> desktop environment. Installed as the <package>kdenetwork-krdc</package> package.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>
+			To install any of the viewers listed above, execute the following command as <systemitem>root</systemitem>:
+		</para>
+<screen><prompt>#</prompt> <command>yum install <replaceable>package</replaceable></command></screen>
+		<para>
+			Replace <replaceable>package</replaceable> with the package name of the viewer you want to use (for example, <package>tigervnc</package>).
+		</para>
+		<note>
+			<para>
+				Procedures in this chapter assume you are using <application>TigerVNC</application> as your VNC viewer. Specific instructions for other viewers can differ, but the general principles still apply.
+			</para>
+		</note>
+	</section>
+
+	<section id="sect-vnc-installations-anaconda-modes">
+		<title>Performing a VNC Installation</title>
+		<para>
+			The <application>Anaconda</application> installation program offers two modes for VNC installation. The modes are <firstterm>Direct Mode</firstterm> and <firstterm>Connect Mode</firstterm>. Direct Mode requires the VNC viewer to initiate the connection to the system being installed. Connect Mode requires the system being installed to initiate the connection to the VNC viewer. Once the connection is established, the two modes do not differ. The mode you select depends on the configuration in your environment.
+		</para>
+
+
+		<variablelist>
+			<varlistentry>
+				<term>Direct Mode</term>
+				<listitem>
+					<para>
+						In this mode, <application>Anaconda</application> is configured to start the installation and wait for a VNC viewer before proceeding. The IP address and port are displayed on the system being installed. Using this information, you can connect to the installation system from a different computer. For this reason you must have visual and interactive access to the system being installed.
+					</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>Connect Mode</term>
+				<listitem>
+					<para>
+						In this mode, the VNC viewer is started on the remote system in <firstterm>listening mode</firstterm>. The VNC viewer waits for an incoming connection on a specified port. Then, <application>Anaconda</application> is started and the host name and port number are provided using a boot option or a Kickstart command. When the installation begins, the installation program establishes a connection with the listening VNC viewer using the specified host name and port number. For this reason, your remote system must be able to accept incoming network connections.
+					</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+
+		<itemizedlist>
+			<title>Considerations for choosing a VNC installation mode</title>
+			<listitem>
+				<para>Visual and Interactive access to the system</para>
+				<itemizedlist>
+					<listitem>
+						<para>If visual and interactive access to the system being installed is not available, then you must use Connect Mode.</para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<para>Network Connection Rules and Firewalls</para>
+				<itemizedlist>
+					<listitem>
+						<para>If the system being installed is not allowed inbound connections by a firewall, then you must use Connect Mode or disable the firewall. Disabling a firewall can have security implications.</para>
+					</listitem>
+					<listitem>
+						<para>If the remote system running the VNC viewer is not allowed incoming connections by a firewall, then you must use Direct Mode, or disable the firewall. Disabling a firewall can have security implications. See the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Using_Firewalls.html#sec-Configuring_the_Firewall"><citetitle>Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security&nbsp;Guide</citetitle></ulink> for information about configuring the firewall.</para>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+		</itemizedlist>
+
+		<note>
+			<para>
+				You must specify custom boot options to start a VNC installation. The exact way to do this differs depending on the system architecture. For architecture-specific instructions about editing boot options, see:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<xref linkend="sect-boot-menu-x86" /> for AMD64 and Intel&nbsp;64 systems
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<xref linkend="sect-boot-menu-ppc" /> for IBM Power&nbsp;Systems servers
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<xref linkend="chap-parameter-configuration-files-s390" /> for IBM System&nbsp;z
+					</para>
+				</listitem>
+			</itemizedlist>
+		</note>
+		<section id="sect-vnc-installations-direct-mode">
+			<title>Installing in VNC Direct Mode</title>
+
+
+			<indexterm>
+				<primary>VNC</primary>
+				<secondary>Direct Mode</secondary>
+			</indexterm>
+
+
+			<para>
+				The Direct Mode expects the VNC viewer to initiate a connection to the system being installed. <application>Anaconda</application> asks you to initiate this connection.
+			</para>
+
+			<procedure id="proc-vnc-installations-direct-mode">
+				<title>Starting VNC in Direct Mode</title>
+				<step>
+					<para>
+						Run the VNC viewer of your choice on the workstation you are using to connect to the system being installed. For example, if you use <application>TigerVNC</application>:
+					</para>
+					<figure id="figu-vnc-installations-connection-details">
+						<title>TigerVNC Connection Details</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/vnc/connection-details.png" format="PNG" />
+							</imageobject>
+							<textobject>
+								<para>
+									TigerVNC after startup, showing the Connection Details dialog
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						Boot the installation system and wait for the boot menu to appear. In the menu, press the <keycap>Tab</keycap> key to edit boot options. Append the <option>inst.vnc</option> option to the end of the command line.
+					</para>
+					<para>
+						Optionally, if you want to restrict VNC access to the installation system, add the <option>inst.vncpassword=<replaceable>PASSWORD</replaceable></option> boot option as well. Replace <replaceable>PASSWORD</replaceable> with the password you want to use for the installation. The VNC password must be between 6 and 8 characters long.
+					</para>
+					<important>
+						<para>
+							Use a temporary password for the <option>inst.vncpassword=</option> option. It should not be a real or root password you use on any system.
+						</para>
+					</important>
+					<figure id="figu-vnc-installations-boot-options">
+						<title>Adding VNC Boot Options on AMD64 and Intel&nbsp;64 Systems</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/vnc/boot-options.png" format="PNG" />
+							</imageobject>
+							<textobject>
+								<para>
+									Editing boot options to activate VNC
+								</para>
+							</textobject>
+						</mediaobject>
+					</figure>
+				</step>
+				<step>
+					<para>
+						Press <keycap>Enter</keycap> to start the installation. The system initializes the installation program and starts the necessary services. When the system is ready, you get a message on the screen similar to the following:
+					</para>
+<screen><computeroutput>13:14:47 Please manually connect your VNC viewer to 192.168.100.131:1 to begin the install.</computeroutput></screen>
+					<para>
+						Note the IP address and port number (in the above example, <literal>192.168.100.131:1</literal>).
+					</para>
+				</step>
+				<step>
+					<para>
+						On the system running the VNC Viewer, enter the IP address and port number obtained in the previous step into the <guilabel>Connection Details</guilabel> dialog in the same format as it was displayed on the screen by Anaconda. Then, click <guilabel>Connect</guilabel>. The VNC viewer connects to the installation system. If you set up a VNC password, enter it when prompted and click <guilabel>OK</guilabel>.
+					</para>
+					<para>
+						For further details about using a VNC client, see the corresponding section in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/sec-vnc-viewer.html"><citetitle pubwork="book">Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 System Administrator's Guide</citetitle></ulink>.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				After you finish the procedure, a new window opens with the VNC connection established, displaying the installation menu. In this window, you can use the <application>Anaconda</application> graphical interface the same way you would use it when installing directly on the system.
+			</para>
+			<para>
+				You can proceed with:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<xref linkend="chap-installing-using-anaconda-x86" /> for AMD64 and Intel&nbsp;64 systems
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<xref linkend="chap-installing-using-anaconda-ppc" /> for IBM Power&nbsp;Systems servers
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<xref linkend="chap-installing-using-anaconda-s390" /> for IBM System&nbsp;z
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+
+		<section id="sect-vnc-installations-connect-mode">
+			<title>Installing in VNC Connect Mode</title>
+
+
+			<indexterm>
+				<primary>VNC</primary>
+				<secondary>Connect Mode</secondary>
+			</indexterm>
+
+
+			<para>
+				In Connect Mode, the system being installed initiates a connection to the VNC viewer running on a remote system. Before you start, make sure the remote system is configured to accept an incoming connection on the port you want to use for VNC. The exact way to make sure the connection is not blocked depends on your network and on your workstation's configuration. Information about configuring the firewall is available in the <ulink url="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Security_Guide/sec-Using_Firewalls.html#sec-Configuring_the_Firewall"><citetitle>Red&nbsp;Hat Enterprise&nbsp;Linux&nbsp;7 Security&nbsp;Guide</citetitle></ulink>.
+			</para>
+			<procedure id="proc-vnc-installations-connect-mode">
+				<title>Starting VNC in Connect Mode</title>
+				<step>
+					<para>
+						Start the VNC viewer on the client system in listening mode. For example, on &PRODUCT; using <application>TigerVNC</application>, execute the following command:
+					</para>
+<screen><prompt>$</prompt> <command>vncviewer -listen <replaceable>PORT</replaceable></command></screen>
+					<para>
+						Replace <replaceable>PORT</replaceable> with the port number you want to use for the connection.
+					</para>
+					<para>
+						The terminal displays a message similar to the following example:
+					</para>
+					<example id="exam-vnc-connect-mode-listening">
+						<title>TigerVNC Viewer Listening</title>
+<screen>
+TigerVNC Viewer 64-bit v1.3.0 (20130924)
+Built on Sep 24 2013 at 16:32:56
+Copyright (C) 1999-2011 TigerVNC Team and many others (see README.txt)
+See http://www.tigervnc.org for information on TigerVNC.
+
+Thu Feb 20 15:23:54 2014
+main:        Listening on port 5901
+</screen>
+					</example>
+					<para>
+						The VNC viewer is now ready and waiting for an incoming connection from the installation system.
+					</para>
+				</step>
+				<step>
+					<para>
+						Boot the system being installed and wait for the boot menu to appear. In the menu, press the <keycap>Tab</keycap> key to edit boot options. Append the following options to the command line:
+					</para>
+<screen><option>inst.vnc inst.vncconnect=<replaceable>HOST</replaceable>:<replaceable>PORT</replaceable></option></screen>
+					<para>
+						Replace <replaceable>HOST</replaceable> with the IP address of the system running the listening VNC viewer, and <replaceable>PORT</replaceable> with the port number that the VNC viewer is listening on.
+					</para>
+				</step>
+				<step>
+					<para>
+						Press <keycap>Enter</keycap> to start the installation. The system initializes the installation program and starts the necessary services. Once the initialization is finished, <application>Anaconda</application> attempts to connect to the IP address and port you provided in the previous step.
+					</para>
+					<para>
+						When the connection is successfully established, a new window opens on the system running the VNC viewer, displaying the installation menu. In this window, you can use the <application>Anaconda</application> graphical interface the same way you would use it when installing directly on the system.
+					</para>
+				</step>
+			</procedure>
+			<para>
+				Afer you finish the procedure, you can proceed with:
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						<xref linkend="chap-installing-using-anaconda-x86" /> for AMD64 and Intel&nbsp;64 systems
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<xref linkend="chap-installing-using-anaconda-ppc" /> for IBM Power&nbsp;Systems servers
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<xref linkend="chap-installing-using-anaconda-s390" /> for IBM System&nbsp;z
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+
+	</section>
+
+	<section id="sect-vnc-kickstart-considerations">
+		<title>Kickstart Considerations</title>
+		<para>
+			Commands for using VNC are also available in Kickstart installations. Using only the <command>vnc</command> command results in an installation using Direct Mode. Additional options are available to set up an installation using Connect Mode. For more information about the <command>vnc</command> command and options used in Kickstart files, see <xref linkend="sect-kickstart-commands" />.
+		</para>
+	</section>
+
+</chapter>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<chapter id="chap-subscription-management-unregistering">
+	<title>Unregistering from Red&nbsp;Hat Subscription Management Services</title>
+
+
+	<indexterm>
+		<primary>unregister</primary>
+	</indexterm>
+	<indexterm>
+		<primary>subscription service</primary>
+	</indexterm>
+
+
+	<para>
+		A system can only be registered with one subscription service. If you need to change which service your system is registered with or need to delete the registration in general, then the method to unregister depends on which type of subscription service the system was originally registered with.
+	</para>
+
+	<section id="sect-subscription-management-unregistering-rhsm">
+		<title>Systems Registered with Red&nbsp;Hat Subscription Management</title>
+		<para>
+			Several different subscription services use the same, certificate-based framework to identify systems, installed products, and attached subscriptions. These services are Customer Portal Subscription Management (hosted), Subscription Asset Manager (on-premise subscription service), and CloudForms System Engine (on-premise subscription and content delivery services). These are all part of <emphasis>Red&nbsp;Hat Subscription Management</emphasis>.
+		</para>
+		<para>
+			For all services within Red&nbsp;Hat Subscription Management, the systems are managed with the Red&nbsp;Hat Subscription Manager client tools.
+		</para>
+		<para>
+			To unregister a system registered with a Red&nbsp;Hat Subscription Management server, use the <command>unregister</command> command as <systemitem class="username">root</systemitem> without any additional parameters:
+		</para>
+<screen><prompt>#</prompt> <command>subscription-manager unregister</command></screen>
+		<para>
+			For additional information, see <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Subscription_Management/1/html/RHSM/index.html">Using and Configuring Red&nbsp;Hat Subscription&nbsp;Manager</ulink>.
+		</para>
+	</section>
+
+	<section id="sect-subscription-management-unregistering-satellite">
+		<title>Systems Registered with Red&nbsp;Hat Satellite</title>
+		<para>
+			For a Satellite registration on the server, locate the system in the <guilabel>Systems</guilabel> tab and delete the appropriate profile.
+		</para>
+		<para>
+			For additional information, see <ulink url="https://access.redhat.com/site/documentation/en-US/Red_Hat_Satellite/6.1/html/User_Guide/index.html">Red&nbsp;Hat Satellite User Guide</ulink>.
+		</para>
+	</section>
+</chapter>

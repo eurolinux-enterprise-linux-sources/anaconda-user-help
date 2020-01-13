@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+
+<section id="sect-installation-complete-ppc">
+	<title>Installation Complete</title>
+
+	<para>
+		Congratulations! Your &PRODUCT; installation is now complete!
+	</para>
+
+	<para>
+		Click the <guibutton>Reboot</guibutton> button to reboot your system and begin using &PRODUCT;. Remember to remove any installation media if it is not ejected automatically upon reboot.
+	</para>
+
+	<para>
+		After your computer's normal power-up sequence has completed,
+		&PRODUCT; loads and starts. By default,
+		the start process is hidden behind a graphical screen that displays
+		a progress bar. Eventually, a GUI login screen (or if the X Window
+		System is not installed, a <prompt>login:</prompt> prompt) appears.
+	</para>
+
+	<para>
+		If your system was installed with the X Window System during this installation process, the first time you start your &PRODUCT; system, applications to set up your system are launched. These applications guide you through initial configuration of &PRODUCT; and allow you to set your system time and date, register your machine with Red&nbsp;Hat Network, and more.
+	</para>
+
+	<para>
+		See <xref linkend="chap-initial-setup"/> for information about the configuration process.
+	</para>
+</section>
